@@ -106,6 +106,7 @@ Lock::Lock(char* debugName) {
 	//Add by Kai
 	lockWaitQueue = new List;
 	lockBusy = false;
+	//Not work
 	lockOwner = NULL;
 }
 Lock::~Lock() {
