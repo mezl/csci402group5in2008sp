@@ -1,5 +1,6 @@
 
 //TEST from aludra
+//TEST from Kai's Computer 
 // synch.cc 
 //	Routines for synchronizing threads.  Three kinds of
 //	synchronization routines are defined here: semaphores, locks 
