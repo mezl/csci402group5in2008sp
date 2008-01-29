@@ -154,7 +154,6 @@ void Lock::Release() {
 		return;
 	}	
 
-
 	//Check for a waiting thread in lock waiting queue
 	thread = (Thread *)lockWaitQueue->Remove();
 	if (thread != NULL){	   //If found thread in lock wait queue
