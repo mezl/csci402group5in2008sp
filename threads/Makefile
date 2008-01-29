@@ -169,7 +169,27 @@ utility.o: ../threads/utility.cc ../threads/copyright.h \
   /usr/include/sys/select.h /usr/include/sys/time.h /usr/include/time.h \
   /usr/include/iso/time_iso.h /usr/include/sys/time_impl.h \
   /usr/include/sys/resource.h /usr/include/sys/siginfo.h \
-  /usr/include/sys/machsig.h /usr/include/sys/procset.h
+   /usr/include/sys/machsig.h /usr/include/sys/procset.h
+test_code.o: ../threads/test_code.cc ../threads/copyright.h \
+  ../threads/system.h ../threads/utility.h ../threads/bool.h \
+  ../machine/sysdep.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdarg.h \
+  /usr/include/iso/stdio_iso.h /usr/include/sys/feature_tests.h \
+  /usr/include/sys/isa_defs.h /usr/include/sys/va_list.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio_tag.h \
+  /usr/include/stdio_impl.h /usr/include/string.h \
+  /usr/include/iso/string_iso.h /usr/include/stdlib.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/stdlib_iso.h \
+  /usr/include/sys/wait.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/sys/types.h \
+  /usr/include/sys/machtypes.h /usr/include/sys/int_types.h \
+  /usr/include/sys/select.h /usr/include/sys/time.h /usr/include/time.h \
+  /usr/include/iso/time_iso.h /usr/include/sys/time_impl.h \
+  /usr/include/sys/resource.h /usr/include/sys/siginfo.h \
+  /usr/include/sys/machsig.h /usr/include/sys/procset.h \
+  ../threads/thread.h ../threads/scheduler.h ../threads/list.h \
+  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
 threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
   ../threads/system.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
