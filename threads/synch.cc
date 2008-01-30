@@ -106,7 +106,6 @@ Lock::Lock(char* debugName) {
 	//Add by Kai
 	lockWaitQueue = new List;
 	lockBusy = false;
-	//Not work
 	lockOwner = NULL;
 }
 Lock::~Lock() {
@@ -174,8 +173,13 @@ void Lock::Release() {
 
 Condition::Condition(char* debugName) {
 
+	//Add by Kai
+	condWaitQueue = new List;
+	condLock = NULL;
 }
 Condition::~Condition() {
+	//Add by Kai 
+	delete condWaitQueue;
 
 }
 void Condition::Wait(Lock* conditionLock) { 
@@ -202,10 +206,42 @@ void Condition::Wait(Lock* conditionLock) {
 void Condition::Signal(Lock* conditionLock) {
 
 	//Add by Kai	
+	Thread *thread;
 	//Disable interrupts
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-
+	if(condWaitQueue->IsEmpty()){
+	       	//If not found thread in condition wait queue
+		//No waiter
+		//Restore Interrupt
+		(void) interrupt->SetLevel(oldLevel);
+		return;
+	}
+	if(conditionLock != condLock){
+		//check saved lock is match the current lock
+		//Restore Interrupt
+		(void) interrupt->SetLevel(oldLevel);
+		return;
+	}
+	//Check for a waiting thread in condition waiting queue
+	thread = (Thread *)condWaitQueue->Remove();
+	if (thread != NULL){
+		//Wake Next thread up - put it on ReadyToRun Queue
+		scheduler->ReadyToRun(thread);
+		if(condWaitQueue->IsEmpty())	{
+			//clear lock ownership
+			//if there is no more waiters, clear lock ownership
+			conditionLock->clearLockOwner();
+		}
+	}else{	
+	      printf("Error, thread should not empty\n");
+	}
+	//Restore Interrupt
+	(void) interrupt->SetLevel(oldLevel);
 }
 void Condition::Broadcast(Lock* conditionLock) {
+	//Add by Kai	
+	while(!condWaitQueue->IsEmpty() ) {
+		Signal(conditionLock);
+	}
 
 }
