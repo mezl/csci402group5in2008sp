@@ -136,6 +136,9 @@ class Condition {
 
   private:
     char* name;
+    //Add by Kai
+    List *condWaitQueue;       // threads waiting in condition
+    Lock *condLock;//save lock pointer in the condiftion class for the first waithing thread
     // plus some other stuff you'll need to define
 };
 #endif // SYNCH_H

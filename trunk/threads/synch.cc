@@ -180,10 +180,30 @@ Condition::~Condition() {
 }
 void Condition::Wait(Lock* conditionLock) { 
 	
-	ASSERT(FALSE); 
+	//Add by Kai	
+	//Disable interrupts
+	IntStatus oldLevel = interrupt->SetLevel(IntOff);
+	condLock = conditionLock;//Save lock pt first
+	conditionLock->Release();//Leave Monitor
+	//Add myself to condition wait queue
+	condWaitQueue->Append((void *)currentThread);
+	currentThread->Sleep(); // so go to sleep
+
+	//After some one wake me up
+	conditionLock->Acquire();//Reenter monitor
+
+	//Restore Interrupt
+	(void) interrupt->SetLevel(oldLevel);
+	//Above Done by Kai	
+	//Don't know what's this
+	//ASSERT(FALSE); 
 
 }
 void Condition::Signal(Lock* conditionLock) {
+
+	//Add by Kai	
+	//Disable interrupts
+	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
 }
 void Condition::Broadcast(Lock* conditionLock) {
