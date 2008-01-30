@@ -148,7 +148,7 @@ void Lock::Release() {
 	//Check lock ownership
 	if(currentThread != lockOwner){
 		//Print Err message
-		//cerr<<"Error! Current Thread is not lock owner"<<endl;//Not Work 
+		printf("<Error! Current Thread is not lock owner");
 		//Restore Interrupt
 		(void) interrupt->SetLevel(oldLevel);
 		return;
