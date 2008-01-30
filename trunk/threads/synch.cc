@@ -172,8 +172,20 @@ void Lock::Release() {
 	//Above Done by Kai	
 }
 
-Condition::Condition(char* debugName) { }
-Condition::~Condition() { }
-void Condition::Wait(Lock* conditionLock) { ASSERT(FALSE); }
-void Condition::Signal(Lock* conditionLock) { }
-void Condition::Broadcast(Lock* conditionLock) { }
+Condition::Condition(char* debugName) {
+
+}
+Condition::~Condition() {
+
+}
+void Condition::Wait(Lock* conditionLock) { 
+	
+	ASSERT(FALSE); 
+
+}
+void Condition::Signal(Lock* conditionLock) {
+
+}
+void Condition::Broadcast(Lock* conditionLock) {
+
+}
