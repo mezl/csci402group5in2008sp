@@ -86,11 +86,11 @@ main(int argc, char **argv)
     DEBUG('t', "Entering main");
     (void) Initialize(argc, argv);
     
+    TestSuite();
 #ifdef THREADS
     ThreadTest();
 #endif
 
-    TestSuite();
     for (argc--, argv++; argc > 0; argc -= argCount, argv += argCount) {
 	argCount = 1;
         if (!strcmp(*argv, "-z"))               // print copyright
