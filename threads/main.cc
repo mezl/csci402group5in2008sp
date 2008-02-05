@@ -53,8 +53,6 @@
 #include "utility.h"
 #include "system.h"
 
-#include "test_code.cc"
-
 
 // External functions used by this file
 
@@ -86,7 +84,6 @@ main(int argc, char **argv)
     DEBUG('t', "Entering main");
     (void) Initialize(argc, argv);
     
-    TestSuite();
 #ifdef THREADS
     ThreadTest();
 #endif
