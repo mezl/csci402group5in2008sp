@@ -53,6 +53,8 @@
 #include "utility.h"
 #include "system.h"
 
+#include "test_code.cc"
+
 
 // External functions used by this file
 
