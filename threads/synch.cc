@@ -104,6 +104,7 @@ Semaphore::V()
 // the test case in the network assignment won't work!
 Lock::Lock(char* debugName) {
 	//Add by Kai
+	name = debugName;
 	lockWaitQueue = new List;
 	lockBusy = false;
 	lockOwner = NULL;
@@ -174,11 +175,13 @@ void Lock::Release() {
 Condition::Condition(char* debugName) {
 
 	//Add by Kai
+	name = debugName;
 	condWaitQueue = new List;
 	condLock = NULL;
 }
 Condition::~Condition() {
 	//Add by Kai 
+	condLock = NULL;
 	delete condWaitQueue;
 
 }
