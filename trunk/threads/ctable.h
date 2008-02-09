@@ -11,10 +11,10 @@ class cTable
 		cTable(int ID_in, int initialClerkCount);
 		~cTable(){}
 		int clerkCount();
-		void addClerk(char *name,int id);
-		void leaveTable(char *name,int id);
-		void acquireLock(char *name,int id);
-		void releaseLock(char *name,int id);
+		void addClerk(char *name,int id,bool display = false);
+		void leaveTable(char *name,int id,bool display = false);
+		void acquireLock(char *name,int id,bool display = false);
+		void releaseLock(char *name,int id,bool display = false);
 		void addMoney(int amount);
 		int reportMoney();
 

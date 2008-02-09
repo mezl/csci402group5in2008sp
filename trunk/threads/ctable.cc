@@ -15,34 +15,34 @@ int cTable::clerkCount()
 	return cCount;
 }
 
-void cTable::addClerk(char *name,int id)
+void cTable::addClerk(char *name,int id,bool display)
 {
 	cCount++;
-	printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
+	if(display)printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
 	tableCondition->Signal(tableLock);
-	printf("[Table]%s%d table %d is added a clerk\n",name,id, tableID);
+	if(display)printf("[Table]%s%d table %d is added a clerk\n",name,id, tableID);
 }
 
-void cTable::leaveTable(char *name,int id)
+void cTable::leaveTable(char *name,int id,bool display)
 {
 	cCount--;
-	printf("[Table]%s %d is leave table now,[%d]still work\n",name,id,cCount);
+	if(display)printf("[Table]%s %d is leave table now,[%d]still work\n",name,id,cCount);
 	tableCondition->Wait(tableLock);
-	printf("[Table]%s %d is come back now\n",name,id);
+	if(display)printf("[Table]%s %d is come back now\n",name,id);
 }
 
-void cTable::acquireLock(char *name,int id)
+void cTable::acquireLock(char *name,int id,bool display)
 {
-	printf("[Table]%s %d is acquire lock now\n",name,id);
+	if(display)printf("[Table]%s %d is acquire lock now\n",name,id);
 	tableLock->Acquire();
-	printf("[Table]%s %d is get lock now\n",name,id);
+	if(display)printf("[Table]%s %d is get lock now\n",name,id);
 }
 
-void cTable::releaseLock(char *name,int id)
+void cTable::releaseLock(char *name,int id,bool display)
 {
-	printf("[Table]%s %d is prepare releasing lock now\n",name,id);
+	if(display)printf("[Table]%s %d is prepare releasing lock now\n",name,id);
 	tableLock->Release();
-	printf("[Table]%s %d is released lock now\n",name,id);
+	if(display)printf("[Table]%s %d is released lock now\n",name,id);
 }
 	
 void cTable::addMoney(int amount)
