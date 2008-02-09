@@ -521,7 +521,7 @@ void Manager(int x)
 	if (passportTable->clerkCount() == 0)
 	{
 		passportTable->addClerk(name,0);
-		printf("[Manager] wakeup a PassClerk to Passport table");
+		printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	//passportTable->releaseLock(name,0);
 	
@@ -529,7 +529,7 @@ void Manager(int x)
 	if (cashierTable->clerkCount() == 0)
 	{
 		cashierTable->addClerk(name,0);
-		printf("[Manager] wakeup a CashClerk to Cashier table");
+		printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	//cashierTable->releaseLock(name,0);
 
@@ -545,7 +545,7 @@ void Manager(int x)
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
 		applicationTable->addClerk(name,0);
-		printf("[Manager] wakeup a AppClerk to Application table");
+		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	//applicationLine->regRelease(name,0);
 	//applicationLine->preferRelease(name,0);
@@ -557,7 +557,7 @@ void Manager(int x)
 	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
 		pictureTable->addClerk(name,0);
-		printf("[Manager] wakeup a PicClerk to Picture table");
+		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	//pictureLine->regRelease(name,0);
 	//pictureLine->preferRelease(name,0);
@@ -569,7 +569,7 @@ void Manager(int x)
 	if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3))
 	{
 		passportTable->addClerk(name,0);
-		printf("[Manager] wakeup a PassClerk to Passport table");
+		printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	//passportLine->regRelease(name,0);
 	//passportLine->preferRelease(name,0);
@@ -581,7 +581,7 @@ void Manager(int x)
 	if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3))
 	{
 		cashierTable->addClerk(name,0);
-		printf("[Manager] wakeup a CashClerk to Cashier table");
+		printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	//cashierLine->regRelease(name,0);
 	//cashierLine->preferRelease(name,0);
