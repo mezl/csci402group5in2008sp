@@ -15,15 +15,18 @@ void Clerk::run()
 		cline->Acquire(clerkName,clerkID);
 		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
+			printf("%s %d check prefer line %d",clerkName,clerkID,cline->getID());
 			Customer *c = (Customer *)cline->getNextPreferLineCustomer(clerkID);
 			handleCustomer(c);
 		}
 		else if(!cline->IsRegLineEmpty())
 		{
+			printf("%s %d check reg line %d",clerkName,clerkID,cline->getID());
 			Customer *c =(Customer *)cline->getNextRegLineCustomer(clerkID);
 			handleCustomer(c);
 		}else{
 			//Go Sleep
+			printf("%s %d have no customer in line %d,leave table",clerkName,clerkID,cline->getID());
 			cline->Release(clerkName,clerkID);			
 			table->leaveTable();
 		}	
