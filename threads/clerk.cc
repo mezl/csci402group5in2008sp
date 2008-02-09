@@ -9,6 +9,7 @@ Clerk::Clerk(cLine *l,cTable *t,int id,char *name)
 }
 void Clerk::run()
 {
+	printf("[Clerk]%s %d Start Running \n",clerkName,clerkID);
 	while(1)
 	{
 		//Do Lock
