@@ -6,7 +6,7 @@ class AppClerk:public Clerk
 {
 	public:
 	AppClerk(cLine *l,cTable *t,int id){
-		Clerk(l,t,id);
+		Clerk::Clerk(l,t,id);
 	}
 	void handleCustomer(Customer *c){	
 		c->completeApplication();
