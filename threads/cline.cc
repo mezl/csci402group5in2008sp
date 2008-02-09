@@ -42,16 +42,16 @@ void cLine::regRelease()
 	printf("Reg Line %d is release lock by \n",lineID);
 	regLineLock->Release();
 }
-void cLine::Acquire()
+void cLine::Acquire(char *name,int id)
 {
 
-	printf("Both Line %d is acquired lock by \n",lineID);
+	printf("Both Line %d is acquired lock by %s %d \n",lineID,name,id);
 	preferAcquire();
 	regAcquire();
 }
-void cLine::Release()
+void cLine::Release(char *name,int id)
 {
-	printf("Both Line %d is release lock by \n",lineID);
+	printf("Both Line %d is release lock by \n",lineID,name,id);
 	preferRelease();
 	regRelease();
 }

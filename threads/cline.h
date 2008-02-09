@@ -20,8 +20,8 @@ class cLine
 		void preferRelease();
 		void regAcquire();
 		void regRelease();
-		void Acquire();
-		void Release();
+		void Acquire(char *name,int id);
+		void Release(char *name,int id);
 		bool IsRegLineEmpty();
 		bool IsPreferLineEmpty();
 	private:
