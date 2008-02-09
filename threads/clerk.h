@@ -1,6 +1,8 @@
-#ifdef  CLERK_H_DEFINED
+#ifndef  CLERK_H_DEFINED
 #define CLERK_H_DEFINED
-
+#include "cline.h"
+#include "table.h"
+#include "Customer.h"
 
 class Clerk	
 {
