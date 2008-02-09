@@ -19,7 +19,7 @@ int cTable::clerkCount()
 void cTable::addClerk(char *name,int id,bool display)
 {
 	if(leaveCount == 0){
-		printf("[Table]No clerk can add!");
+		if(display)printf("[Table]No clerk can add!\n");
 		return;
 	}
 	cCount++;
