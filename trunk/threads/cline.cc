@@ -24,28 +24,28 @@ cLine::~cLine()
 
 }
 void cLine::preferAcquire(char *name,int id,bool display)
-{
-	printf("[Line]Prefer %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
+{	
+	if(display)printf("[Line]Prefer %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
 	preferLineLock->Acquire();
 	printf("[Line]Get prefer lock\n");
 }
-void cLine::preferRelease(char *name,int id)
+void cLine::preferRelease(char *name,int id,bool display)
 {
 	printf("[Line]Prefer %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	preferLineLock->Release();
 }
 
-void cLine::regAcquire(char *name,int id)
+void cLine::regAcquire(char *name,int id,bool display)
 {
 	printf("[Line]Reg %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
 	regLineLock->Acquire();
 }
-void cLine::regRelease(char *name,int id)
+void cLine::regRelease(char *name,int id,bool display)
 {
 	printf("[Line]Reg %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	regLineLock->Release();
 }
-void cLine::Acquire(char *name,int id)
+void cLine::Acquire(char *name,int id,bool display)
 {
 	lineLock->Acquire();
 	printf("[Line]Both %s%d is acquired lock by %s %d \n",lineName,lineID,name,id);
@@ -53,7 +53,7 @@ void cLine::Acquire(char *name,int id)
 	regAcquire(name,id);
 	lineLock->Release();
 }
-void cLine::Release(char *name,int id)
+void cLine::Release(char *name,int id,bool display)
 {
 	lineLock->Acquire();
 	printf("[Line]Both %s%d is release lock by %s %d\n",lineName,lineID,name,id);
