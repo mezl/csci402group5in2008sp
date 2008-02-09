@@ -10,10 +10,7 @@ class Clerk
 	Clerk(cLine *l,Table *t,int id);
 	virtual ~Clerk();
 	void run();
-	virtual void handleCustomer(Customer *c){
-	return NULL;
-	
-	};
+	virtual void handleCustomer(Customer *c)=0;
 	private:
 	cLine *cline;
 	Table *table;
