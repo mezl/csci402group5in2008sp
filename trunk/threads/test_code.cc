@@ -377,8 +377,13 @@ void TestSuite() {
 #include "picclerk.cc"
 #include "passclerk.cc"
 #include "cashclerk.cc"
+<<<<<<< .mine
+#define CUSTOMER_NUM 5
+#define CLERK_NUM 10
+=======
 #define CUSTOMER_NUM 10
 #define CLERK_NUM 4
+>>>>>>> .r239
 cLine *applicationLine = new cLine("app line",1);
 cLine *pictureLine = new cLine("pic line",2);
 cLine *passportLine = new cLine("passport line",3);
@@ -510,6 +515,7 @@ void Manager(int x)
 	// add 1 clerk if table is empty
 	char *name = "Manager";
 
+	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,0);
 	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
 	{
@@ -517,7 +523,9 @@ void Manager(int x)
 		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,0);
+	//applicationLine->Release(name, 0);
 
+	//pictureLine->Acquire(name, 0);
 	pictureTable->acquireLock(name,0);
 	if ((pictureTable->clerkCount() == 0) && !pictureLine->nobody())
 	{
@@ -525,7 +533,9 @@ void Manager(int x)
 		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,0);
+	//pictureLine->Release(name, 0);
 
+	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
 	if ((passportTable->clerkCount() == 0) && !passportLine->nobody())
 	{
@@ -533,7 +543,9 @@ void Manager(int x)
 		printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	passportTable->releaseLock(name,0);
+	//passportLine->Release(name, 0);
 	
+	//cashierLine->Acquire(name, 0);
 	cashierTable->acquireLock(name,0);
 	if ((cashierTable->clerkCount() == 0) && !cashierLine->nobody())
 	{
@@ -541,6 +553,7 @@ void Manager(int x)
 		printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	cashierTable->releaseLock(name,0);
+	//cashierLine->Release(name, 0);
 
 
 	// check for number of customers in each line
@@ -548,53 +561,45 @@ void Manager(int x)
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
 	// must release all locks at completion.
 
-	//applicationLine->regAcquire(name,0);
-	//applicationLine->preferAcquire(name,0);
+	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,0);
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
 		applicationTable->addClerk(name,0);
 		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
-	//applicationLine->regRelease(name,0);
-	//applicationLine->preferRelease(name,0);
 	applicationTable->releaseLock(name,0);
+	//applicationLine->Release(name, 0);
 
-	//pictureLine->regAcquire(name,0);
-	//pictureLine->preferAcquire(name,0);
+	//pictureLine->Acquire(name, 0);
 	pictureTable->acquireLock(name,0);
 	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
 		pictureTable->addClerk(name,0);
 		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
-	//pictureLine->regRelease(name,0);
-	//pictureLine->preferRelease(name,0);
 	pictureTable->releaseLock(name,0);
+	//pictureLine->Release(name, 0);
 
-	//passportLine->regAcquire(name,0);
-	//passportLine->preferAcquire(name,0);
+	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
 	if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3))
 	{
 		passportTable->addClerk(name,0);
 		printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
-	//passportLine->regRelease(name,0);
-	//passportLine->preferRelease(name,0);
 	passportTable->releaseLock(name,0);
+	//passportLine->Release(name, 0);
 
-	//cashierLine->regAcquire(name,0);
-	//cashierLine->preferAcquire(name,0);
+	//cashierLine->Acquire(name, 0);
 	cashierTable->acquireLock(name,0);
 	if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3))
 	{
 		cashierTable->addClerk(name,0);
 		printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
-	//cashierLine->regRelease(name,0);
-	//cashierLine->preferRelease(name,0);
 	cashierTable->releaseLock(name,0);
+	//cashierLine->Release(name, 0);
 
 	// check for total amount of money currently collected at the office
 	// Sum up all the money in each lines and all the money in each tables
