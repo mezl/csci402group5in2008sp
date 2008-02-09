@@ -14,24 +14,29 @@ Customer::Customer(int ID_in, int money_in, cLine* applicationLine_in, cLine* pi
 	pictureDone = false;
 	passportDone = false;
 	cashierDone = false;
+	//random function initilization
+	srand(time(NULL));
 }
 
 void Customer::customerRun()
 {
-	//random function initilization
-	srand(time(NULL));
-
+	
+	printf("Customer %d Start run \n",ID);
 	// Choose randomly between entering a application line or picture line
 	// the customer will use the 500 dollars to get into the prefered line
 	// whenever possible
 	if ((rand()%2) == 0)
 	{
+		printf("Customer %d choose app first \n",ID);
 		gotoApplicationLine();
+		printf("Customer %d go to pic line \n",ID);
 		gotoPictureLine();
 	}
 	else
 	{
+		printf("Customer %d go to pic line \n",ID);
 		gotoPictureLine();
+		printf("Customer %d go to app line \n",ID);
 		gotoApplicationLine();
 	}
 	gotoPassportLine();
