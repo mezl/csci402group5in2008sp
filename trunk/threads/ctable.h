@@ -22,6 +22,7 @@ class cTable
 		int tableID;
 		int tableMoney;
 		int cCount;
+		int leaveCount;
 		Lock *tableLock;
 		Condition *tableCondition;
 };
