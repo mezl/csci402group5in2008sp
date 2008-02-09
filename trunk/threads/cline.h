@@ -7,7 +7,7 @@
 class cLine
 {
 	public:
-		cLine(int ID);
+		cLine(char *name,int ID);
 		cLine();
 		~cLine();
 		void addPreferLine(int c,int mount);
@@ -24,10 +24,13 @@ class cLine
 		void Release(char *name,int id);
 		bool IsRegLineEmpty();
 		bool IsPreferLineEmpty();
+		int getID(){return lineID;}
+		char *getName(){return lineName;}
 	private:
 		int preferLineCount;		
 		int regLineCount;		
 		int lineID;
+		char *lineName;
 		int amount;
 		Condition* preferLineCond;
 		Lock* preferLineLock; 

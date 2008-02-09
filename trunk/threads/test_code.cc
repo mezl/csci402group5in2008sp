@@ -376,10 +376,10 @@ void TestSuite() {
 #include "appclerk.cc"
 #define CUSTOMER_NUM 4
 #define CLERK_NUM 4
-cLine *applicationLine = new cLine(1);
-cLine *pictureLine = new cLine(2);
-cLine *passportLine = new cLine(3);
-cLine *cashierLine = new cLine(4);
+cLine *applicationLine = new cLine("app line",1);
+cLine *pictureLine = new cLine("pic line",2);
+cLine *passportLine = new cLine("passport line",3);
+cLine *cashierLine = new cLine("cashier line",4);
 
 cTable *applicationTable = new cTable(1);
 cTable *pictureTable = new cTable(2);
