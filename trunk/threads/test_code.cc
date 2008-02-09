@@ -419,7 +419,7 @@ void office()
 	Clerk *appClerk[CLERK_NUM];
 	Thread *appClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
-		appClerk[i] = new AppClerk(applicationLine,applicationTable,i);
+		appClerk[i] = new AppClerk(applicationLine,applicationTable,i,"Clerk");
 		printf("Create AppClerk %d Thread\n",appClerk[i]->getID());
 		char msg[12];
 		appClerk_thread[i] = new Thread(msg);
