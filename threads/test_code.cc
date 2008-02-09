@@ -427,7 +427,7 @@ void office()
 		printf("Create Customer %d Thread\n",customer[i]->getID());
 		customer_thread[i] = new Thread("Customer");
 		printf("Fork Customer %d Thread\n",customer[i]->getID());
-		customer_thread -> Fork(myCustomerForkFunc, (int)customer[i]);
+		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
 /*
 	printf("Create Customer 2\n");
