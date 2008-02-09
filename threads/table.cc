@@ -8,7 +8,7 @@ Table::Table(int ID_in)
 {
 	tableID = ID_in;
 	tableMoney = 0;
-	clerkCount = 0;
+	cCount = 0;
 	tableLock = new Lock("Table Lock");
 	tableCondiiton = new Condiiton("Table Condiiton");
 }
@@ -16,18 +16,18 @@ Table::Table(int ID_in)
 
 int Table::clerkCount()
 {
-	return clerkCount;
+	return cCount;
 }
 
 void Table::addClerk()
 {
-	clerkCount++;
+	cCount++;
 	tableCondition.signal(&tableLock);
 }
 
 void Table::leaveTable()
 {
-	clerkCount--;
+	cCount--;
 	tableCondiiton.wait(&tableLock);
 }
 
