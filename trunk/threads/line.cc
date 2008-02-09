@@ -74,7 +74,7 @@ Customer * Line::getNextPreferLineCustomer(int clerkID)
 	if(IsPreferLineEmpty()){
 		printf("No customer in prefer line %d\n",lineID);
 		preferLineLock->Release();
-		return;
+		return NULL;
 	}
 	preferLineCount--;
 	preferLineCond->Singal(&preferLineLock);
