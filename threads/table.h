@@ -1,0 +1,26 @@
+// table.h
+
+#ifdef  TABLE_H_DEFINED
+#define TABLE_H_DEFINED
+#include "list.h"
+
+
+class Table
+{
+	public:
+		Table(int ID_in);
+		~Table();
+		int clerkCount();
+		void addClerk();
+		void leaveTable();
+		void acquireLock();
+		void releaseLock();
+
+
+	private:
+		int tableID;
+		int clerkCount;
+		Lock *tableLock;
+		Condition *tableCondition;
+};
+#endif
