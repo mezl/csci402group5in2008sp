@@ -2,7 +2,7 @@
 
 #ifdef  TABLE_H_DEFINED
 #define TABLE_H_DEFINED
-#include "list.h"
+#include "synch.h"
 
 
 class Table
