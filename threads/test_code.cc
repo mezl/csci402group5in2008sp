@@ -482,7 +482,7 @@ void Manager(int x)
 	cashierTable->acquireLock(name,0);
 	if (cashierTable->clerkCount() == 0)
 	{
-		cashierTable->addClerk(name,0);
+		cashierTable->addClerk();
 	}
 	cashierTable->releaseLock(name,0);
 
