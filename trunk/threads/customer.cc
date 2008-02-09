@@ -75,7 +75,7 @@ void Customer::gotoPictureLine()
 	else
 	{
 		pictureLine -> regAcquire(customerName,customerID);
-		pictureLine -> addRegularLine((int)this);
+		pictureLine -> addRegLine((int)this);
 		pictureLine -> regRelease(customerName,customerID);
 	}
 }
@@ -92,7 +92,7 @@ void Customer::gotoPassportLine()
 	else
 	{
 		passportLine -> regAcquire(customerName,customerID);
-		passportLine -> addRegularLine((int)this);
+		passportLine -> addRegLine((int)this);
 		passportLine -> regRelease(customerName,customerID);
 	}
 }
@@ -109,7 +109,7 @@ void Customer::gotoCashierLine()
 	else
 	{
 		cashierLine -> regAcquire(customerName,customerID);
-		cashierLine -> addRegularLine((int)this);
+		cashierLine -> addRegLine((int)this);
 		cashierLine -> regRelease(customerName,customerID);
 	}
 }
