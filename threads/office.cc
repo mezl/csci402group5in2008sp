@@ -8,7 +8,7 @@
 #include "table.h"
 #include "copyright.h"
 #include "utility.h"
-
+#include "timer.h"
 
 cLine *applicationLine = new cLine(1);
 cLine *pictureLine = new cLine(2);
