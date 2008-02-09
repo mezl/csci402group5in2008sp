@@ -64,7 +64,7 @@ void Manager(int x)
 	// add 1 clerk if table is empty
 
 	applicationTable->acquireLock();
-	if (applicationTable->clerkCount() == 0))
+	if (applicationTable->clerkCount() == 0)
 	{
 		applicationTable->addClerk();
 	}
@@ -97,7 +97,7 @@ void Manager(int x)
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
 	// must release all locks at completion.
 
-	applicationline->regAcquire();
+	applicationLine->regAcquire();
 	applicationLine->preferAcquire();
 	applicationTable->acquireLock();
 	if (applicationLine->customerCount() > 3)
