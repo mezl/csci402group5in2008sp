@@ -5,7 +5,7 @@
 class AppClerk:public Clerk
 {
 	public:
-	AppClerk(cLine *l,cTable *t,int id);
+	//AppClerk(cLine *l,cTable *t,int id);
 	void handleCustomer(Customer *c){	
 		c->completeApplication();
 	}
