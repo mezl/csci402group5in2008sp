@@ -602,7 +602,7 @@ void Manager(int x)
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
-	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
+	//printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 }
 void Problem2()
 {
