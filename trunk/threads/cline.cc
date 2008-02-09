@@ -24,35 +24,35 @@ cLine::~cLine()
 }
 void cLine::preferAcquire(char *name,int id)
 {
-	printf("[Line]Prefer Line %d is acquired lock by %s %d\n",lineID,name,id);
+	printf("[Line]Prefer %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
 	preferLineLock->Acquire();
 }
 void cLine::preferRelease(char *name,int id)
 {
-	printf("[Line]Prefer Line %d is release lock by %s %d\n",lineID,name,id);
+	printf("[Line]Prefer %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	preferLineLock->Release();
 }
 
 void cLine::regAcquire(char *name,int id)
 {
-	printf("[Line]Reg Line %d is acquired lock by %s %d\n",lineID,name,id);
+	printf("[Line]Reg %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
 	regLineLock->Acquire();
 }
 void cLine::regRelease(char *name,int id)
 {
-	printf("[Line]Reg Line %d is release lock by %s %d\n",lineID,name,id);
+	printf("[Line]Reg %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	regLineLock->Release();
 }
 void cLine::Acquire(char *name,int id)
 {
 
-	printf("[Line]Both Line %d is acquired lock by %s %d \n",lineID,name,id);
+	printf("[Line]Both %s%d is acquired lock by %s %d \n",lineName,lineID,name,id);
 	preferAcquire(name,id);
 	regAcquire(name,id);
 }
 void cLine::Release(char *name,int id)
 {
-	printf("[Line]Both Line %d is release lock by %s %d\n",lineID,name,id);
+	printf("[Line]Both %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	preferRelease(name,id);
 	regRelease(name,id);
 }
@@ -69,33 +69,45 @@ bool cLine::IsPreferLineEmpty()
 
 void cLine::addPreferLine(int c,int mount)
 {
-	printf("[Line]One Customer go the prefer %s %d\n",lineName,lineID);
+	printf("[Line]One Customer go the prefer %s%d\n",lineName,lineID);
 	preferLineCount++;
-	printf("[Line]Prefer %s %d have %d Customer in the line\n",lineName,lineID,preferLineCount);
+	printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);
 	preferLineCond->Wait(preferLineLock);
-	printf("[Line]Customer X in front the prefer  %s %d\n",lineName,lineID);
+	printf("[Line]One Customer in front the prefer %s%d\n",lineName,lineID);
 	
 }
 void cLine::addRegLine(int c)	
 {
-
+	printf("[Line]One Customer go the reg %s%d\n",lineName,lineID);
+	regLineCount++;
+	printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
+	regLineQueue->Append((void *)c);
+	regLineCond->Wait(regLineLock);
+	printf("[Line]One Customer in front the reg %s%d\n",lineName,lineID);
 }
 void * cLine::getNextPreferLineCustomer(int clerkID)
 {
 	if(IsPreferLineEmpty()){
-		printf("[Line]No customer in prefer line %d\n",lineID);
+		printf("[Line]No customer in prefer %s%d\n",lineName,lineID);
 		preferLineLock->Release();
 		return NULL;
 	}
 	preferLineCount--;
 	preferLineCond->Signal(preferLineLock);
-	printf("[Line]Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
+	printf("[Line]Clerk %d call next customer in prefer %s%d\n",clerkID,lineName,lineID);
 	return preferLineQueue->Remove();
 }
 void * cLine::getNextRegLineCustomer(int clerkID)
 {
-return NULL;
-
+	if(IsRegLineEmpty()){
+		printf("[Line]No customer in reg %s%d\n",lineName,lineID);
+		regLineLock->Release();
+		return NULL;
+	}
+	regLineCount--;
+	regLineCond->Signal(regLineLock);
+	printf("[Line]Clerk %d call next customer in reg %s%d\n",clerkID,lineName,lineID);
+	return regLineQueue->Remove()
 }
