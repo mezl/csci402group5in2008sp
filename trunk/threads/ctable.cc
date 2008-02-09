@@ -19,6 +19,7 @@ void cTable::addClerk(char *name,int id)
 {
 	cCount++;
 	tableCondition->Signal(tableLock);
+	printf("[Table] table %d is adding a clerk\n", tableID);
 }
 
 void cTable::leaveTable(char *name,int id)
