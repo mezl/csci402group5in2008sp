@@ -7,7 +7,7 @@
 class Clerk	
 {
 	public:
-	Clerk(cLine *l,Table *t,int id);
+	Clerk(cLine *l,cTable *t,int id);
 	virtual ~Clerk(){}
 	void run();
 	virtual void handleCustomer(Customer *c){
@@ -17,7 +17,7 @@ class Clerk
 
 	private:
 	cLine *cline;
-	Table *table;
+	cTable *table;
 	int clerkID;
 };
 #endif

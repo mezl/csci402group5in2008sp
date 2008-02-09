@@ -5,11 +5,11 @@
 #include "system.h"
 
 
-class Table
+class cTable
 {
 	public:
-		Table(int ID_in);
-		~Table(){}
+		cTable(int ID_in);
+		~cTable(){}
 		int clerkCount();
 		void addClerk();
 		void leaveTable();

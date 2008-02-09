@@ -1,6 +1,6 @@
 //Base clerk function
 #include "clerk.h"
-Clerk::Clerk(cLine *l,Table *t,int id)
+Clerk::Clerk(cLine *l,cTable *t,int id)
 {
 	cline = l;
 	table = t;//share with manager
