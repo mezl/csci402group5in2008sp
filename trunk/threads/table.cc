@@ -3,6 +3,7 @@ Table::Table()
 {
 
 }
+/*
 Table::Table(int ID_in)
 {
 	tableID = ID_in;
@@ -47,3 +48,4 @@ void Table::addMoney(int amount)
 {
 	tableMoney += amount;
 }
+*/
