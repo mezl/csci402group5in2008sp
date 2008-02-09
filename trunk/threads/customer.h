@@ -12,17 +12,6 @@
 
 class Customer
 {
-	private:
-	int ID;
-	int money;
-	cLine * applicationLine;
-	cLine * pictureLine;
-	cLine * passportLine;
-	cLine * cashierLine;
-	bool applicationDone;
-	bool pictureDone;
-	bool passportDone;
-	bool cashierDone;
 
 	public:
 	Customer(int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in);
@@ -36,5 +25,17 @@ class Customer
 	void completePassport();
 	void completeCashier();
 	int getID();
+
+	private:
+	int ID;
+	int money;
+	cLine * applicationLine;
+	cLine * pictureLine;
+	cLine * passportLine;
+	cLine * cashierLine;
+	bool applicationDone;
+	bool pictureDone;
+	bool passportDone;
+	bool cashierDone;
 };
 #endif
