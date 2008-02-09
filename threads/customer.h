@@ -3,12 +3,10 @@
 #ifndef CUSTOMER_H
 #define CUSTOMER_H
 
-#include <bool.h>
+#include "bool.h"
 #include "copyright.h"
 #include "system.h"
-#include <iostream.h>
 #include <time.h>
-#include <fstream.h>
 #include "synch.h"
 #include "line.h"
 
