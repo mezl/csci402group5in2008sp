@@ -7,33 +7,33 @@ void Manager()
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
 
-	applicationTable.acquireLock();
-	if (applicationTable.clerkCount() == 0))
+	applicationTable->acquireLock();
+	if (applicationTable->clerkCount() == 0))
 	{
-		applicationTable.addClerk();
+		applicationTable->addClerk();
 	}
-	applicationTable.releaseLock();
+	applicationTable->releaseLock();
 
-	pictureTable.acquireLock();
-	if (pictureTable.clerkCount() == 0)
+	pictureTable->acquireLock();
+	if (pictureTable->clerkCount() == 0)
 	{
-		pictureTable.addClerk();
+		pictureTable->addClerk();
 	}
-	pictureTable.releaseLock();
+	pictureTable->releaseLock();
 
-	passportTable.acquireLock();
-	if (passportTable.clerkCount() == 0)
+	passportTable->acquireLock();
+	if (passportTable->clerkCount() == 0)
 	{
-		passportTable.addClerk();
+		passportTable->addClerk();
 	}
-	passportTable.releaseLock();
+	passportTable->releaseLock();
 	
-	cashierTable.acquireLock();
-	if (cashierTable.clerkCount() == 0)
+	cashierTable->acquireLock();
+	if (cashierTable->clerkCount() == 0)
 	{
-		cashierTable.addClerk();
+		cashierTable->addClerk();
 	}
-	cashierTable.releaseLock();
+	cashierTable->releaseLock();
 
 
 	// check for number of customers in each line
@@ -41,47 +41,47 @@ void Manager()
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
 	// must release all locks at completion.
 
-	applicationline.regAcquire();
-	applicationLine.preferAcquire();
-	applicationTable.acquireLock();
-	if (applicationLine.customerCount() > 3)
+	applicationline->regAcquire();
+	applicationLine->preferAcquire();
+	applicationTable->acquireLock();
+	if (applicationLine->customerCount() > 3)
 	{
-		applicationTable.addClerk();
+		applicationTable->addClerk();
 	}
-	applicationLine.regRelease();
-	applicationLine.preferRelease();
-	applicaitonTable.releaseLock();
+	applicationLine->regRelease();
+	applicationLine->preferRelease();
+	applicaitonTable->releaseLock();
 
-	pictureline.regAcquire();
-	pictureLine.preferAcquire();
-	pictureTable.acquireLock();
-	if (pictureLine.customerCount() > 3)
+	pictureline->regAcquire();
+	pictureLine->preferAcquire();
+	pictureTable->acquireLock();
+	if (pictureLine->customerCount() > 3)
 	{
-		pictureTable.addClerk();
+		pictureTable->addClerk();
 	}
-	pictureLine.regRelease();
-	pictureLine.preferRelease();
-	pictureTable.releaseLock();
+	pictureLine->regRelease();
+	pictureLine->preferRelease();
+	pictureTable->releaseLock();
 
-	passportline.regAcquire();
-	passportLine.preferAcquire();
-	passportTable.acquireLock();
-	if (passportLine.customerCount() > 3)
+	passportline->regAcquire();
+	passportLine->preferAcquire();
+	passportTable->acquireLock();
+	if (passportLine->customerCount() > 3)
 	{
-		passportTable.addClerk();
+		passportTable->addClerk();
 	}
-	passportLine.regRelease();
-	passportLine.preferRelease();
-	passportTable.releaseLock();
+	passportLine->regRelease();
+	passportLine->preferRelease();
+	passportTable->releaseLock();
 
-	cashierline.regAcquire();
-	cashierLine.preferAcquire();
-	cashierTable.acquireLock();
-	if (cashierLine.customerCount() > 3)
+	cashierline->regAcquire();
+	cashierLine->preferAcquire();
+	cashierTable->acquireLock();
+	if (cashierLine->customerCount() > 3)
 	{
-		cashierTable.addClerk();
+		cashierTable->addClerk();
 	}
-	cashierLine.regRelease();
-	cashierLine.preferRelease();
-	cashierTable.releaseLock();
+	cashierLine->regRelease();
+	cashierLine->preferRelease();
+	cashierTable->releaseLock();
 }
