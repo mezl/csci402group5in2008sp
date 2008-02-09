@@ -18,13 +18,13 @@ int Table::clerkCount()
 void Table::addClerk()
 {
 	cCount++;
-	tableCondition->Signal(&tableLock);
+	tableCondition->Signal(tableLock);
 }
 
 void Table::leaveTable()
 {
 	cCount--;
-	tableCondition->Wait(&tableLock);
+	tableCondition->Wait(tableLock);
 }
 
 void Table::acquireLock()
