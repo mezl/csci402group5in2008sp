@@ -61,7 +61,7 @@ void Line::addPreferLine(Customer c,int mount)
 	preferLineCount++;
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);
-	preferLineCond.Wait(&preferLineLock);
+	preferLineCond->Wait(&preferLineLock);
 	printf("Customer %d in front the prefer line %d\n",c.getID(),lineID);
 	
 }
@@ -73,11 +73,11 @@ Customer * Line::getNextPreferLineCustomer(int clerkID)
 {
 	if(IsPreferLineEmpty()){
 		printf("No customer in prefer line %d\n",lineID);
-		preferLineLock.Release();
+		preferLineLock->Release();
 		return;
 	}
 	preferLineCount--;
-	preferLineCond.Singal(&preferLineLock);
+	preferLineCond->Singal(&preferLineLock);
 	printf("Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
 	return (Customer *)preferLineQueue->Remove();
 }
