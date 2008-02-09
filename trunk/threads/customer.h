@@ -25,7 +25,7 @@ class Customer
 	void completePassport();
 	void completeCashier();
 	int getID(){return customerID;}
-	char *getName(return customerName;)
+	char *getName(){return customerName;}
 
 	private:
 	int customerID;
