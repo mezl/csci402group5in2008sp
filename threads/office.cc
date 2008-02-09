@@ -17,8 +17,8 @@ cLine *cashierLine = new cLine(4);
 
 Table *applicationTable = new Table(1);
 Table *pictureTable = new Table(2);
-Table *passportLine = new Table(3);
-Table *cashierLine = new Table(4);
+Table *passportTable = new Table(3);
+Table *cashierTable= new Table(4);
 
 void Manager();
 void office()
