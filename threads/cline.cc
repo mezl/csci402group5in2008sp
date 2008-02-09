@@ -23,28 +23,35 @@ cLine::~cLine()
 }
 void cLine::preferAcquire()
 {
+	printf("Prefer Line %d is acquired lock by ",lineID);
 	preferLineLock->Acquire();
 }
 void cLine::preferRelease()
 {
+	printf("Prefer Line %d is release lock by ",lineID);
 	preferLineLock->Release();
 }
 
 void cLine::regAcquire()
 {
+	printf("Reg Line %d is acquired lock by ",lineID);
 	regLineLock->Acquire();
 }
 void cLine::regRelease()
 {
+	printf("Reg Line %d is release lock by ",lineID);
 	regLineLock->Release();
 }
 void cLine::Acquire()
 {
+
+	printf("Both Line %d is acquired lock by ",lineID);
 	preferAcquire();
 	regAcquire();
 }
 void cLine::Release()
 {
+	printf("Both Line %d is release lock by ",lineID);
 	preferRelease();
 	regRelease();
 }
@@ -61,12 +68,12 @@ bool cLine::IsPreferLineEmpty()
 
 void cLine::addPreferLine(int c,int mount)
 {
-//	printf("Customer %d in the prefer line %d\n",c.getID(),lineID);
+	printf("Customer X  in the prefer line %d\n",lineID);
 	preferLineCount++;
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);
 	preferLineCond->Wait(preferLineLock);
-//	printf("Customer %d in front the prefer line %d\n",c.getID(),lineID);
+	printf("Customer X in front the prefer line %d\n",lineID);
 	
 }
 void cLine::addRegLine()	
