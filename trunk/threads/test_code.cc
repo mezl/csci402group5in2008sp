@@ -6,7 +6,7 @@
 #ifdef CHANGED
 #include "synch.h"
 #endif
-
+#include "office.cc"
 #ifdef CHANGED
 // --------------------------------------------------
 // Test Suite

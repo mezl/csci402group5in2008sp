@@ -1,3 +1,5 @@
+#ifndef OFFICE_C_DEFINED
+#define OFFICE_H_DEFINED
 // Office simulation code
 // office.cc
 
@@ -141,3 +143,4 @@ void Manager(int x)
 	cashierLine->preferRelease();
 	cashierTable->releaseLock();
 }
+#endif
