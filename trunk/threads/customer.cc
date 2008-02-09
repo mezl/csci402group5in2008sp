@@ -40,6 +40,7 @@ void Customer::customerRun()
 		printf("[CUST]Customer %d then go to app line \n",customerID);
 		gotoApplicationLine();
 	}
+	printf("[CUST]Customer %d finish both app & pic \n",customerID);
 	gotoPassportLine();
 	gotoCashierLine();
 }
