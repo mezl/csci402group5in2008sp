@@ -17,11 +17,11 @@ class cLine
 		int preferCustomerCount(){return preferLineCount;}
 		int regCustomerCount(){return regLineCount;}
 		void preferAcquire(char *name,int id,bool display=true);
-		void preferRelease(char *name,int id);
-		void regAcquire(char *name,int id);
-		void regRelease(char *name,int id);
-		void Acquire(char *name,int id);
-		void Release(char *name,int id);
+		void preferRelease(char *name,int id,bool display=true);
+		void regAcquire(char *name,int id,bool display=true);
+		void regRelease(char *name,int id,bool display=true);
+		void Acquire(char *name,int id,bool display=true);
+		void Release(char *name,int id,bool display=true);
 		bool IsRegLineEmpty();
 		bool IsPreferLineEmpty();
 		int getID(){return lineID;}
