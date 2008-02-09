@@ -66,7 +66,7 @@ void Customer::gotoPictureLine()
 	else
 	{
 		pictureLine -> regAcquire();
-		pictureLine -> addRegularLine(this);
+//		pictureLine -> addRegularLine(this);
 		pictureLine -> regRelease();
 	}
 }
@@ -78,7 +78,7 @@ void Customer::gotoPassportLine()
 		passportLine -> preferAcquire();
 		money = money-500;
 	//	passportLine -> addPreferLine(this, 500);
-		passportLine -> preferRelease();	
+	//	passportLine -> preferRelease();	
 	}
 	else
 	{
