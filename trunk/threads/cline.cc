@@ -77,7 +77,7 @@ void cLine::addPreferLine(int c,int mount)
 	printf("Customer X in front the prefer line %d\n",lineID);
 	
 }
-void cLine::addRegLine()	
+void cLine::addRegLine(int c)	
 {
 
 }

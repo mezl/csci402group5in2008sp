@@ -11,7 +11,7 @@ class cLine
 		cLine();
 		~cLine();
 		void addPreferLine(int c,int mount);
-		void addRegLine();
+		void addRegLine(int c);
 		void * getNextPreferLineCustomer(int clerkID);
 		void * getNextRegLineCustomer(int clerkID);
 		int preferCustomerCount(){return preferLineCount;}
