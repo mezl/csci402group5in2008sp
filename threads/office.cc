@@ -1,6 +1,7 @@
 // Office simulation code
 // office.cc
 #include "office.h"
+/*
 void Office::myCustomerForkFunc(int x)
 {
 	Customer *c = (Customer*)x;
@@ -120,3 +121,4 @@ void Office::Manager(int x)
 	cashierLine->preferRelease();
 	cashierTable->releaseLock();
 }
+*/
