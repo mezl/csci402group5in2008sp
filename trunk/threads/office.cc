@@ -1,7 +1,7 @@
 // Office simulation code
 // office.cc
 #include "office.h"
-void myCustomerForkFunc(int x)
+void Office::myCustomerForkFunc(int x)
 {
 	Customer *c = (Customer*)x;
 	c -> customerRun();
@@ -9,14 +9,14 @@ void myCustomerForkFunc(int x)
 	delete c;
 }
 
-void myClerkForkFunc(int x)
+void Office::myClerkForkFunc(int x)
 {
 	Clerk *cl = (Clerk*)x;
 	cl -> run();
 
 	delete cl;
 }
-void office()
+void Office::run()
 {
 	// create the manager
 	Timer *timer = new Timer(Manager, 0, false);
@@ -37,7 +37,7 @@ void office()
 
 }
 
-void Manager(int x)
+void Office::Manager(int x)
 {
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
