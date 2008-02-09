@@ -409,8 +409,8 @@ void office()
 {
 	printf("Start Office Sim\n");
 	// create the manager
-	Timer *timer = new Timer(Manager, 0, false);
-	printf("Create Manager\n");
+	//Timer *timer = new Timer(Manager, 0, false);
+	//printf("Create Manager\n");
 
 	// create 4 clerks (1 clerk for each table/job)
 
