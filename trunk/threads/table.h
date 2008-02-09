@@ -3,7 +3,7 @@
 #ifdef  TABLE_H_DEFINED
 #define TABLE_H_DEFINED
 #include "synch.h"
-
+#include "system.h"
 
 class Table
 {
@@ -17,8 +17,6 @@ class Table
 		void acquireLock();
 		void releaseLock();
 		void addMoney(int amount);
-
-
 	private:
 		int tableID;
 		int tableMoney;
