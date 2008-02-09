@@ -4,16 +4,16 @@
 #include "manager.cc"
 #include "customer.h"
 #include "clerk.h"
-#include "line.h"
+#include "cline.h"
 #include "table.h"
 #include "copyright.h"
 #include "utility.h"
 
 
-Line *applicationLine = new Line(1);
-Line *pictureLine = new Line(2);
-Line *passportLine = new Line(3);
-Line *cashierLine = new Line(4);
+cLine *applicationLine = new cLine(1);
+cLine *pictureLine = new cLine(2);
+cLine *passportLine = new cLine(3);
+cLine *cashierLine = new cLine(4);
 
 Table *applicationTable = new Table(1);
 Table *pictureTable = new Table(2);
