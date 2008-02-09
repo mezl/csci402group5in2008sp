@@ -505,7 +505,7 @@ void Manager(int x)
 	if (applicationTable->clerkCount() == 0)
 	{
 		applicationTable->addClerk(name,0);
-		printf("[Manager] wakeup a AppClerk to Application table");
+		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	//applicationTable->releaseLock(name,0);
 
@@ -513,7 +513,7 @@ void Manager(int x)
 	if (pictureTable->clerkCount() == 0)
 	{
 		pictureTable->addClerk(name,0);
-		printf("[Manager] wakeup a PicClerk to Picture table");
+		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	//pictureTable->releaseLock(name,0);
 
