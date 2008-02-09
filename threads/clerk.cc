@@ -29,9 +29,8 @@ void Clerk::run()
 		}
 		else{
 			//Go Sleep
-			printf("[Clerk]%s %d have no customr in line %d,leave table\n",clerkName,clerkID,cline->getID());
+			printf("[Clerk]%s %d have no customer in line %d,leave table\n",clerkName,clerkID,cline->getID());
 			cline->Release(clerkName,clerkID);			
-
 			table->acquireLock(clerkName,clerkID);
 			table->leaveTable(clerkName,clerkID);
 			table->releaseLock(clerkName,clerkID);
