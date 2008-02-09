@@ -1,6 +1,7 @@
 #ifndef LINE_H_DEFINED
 #define LINE_H_DEFINED
 #include "list.h"
+#include "synch.h"
 
 class Line
 {
