@@ -9,6 +9,14 @@ class Line
 		~Line();
 		void addPreferLine();
 		void addRegLine();
+		void Line::preferAcquire();
+		void preferRelease();
+		void regAcquire();
+		void regRelease();
+		void Acquire();
+		void Release();
+		bool IsRegLineEmpty();
+		bool IsPreferLineEmpty();
 	private:
 		int preferLineCount;		
 		int regLineCount;		
