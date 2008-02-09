@@ -457,34 +457,34 @@ void Manager(int x)
 {
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
-
-	applicationTable->acquireLock();
+	
+	applicationTable->acquireLock("Manager",0);
 	if (applicationTable->clerkCount() == 0)
 	{
 		applicationTable->addClerk();
 	}
-	applicationTable->releaseLock();
+	applicationTable->releaseLock("Manager",0);
 
 	pictureTable->acquireLock();
 	if (pictureTable->clerkCount() == 0)
 	{
 		pictureTable->addClerk();
 	}
-	pictureTable->releaseLock();
+	pictureTable->releaseLock("Manager",0);
 
-	passportTable->acquireLock();
+	passportTable->acquireLock("Manager",0);
 	if (passportTable->clerkCount() == 0)
 	{
 		passportTable->addClerk();
 	}
-	passportTable->releaseLock();
+	passportTable->releaseLock("Manager",0);
 	
-	cashierTable->acquireLock();
+	cashierTable->acquireLock("Manager",0);
 	if (cashierTable->clerkCount() == 0)
 	{
-		cashierTable->addClerk();
+		cashierTable->addClerk("Manager",0);
 	}
-	cashierTable->releaseLock();
+	cashierTable->releaseLock("Manager",0);
 
 
 	// check for number of customers in each line
@@ -492,49 +492,49 @@ void Manager(int x)
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
 	// must release all locks at completion.
 
-	applicationLine->regAcquire();
-	applicationLine->preferAcquire();
-	applicationTable->acquireLock();
+	applicationLine->regAcquire("Manager",0);
+	applicationLine->preferAcquire("Manager",0);
+	applicationTable->acquireLock("Manager",0);
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
 		applicationTable->addClerk();
 	}
-	applicationLine->regRelease();
-	applicationLine->preferRelease();
-	applicationTable->releaseLock();
+	applicationLine->regRelease("Manager",0);
+	applicationLine->preferRelease("Manager",0);
+	applicationTable->releaseLock("Manager",0);
 
-	pictureLine->regAcquire();
-	pictureLine->preferAcquire();
-	pictureTable->acquireLock();
+	pictureLine->regAcquire("Manager",0);
+	pictureLine->preferAcquire("Manager",0);
+	pictureTable->acquireLock("Manager",0);
 	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
 		pictureTable->addClerk();
 	}
-	pictureLine->regRelease();
-	pictureLine->preferRelease();
-	pictureTable->releaseLock();
+	pictureLine->regRelease("Manager",0);
+	pictureLine->preferRelease("Manager",0);
+	pictureTable->releaseLock("Manager",0);
 
-	passportLine->regAcquire();
-	passportLine->preferAcquire();
-	passportTable->acquireLock();
+	passportLine->regAcquire("Manager",0);
+	passportLine->preferAcquire("Manager",0);
+	passportTable->acquireLock("Manager",0);
 	if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3))
 	{
 		passportTable->addClerk();
 	}
-	passportLine->regRelease();
-	passportLine->preferRelease();
-	passportTable->releaseLock();
+	passportLine->regRelease("Manager",0);
+	passportLine->preferRelease("Manager",0);
+	passportTable->releaseLock("Manager",0);
 
-	cashierLine->regAcquire();
-	cashierLine->preferAcquire();
-	cashierTable->acquireLock();
+	cashierLine->regAcquire("Manager",0);
+	cashierLine->preferAcquire("Manager",0);
+	cashierTable->acquireLock("Manager",0);
 	if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3))
 	{
 		cashierTable->addClerk();
 	}
-	cashierLine->regRelease();
-	cashierLine->preferRelease();
-	cashierTable->releaseLock();
+	cashierLine->regRelease("Manager",0);
+	cashierLine->preferRelease("Manager",0);
+	cashierTable->releaseLock("Manager",0);
 }
 void Problem2()
 {
