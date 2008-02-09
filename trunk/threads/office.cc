@@ -19,7 +19,7 @@ void Office::myClerkForkFunc(int x)
 void Office::run()
 {
 	// create the manager
-	Timer *timer = new Timer(Manager, 0, false);
+	Timer *timer = new Timer((VoidFunctionPtr)Manager, 0, false);
 
 	// create 4 clerks (1 clerk for each table/job)
 
@@ -28,12 +28,12 @@ void Office::run()
 	// customer 1 with ID = 1 and $1600
 	Customer *cus1 = new Customer(1, 1600, applicationLine, pictureLine, passportLine, cashierLine);
 	Thread *t1 = new Thread("Customer 1");
-	t1 -> Fork(myCustomerForkFunc, (int)t1);
+	t1 -> Fork((VoidFunctionPtr)myCustomerForkFunc, (int)t1);
 
 	// customer 2 with ID = 2 and $1100
 	Customer *cus2 = new Customer(2, 1100, applicationLine, pictureLine, passportLine, cashierLine);
 	Thread *t2 = new Thread("Customer 2");
-	t2 -> Fork(myCustomerForkFunc, (int) t2);
+	t2 -> Fork((VoidFunctionPtr)myCustomerForkFunc, (int) t2);
 
 }
 
