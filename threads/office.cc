@@ -20,11 +20,27 @@ Table *pictureTable = new Table(2);
 Table *passportTable = new Table(3);
 Table *cashierTable= new Table(4);
 
-void Manager();
+void Manager(int x);
+
+void myCustomerForkFunc(int x)
+{
+	Customer *c = (Customer*)x;
+	c -> customerRun();
+
+	delete c;
+}
+
+void myClerkForkFunc(int x)
+{
+	Clerk *cl = (Clerk*)x;
+	cl -> run();
+
+	delete cl;
+}
 void office()
 {
 	// create the manager
-	Timer *timer = new Timer(Manager(), 0, true);
+	Timer *timer = new Timer(Manager, 0, true);
 
 	// create 4 clerks (1 clerk for each table/job)
 
@@ -42,21 +58,6 @@ void office()
 
 }
 
-void myCustomerForkFunc(int x)
-{
-	Customer *c = (Customer*)x;
-	c -> customerRun();
-
-	delete c;
-}
-
-void myClerkForkFunc(int x)
-{
-	Clerk *cl = (Clerk*)x;
-	cl -> run();
-
-	delete cl;
-}
 /*
 void Manager()
 {
