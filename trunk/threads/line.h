@@ -14,11 +14,11 @@ class Line
 		int regLineCount;		
 		int lineID;
 		int amount;
-		Condition *preferLineCond;
-		Lock *preferLineLock; 
-		Condition *regLineCond;
-		Lock *regLineLock;
-	        List *preferLineQueue;	
-	        List *regLineQueue;	
+		Condition* preferLineCond;
+		Lock* preferLineLock; 
+		Condition* regLineCond;
+		Lock* regLineLock;
+	        List* preferLineQueue;	
+	        List* regLineQueue;	
 };
 #endif
