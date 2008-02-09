@@ -100,18 +100,18 @@ void Manager(int x)
 	applicationLine->regAcquire();
 	applicationLine->preferAcquire();
 	applicationTable->acquireLock();
-	if (applicationLine->customerCount() > 3)
+	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
 		applicationTable->addClerk();
 	}
 	applicationLine->regRelease();
 	applicationLine->preferRelease();
-	applicaitonTable->releaseLock();
+	applicationTable->releaseLock();
 
-	pictureline->regAcquire();
+	pictureLine->regAcquire();
 	pictureLine->preferAcquire();
 	pictureTable->acquireLock();
-	if (pictureLine->customerCount() > 3)
+	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
 		pictureTable->addClerk();
 	}
@@ -119,10 +119,10 @@ void Manager(int x)
 	pictureLine->preferRelease();
 	pictureTable->releaseLock();
 
-	passportline->regAcquire();
+	passportLine->regAcquire();
 	passportLine->preferAcquire();
 	passportTable->acquireLock();
-	if (passportLine->customerCount() > 3)
+	if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3))
 	{
 		passportTable->addClerk();
 	}
@@ -130,10 +130,10 @@ void Manager(int x)
 	passportLine->preferRelease();
 	passportTable->releaseLock();
 
-	cashierline->regAcquire();
+	cashierLine->regAcquire();
 	cashierLine->preferAcquire();
 	cashierTable->acquireLock();
-	if (cashierLine->customerCount() > 3)
+	if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3))
 	{
 		cashierTable->addClerk();
 	}
