@@ -81,7 +81,7 @@ void * cLine::getNextPreferLineCustomer(int clerkID)
 		return NULL;
 	}
 	preferLineCount--;
-	preferLineCond->Singal(preferLineLock);
+	preferLineCond->Signal(preferLineLock);
 	printf("Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
 	return preferLineQueue->Remove();
 }
