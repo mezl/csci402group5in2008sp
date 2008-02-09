@@ -218,7 +218,12 @@ void Condition::Signal(Lock* conditionLock) {
 		if (thread != NULL){
 			//Wake Next thread up - put it on ReadyToRun Queue
 			scheduler->ReadyToRun(thread);
+			
 		}
+		if(condWaitQueue->IsEmpty()){
+			conditionLock->clearLockOwner();
+		}
+
 	}else{	
 		//printf("Error, thread should not empty\n");
 	}		
