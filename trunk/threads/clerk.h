@@ -14,7 +14,7 @@ class Clerk
 	
 	
 	}
-
+	int getID(){return clerkID;}
 	private:
 	cLine *cline;
 	cTable *table;

@@ -375,6 +375,7 @@ void TestSuite() {
 #include "timer.h"
 
 #define CUSTOMER_NUM 4
+#define CLERK_NUM 4
 cLine *applicationLine = new cLine(1);
 cLine *pictureLine = new cLine(2);
 cLine *passportLine = new cLine(3);
@@ -411,21 +412,34 @@ void office()
 {
 	printf("Start Office Sim\n");
 	// create the manager
-	//Timer *timer = new Timer(Manager, 0, false);
-	//printf("Create Manager\n");
+	Timer *timer = new Timer(Manager, 0, false);
+	printf("Create Manager\n");
 
 	// create 4 clerks (1 clerk for each table/job)
-
+	AppClerk *appClerk[CLERK_NUM];
+	Thread *appClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		appClerk[i] = new AppClerk(applicationLine,applicationTable,i);
+		printf("Create AppClerk %d Thread\n",appClerk[i]->getID());
+		char msg[12];
+		appClerk_thread[i] = new Thread(msg);
+		printf("Fork AppClerk %d Thread\n",appClerk[i]->getID());
+		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
+	
+	}
 
 	printf("Create Customer \n");
 	// create 2 customers
 	// customer 1 with ID = 1 and $1600
 	Customer *customer[CUSTOMER_NUM];
 	Thread *customer_thread[CUSTOMER_NUM];
+
 	for(int i = 0; i < CUSTOMER_NUM; i++){
 		customer[i] = new Customer(i, 1600, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("Create Customer %d Thread\n",customer[i]->getID());
-		customer_thread[i] = new Thread("Customer");
+		char msg[12];
+		sprintf(msg,"Customer %d",i);
+		customer_thread[i] = new Thread(msg);
 		printf("Fork Customer %d Thread\n",customer[i]->getID());
 		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
