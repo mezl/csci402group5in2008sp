@@ -1,8 +1,4 @@
 #include "table.h"
-Table::Table()
-{
-
-}
 
 Table::Table(int ID_in)
 {
@@ -10,7 +6,7 @@ Table::Table(int ID_in)
 	tableMoney = 0;
 	cCount = 0;
 	tableLock = new Lock("Table Lock");
-	tableCondiiton = new Condiiton("Table Condiiton");
+	tableCondition = new Condition("Table Condiiton");
 }
 
 
