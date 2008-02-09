@@ -14,6 +14,7 @@ void Clerk::run()
 	{
 		//Do Lock
 		cline->Acquire(clerkName,clerkID);
+		printf("[Clerk]%s %d Get both line lock\n",clerkName,clerkID);
 		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
 			printf("[Clerk]%s %d check prefer line %d\n",clerkName,clerkID,cline->getID());
