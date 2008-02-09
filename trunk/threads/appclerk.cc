@@ -14,7 +14,6 @@ class AppClerk:public Clerk
 		c->completeApplication();
 	}
 	~AppClerk(){
-		~Clerk();
 	}
 			
 };
