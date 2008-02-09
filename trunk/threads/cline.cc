@@ -109,5 +109,5 @@ void * cLine::getNextRegLineCustomer(int clerkID)
 	regLineCount--;
 	regLineCond->Signal(regLineLock);
 	printf("[Line]Clerk %d call next customer in reg %s%d\n",clerkID,lineName,lineID);
-	return regLineQueue->Remove()
+	return regLineQueue->Remove();
 }
