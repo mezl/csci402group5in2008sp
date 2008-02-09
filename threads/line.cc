@@ -44,12 +44,12 @@ void Line::Release()
 	preferRelease();
 	regRelease();
 }
-Line::IsRegLineEmpty()
+bool Line::IsRegLineEmpty()
 {
 	bool count =  (regLineCount == 0);
 	return count;
 }
-Line::IsPreferLineEmpty()
+bool Line::IsPreferLineEmpty()
 {
 	bool count =  (preferLineCount == 0);
 	return count;

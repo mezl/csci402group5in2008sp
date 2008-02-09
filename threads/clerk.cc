@@ -1,4 +1,6 @@
 //Base clerk function
+#include "clerk.h"
+#ifdef
 Clerk::Clerk(Line *l,Table *t)
 {
 	line = l;
