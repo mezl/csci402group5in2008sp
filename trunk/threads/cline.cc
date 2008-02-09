@@ -85,3 +85,8 @@ void * cLine::getNextPreferLineCustomer(int clerkID)
 	printf("Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
 	return preferLineQueue->Remove();
 }
+void * cLine::getNextRegLineCustomer(int clerkID)
+{
+return NULL;
+
+}
