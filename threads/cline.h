@@ -36,6 +36,7 @@ class cLine
 		Lock* preferLineLock; 
 		Condition* regLineCond;
 		Lock* regLineLock;
+		Lock* lineLock;//for lock both line
 	        List* preferLineQueue;	
 	        List* regLineQueue;	
 };
