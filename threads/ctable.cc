@@ -27,12 +27,12 @@ void cTable::leaveTable()
 	tableCondition->Wait(tableLock);
 }
 
-void cTable::acquireLock()
+void cTable::acquireLock(char *name,int id)
 {
 	tableLock->Acquire();
 }
 
-void cTable::releaseLock()
+void cTable::releaseLock(char *name,int id)
 {
 	tableLock->Release();
 }
