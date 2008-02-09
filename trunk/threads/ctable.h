@@ -8,7 +8,7 @@
 class cTable
 {
 	public:
-		cTable(int ID_in);
+		cTable(int ID_in, int initialClerkCount);
 		~cTable(){}
 		int clerkCount();
 		void addClerk(char *name,int id);
