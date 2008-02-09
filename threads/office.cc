@@ -47,12 +47,12 @@ void office()
 
 	// create 2 customers
 	// customer 1 with ID = 1 and $1600
-	Customer *cus1 = new Customer(1, 1600, &applicationLine, &pictureLine, &passportLine, &cashierLine);
+	Customer *cus1 = new Customer(1, 1600, applicationLine, pictureLine, passportLine, cashierLine);
 	Thread *t1 = new Thread("Customer 1");
 	t1 -> Fork(myCustomerForkFunc, (int)t1);
 
 	// customer 2 with ID = 2 and $1100
-	Customer *cus2 = new Customer(2, 1100, &applicationLine, &pictureLine, &passportLine, &cashierLine);
+	Customer *cus2 = new Customer(2, 1100, applicationLine, pictureLine, passportLine, cashierLine);
 	Thread *t2 = new Thread("Customer 2");
 	t2 -> Fork(myCustomerForkFunc, (int) t2);
 
