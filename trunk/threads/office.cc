@@ -2,10 +2,10 @@
 // office.cc
 
 #include "manager.cc"
-#include "Customer.h"
-#include "Clerk.h"
-#include "Line.h"
-#include "Table.h"
+#include "customer.h"
+#include "clerk.h"
+#include "line.h"
+#include "table.h"
 #include "copyright.h"
 #include "utility.h"
 
