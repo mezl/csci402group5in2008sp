@@ -234,7 +234,7 @@ void Condition::Signal(Lock* conditionLock) {
 		(void) interrupt->SetLevel(oldLevel);
 		return;
 	}
-	if(!conditionLock->ownLock()){
+	if(!conditionLock->ownTheLock()){
 		(void) interrupt->SetLevel(oldLevel);
 		return;
 	}
