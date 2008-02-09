@@ -13,8 +13,8 @@ class cTable
 		int clerkCount();
 		void addClerk();
 		void leaveTable();
-		void acquireLock();
-		void releaseLock();
+		void acquireLock(char *name,int id);
+		void releaseLock(char *name,int id);
 		void addMoney(int amount);
 	private:
 		int tableID;
