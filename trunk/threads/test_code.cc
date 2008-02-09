@@ -416,7 +416,7 @@ void office()
 	printf("Create Manager\n");
 
 	// create 4 clerks (1 clerk for each table/job)
-	AppClerk *appClerk[CLERK_NUM];
+	Clerk *appClerk[CLERK_NUM];
 	Thread *appClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
 		appClerk[i] = new AppClerk(applicationLine,applicationTable,i);
