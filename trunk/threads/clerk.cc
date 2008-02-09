@@ -6,7 +6,7 @@ Clerk::Clerk(cLine *l,Table *t)
 	table = t;//share with manager
 	
 }
-Clerk::~Clerk(){
+virtual Clerk::~Clerk(){
 }
 
 void Clerk::run()
