@@ -457,7 +457,8 @@ void Manager(int x)
 {
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
-	char *name = "Manager";	
+	char name[8];
+	sprintf(name,"Manager");	
 	applicationTable->acquireLock(name,0);
 	if (applicationTable->clerkCount() == 0)
 	{
