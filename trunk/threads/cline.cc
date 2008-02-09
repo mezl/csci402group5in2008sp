@@ -58,8 +58,8 @@ bool cLine::IsPreferLineEmpty()
 	bool count =  (preferLineCount == 0);
 	return count;
 }
-/*
-void cLine::addPreferLine(Customer c,int mount)
+
+void cLine::addPreferLine(void * c,int mount)
 {
 	printf("Customer %d in the prefer line %d\n",c.getID(),lineID);
 	preferLineCount++;
@@ -68,13 +68,12 @@ void cLine::addPreferLine(Customer c,int mount)
 	preferLineCond->Wait(&preferLineLock);
 	printf("Customer %d in front the prefer line %d\n",c.getID(),lineID);
 	
-}*/
+}
 void cLine::addRegLine()	
 {
 
 }
-/*
-Customer * cLine::getNextPreferLineCustomer(int clerkID)
+void * cLine::getNextPreferLineCustomer(int clerkID)
 {
 	if(IsPreferLineEmpty()){
 		printf("No customer in prefer line %d\n",lineID);
@@ -84,6 +83,5 @@ Customer * cLine::getNextPreferLineCustomer(int clerkID)
 	preferLineCount--;
 	preferLineCond->Singal(&preferLineLock);
 	printf("Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
-	return (Customer *)preferLineQueue->Remove();
+	return preferLineQueue->Remove();
 }
-*/

@@ -3,7 +3,7 @@
 #include "list.h"
 #include "synch.h"
 #include "system.h"
-#include "customer.h"
+//#include "customer.h"
 class cLine
 {
 	public:
