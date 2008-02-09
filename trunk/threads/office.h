@@ -41,7 +41,7 @@ class Office
 			cTable *passportTable;
 			cTable *cashierTable;
 
-}
+};
 
 
 #endif	
