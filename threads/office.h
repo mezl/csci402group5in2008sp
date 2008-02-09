@@ -8,21 +8,40 @@
 #include "copyright.h"
 #include "utility.h"
 #include "timer.h"
+class Office
+{
+	public:
+		Office(){
+		
+			applicationLine = new cLine(1);
+			pictureLine = new cLine(2);
+			passportLine = new cLine(3);
+			cashierLine = new cLine(4);
 
-cLine *applicationLine = new cLine(1);
-cLine *pictureLine = new cLine(2);
-cLine *passportLine = new cLine(3);
-cLine *cashierLine = new cLine(4);
+			applicationTable = new cTable(1);
+			pictureTable = new cTable(2);
+			passportTable = new cTable(3);
+			cashierTable= new cTable(4);
+		}
+		~Office(){}
+		void run();
 
-cTable *applicationTable = new cTable(1);
-cTable *pictureTable = new cTable(2);
-cTable *passportTable = new cTable(3);
-cTable *cashierTable= new cTable(4);
+	private:
+			void Manager(int x);
+			void myCustomerForkFunc(int x);
+			void myClerkForkFunc(int x);
 
-void Manager(int x);
-void myCustomerForkFunc(int x);
-void myClerkForkFunc(int x);
-void office();
-void Manager(int x);
+			cLine *applicationLine ;
+			cLine *pictureLine ;
+			cLine *passportLine;
+			cLine *cashierLine;
+
+			cTable *applicationTable;
+			cTable *pictureTable ;
+			cTable *passportTable;
+			cTable *cashierTable;
+
+}
+
 
 #endif	
