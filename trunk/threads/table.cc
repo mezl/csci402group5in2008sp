@@ -18,23 +18,23 @@ int Table::clerkCount()
 void Table::addClerk()
 {
 	cCount++;
-	tableCondition.signal(&tableLock);
+	tableCondition->Signal(&tableLock);
 }
 
 void Table::leaveTable()
 {
 	cCount--;
-	tableCondiiton.wait(&tableLock);
+	tableCondition->Wait(&tableLock);
 }
 
 void Table::acquireLock()
 {
-	tableLock.Acquire();
+	tableLock->Acquire();
 }
 
 void Table::releaseLock()
 {
-	tableLock.Release();
+	tableLock->Release();
 }
 	
 void Table::addMoney(int amount)
