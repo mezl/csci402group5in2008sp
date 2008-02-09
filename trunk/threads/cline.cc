@@ -123,3 +123,10 @@ int cLine::reportMoney()
 {
 	return amount;
 }
+
+bool cLine::nobody()
+{
+	if((preferLineCount == 0) && (regLineCount == 0))
+		return true;
+	return false;
+}
