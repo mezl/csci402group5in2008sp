@@ -7,7 +7,6 @@
 #include "copyright.h"
 #include "system.h"
 #include <iostream.h>
-#include <list>
 #include <time.h>
 #include <fstream.h>
 #include "synch.h"
