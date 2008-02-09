@@ -15,10 +15,12 @@ class Table
 		void leaveTable();
 		void acquireLock();
 		void releaseLock();
+		void addMoney(int amount);
 
 
 	private:
 		int tableID;
+		int tableMoney;
 		int clerkCount;
 		Lock *tableLock;
 		Condition *tableCondition;

@@ -5,6 +5,7 @@
 Table::Table(int ID_in)
 {
 	tableID = ID_in;
+	tableMoney = 0;
 	clerkCount = 0;
 	tableLock = new Lock("Table Lock");
 	tableCondiiton = new Condiiton("Table Condiiton");
@@ -39,4 +40,9 @@ void Table::acquireLock()
 void Table::releaseLock()
 {
 	tableLock.Release();
+}
+	
+void Table::addMoney(int amount)
+{
+	tableMoney += amount;
 }
