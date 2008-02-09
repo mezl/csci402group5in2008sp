@@ -9,9 +9,9 @@ class cLine
 		cLine(int ID);
 		cLine();
 		~cLine();
-		//void addPreferLine(Customer c,int mount);
+		void addPreferLine(Customer c,int mount);
 		void addRegLine();
-		//Customer * getNextPreferLineCustomer(int clerkID);
+		Customer * getNextPreferLineCustomer(int clerkID);
 		void preferAcquire();
 		void preferRelease();
 		void regAcquire();
