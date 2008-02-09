@@ -6,9 +6,6 @@ Clerk::Clerk(cLine *l,Table *t)
 	table = t;//share with manager
 	
 }
-virtual Clerk::~Clerk(){
-}
-
 void Clerk::run()
 {
 	while(1)
@@ -17,17 +14,17 @@ void Clerk::run()
 		cline->Acquire();
 		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
-			Customer *c = cline->getNextPreferLineCustomer();
+			Customer *c = (Customer *c)cline->getNextPreferLineCustomer();
 			handleCustomer(c);
 		}
 		else if(!cline->IsRegLineEmpty())
 		{
-			Customer *c = cline->getNextRegLineCustomer();
+			Customer *c =(Customer *c)cline->getNextRegLineCustomer();
 			handleCustomer(c);
 		}else{
 			//Go Sleep
 			cline->Release();			
-			table->leave();
+			table->leaveTable();
 		}	
 		cline->Release();
 	}
