@@ -435,7 +435,7 @@ void office()
 	Thread *customer_thread[CUSTOMER_NUM];
 
 	for(int i = 0; i < CUSTOMER_NUM; i++){
-		customer[i] = new Customer(i, 1600, applicationLine, pictureLine, passportLine, cashierLine);
+		customer[i] = new Customer("customer",i, 1600, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("Create Customer %d Thread\n",customer[i]->getID());
 		char msg[12];
 		sprintf(msg,"Customer %d",i);
