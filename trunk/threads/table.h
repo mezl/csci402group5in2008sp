@@ -19,7 +19,7 @@ class Table
 	private:
 		int tableID;
 		int tableMoney;
-		int clerkCount;
+		int cCount;
 		Lock *tableLock;
 		Condition *tableCondition;
 };
