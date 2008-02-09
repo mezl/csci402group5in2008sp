@@ -69,13 +69,13 @@ void Customer::gotoPictureLine()
 	{
 		pictureLine -> preferAcquire(customerName,customerID);
 		money = money-500;
-//		pictureLine -> addPreferLine(this, 500);
+		pictureLine -> addPreferLine((int)this, 500);
 		pictureLine -> preferRelease(customerName,customerID);
 	}
 	else
 	{
 		pictureLine -> regAcquire(customerName,customerID);
-//		pictureLine -> addRegularLine(this);
+		pictureLine -> addRegularLine((int)this);
 		pictureLine -> regRelease(customerName,customerID);
 	}
 }
@@ -86,13 +86,13 @@ void Customer::gotoPassportLine()
 	{
 		passportLine -> preferAcquire(customerName,customerID);
 		money = money-500;
-	//	passportLine -> addPreferLine(this, 500);
-	//	passportLine -> preferRelease(customerName,customerID);	
+		passportLine -> addPreferLine((int)this, 500);
+		passportLine -> preferRelease(customerName,customerID);	
 	}
 	else
 	{
 		passportLine -> regAcquire(customerName,customerID);
-//		passportLine -> addRegularLine(this);
+		passportLine -> addRegularLine((int)this);
 		passportLine -> regRelease(customerName,customerID);
 	}
 }
@@ -103,13 +103,13 @@ void Customer::gotoCashierLine()
 	{
 		cashierLine -> preferAcquire(customerName,customerID);
 		money = money-500;
-//		cashierLine -> addPreferLine(this, 500);
+		cashierLine -> addPreferLine((int)this, 500);
 		cashierLine -> preferRelease(customerName,customerID);
 	}
 	else
 	{
 		cashierLine -> regAcquire(customerName,customerID);
-//		cashierLine -> addRegularLine(this);
+		cashierLine -> addRegularLine((int)this);
 		cashierLine -> regRelease(customerName,customerID);
 	}
 }
