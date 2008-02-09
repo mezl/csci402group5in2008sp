@@ -4,6 +4,7 @@
 #include "synch.h"
 #include "customer.h"
 #include "system.h"
+#include "cline.h"
 class cLine
 {
 	public:
