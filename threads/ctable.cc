@@ -1,6 +1,6 @@
 #include "table.h"
 
-Table::Table(int ID_in)
+cTable::cTable(int ID_in)
 {
 	tableID = ID_in;
 	tableMoney = 0;
@@ -10,34 +10,34 @@ Table::Table(int ID_in)
 }
 
 
-int Table::clerkCount()
+int cTable::clerkCount()
 {
 	return cCount;
 }
 
-void Table::addClerk()
+void cTable::addClerk()
 {
 	cCount++;
 	tableCondition->Signal(tableLock);
 }
 
-void Table::leaveTable()
+void cTable::leaveTable()
 {
 	cCount--;
 	tableCondition->Wait(tableLock);
 }
 
-void Table::acquireLock()
+void cTable::acquireLock()
 {
 	tableLock->Acquire();
 }
 
-void Table::releaseLock()
+void cTable::releaseLock()
 {
 	tableLock->Release();
 }
 	
-void Table::addMoney(int amount)
+void cTable::addMoney(int amount)
 {
 	tableMoney += amount;
 }

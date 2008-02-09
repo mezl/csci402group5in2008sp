@@ -5,7 +5,7 @@
 #include "customer.h"
 #include "clerk.h"
 #include "cline.h"
-#include "table.h"
+#include "ctable.h"
 #include "copyright.h"
 #include "utility.h"
 #include "timer.h"
@@ -15,10 +15,10 @@ cLine *pictureLine = new cLine(2);
 cLine *passportLine = new cLine(3);
 cLine *cashierLine = new cLine(4);
 
-Table *applicationTable = new Table(1);
-Table *pictureTable = new Table(2);
-Table *passportTable = new Table(3);
-Table *cashierTable= new Table(4);
+cTable *applicationTable = new cTable(1);
+cTable *pictureTable = new cTable(2);
+cTable *passportTable = new cTable(3);
+cTable *cashierTable= new cTable(4);
 
 void Manager(int x);
 
