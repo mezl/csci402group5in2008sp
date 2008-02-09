@@ -50,6 +50,7 @@ void Customer::gotoApplicationLine()
 	{
 		printf("[CUST]Customer %d go to prefer pic line \n",customerID);
 		applicationLine -> preferAcquire(customerName,customerID);
+		printf("[CUST]Customer %d get prefer pic line lock\n",customerID);
 		money = money-500;
 		applicationLine -> addPreferLine((int)this, 500);
 		printf("[CUST]Customer %d wake up in %s%d \n",customerID,
