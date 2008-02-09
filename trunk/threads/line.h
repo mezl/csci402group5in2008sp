@@ -7,8 +7,8 @@ class Line
 	public:
 		Line();
 		~Line();
-		addPreferLine();
-		addRegLine();
+		void addPreferLine();
+		void addRegLine();
 	private:
 		int preferLineCount;		
 		int regLineCount;		
