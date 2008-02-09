@@ -509,7 +509,7 @@ void office()
 
 void Manager(int x)
 {
-	managerLock.Acquire();
+	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
 	char *name = "Manager";
@@ -608,7 +608,7 @@ void Manager(int x)
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
 	//printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
-	managerLock.Release();
+	(void) interrupt->SetLevel(oldLevel);
 }
 void Problem2()
 {
