@@ -416,7 +416,7 @@ void office()
 {
 	printf("[Office]Start Office Sim\n");
 	// create the manager
-	Timer *managerTimer = new Timer(Manager, 0, false);
+	//Timer *managerTimer = new Timer(Manager, 0, false);
 	printf("[Office]Create Manager\n");
 
 
