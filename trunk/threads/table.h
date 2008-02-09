@@ -8,6 +8,7 @@
 class Table
 {
 	public:
+		Table();
 		Table(int ID_in);
 		~Table();
 		int clerkCount();
