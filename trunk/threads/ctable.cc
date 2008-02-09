@@ -15,16 +15,18 @@ int cTable::clerkCount()
 	return cCount;
 }
 
-void cTable::addClerk()
+void cTable::addClerk(char *name,int id)
 {
 	cCount++;
 	tableCondition->Signal(tableLock);
 }
 
-void cTable::leaveTable()
+void cTable::leaveTable(char *name,int id)
 {
 	cCount--;
+	printf("[Table]%s %d is leave table now,[%d]still work\n",name,id,cCount);
 	tableCondition->Wait(tableLock);
+	printf("[Table]%s %d is come back now\n",name,id);
 }
 
 void cTable::acquireLock(char *name,int id)

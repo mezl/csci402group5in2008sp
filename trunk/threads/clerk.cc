@@ -30,7 +30,7 @@ void Clerk::run()
 			//Go Sleep
 			printf("[Clerk]%s %d have no customer in line %d,leave table\n",clerkName,clerkID,cline->getID());
 			cline->Release(clerkName,clerkID);			
-			table->leaveTable();
+			table->leaveTable(clerkName,clerkID);
 		}	
 		cline->Release(clerkName,clerkID);
 	}
