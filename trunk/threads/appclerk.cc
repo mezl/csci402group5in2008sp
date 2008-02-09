@@ -5,8 +5,8 @@
 class AppClerk:public Clerk
 {
 	public:
-	AppClerk(cLine *l,cTable *t,int id):
-		Clerk(l,t,id)
+	AppClerk(cLine *l,cTable *t,int id,char *name):
+		Clerk(l,t,id,name)
 	{
 		
 	}
