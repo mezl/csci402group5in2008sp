@@ -14,12 +14,12 @@ void Clerk::run()
 		cline->Acquire();
 		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
-			Customer *c = (Customer *c)cline->getNextPreferLineCustomer();
+			Customer *c = (Customer *)cline->getNextPreferLineCustomer();
 			handleCustomer(c);
 		}
 		else if(!cline->IsRegLineEmpty())
 		{
-			Customer *c =(Customer *c)cline->getNextRegLineCustomer();
+			Customer *c =(Customer *)cline->getNextRegLineCustomer();
 			handleCustomer(c);
 		}else{
 			//Go Sleep
