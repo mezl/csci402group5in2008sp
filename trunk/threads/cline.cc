@@ -23,35 +23,35 @@ cLine::~cLine()
 }
 void cLine::preferAcquire()
 {
-	printf("Prefer Line %d is acquired lock by ",lineID);
+	printf("Prefer Line %d is acquired lock by \n",lineID);
 	preferLineLock->Acquire();
 }
 void cLine::preferRelease()
 {
-	printf("Prefer Line %d is release lock by ",lineID);
+	printf("Prefer Line %d is release lock by \n",lineID);
 	preferLineLock->Release();
 }
 
 void cLine::regAcquire()
 {
-	printf("Reg Line %d is acquired lock by ",lineID);
+	printf("Reg Line %d is acquired lock by \n",lineID);
 	regLineLock->Acquire();
 }
 void cLine::regRelease()
 {
-	printf("Reg Line %d is release lock by ",lineID);
+	printf("Reg Line %d is release lock by \n",lineID);
 	regLineLock->Release();
 }
 void cLine::Acquire()
 {
 
-	printf("Both Line %d is acquired lock by ",lineID);
+	printf("Both Line %d is acquired lock by \n",lineID);
 	preferAcquire();
 	regAcquire();
 }
 void cLine::Release()
 {
-	printf("Both Line %d is release lock by ",lineID);
+	printf("Both Line %d is release lock by \n",lineID);
 	preferRelease();
 	regRelease();
 }
