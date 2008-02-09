@@ -9,7 +9,6 @@
 #include <time.h>
 #include "synch.h"
 #include "cline.h"
-
 class Customer
 {
 
