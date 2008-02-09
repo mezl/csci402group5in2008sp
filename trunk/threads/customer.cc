@@ -50,13 +50,13 @@ void Customer::gotoApplicationLine()
 	{
 		applicationLine -> preferAcquire(customerName,customerID);
 		money = money-500;
-		applicationLine -> addPreferLine(this, 500);
+		applicationLine -> addPreferLine((int)this, 500);
 		applicationLine -> preferRelease(customerName,customerID);
 	}
 	else
 	{
 		applicationLine -> regAcquire(customerName,customerID);
-		applicationLine -> addRegularLine(this);
+		applicationLine -> addRegularLine((int)this);
 		applicationLine -> regRelease(customerName,customerID);
 	}
 }
