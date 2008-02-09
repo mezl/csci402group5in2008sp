@@ -10,6 +10,7 @@ Line::Line(int ID)
 	regLineQueue = new List;
 
 	preferLineCount = 0;
+	regLineCount = 0;
 	lineID = ID;
 	amount = 0;
 }
@@ -19,20 +20,20 @@ Line::~Line()
 }
 void Line::preferAcquire()
 {
-	preferLineLock.Acquire();
+	preferLineLock->Acquire();
 }
 void Line::preferRelease()
 {
-	preferLineLock.Release();
+	preferLineLock->Release();
 }
 
 void Line::regAcquire()
 {
-	regLineLock.Acquire();
+	regLineLock->Acquire();
 }
 void Line::regRelease()
 {
-	regLineLock.Release();
+	regLineLock->Release();
 }
 void Line::Acquire()
 {
