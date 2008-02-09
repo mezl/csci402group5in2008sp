@@ -69,12 +69,13 @@ bool cLine::IsPreferLineEmpty()
 
 void cLine::addPreferLine(int c,int mount)
 {
-	printf("Customer X  in the prefer line %d\n",lineID);
+	printf("[Line]One Customer go the prefer %s %d\n",lineName,lineID);
 	preferLineCount++;
+	printf("[Line]Prefer %s %d have %d Customer in the line\n",lineName,lineID,preferLineCount);
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);
 	preferLineCond->Wait(preferLineLock);
-	printf("Customer X in front the prefer line %d\n",lineID);
+	printf("[Line]Customer X in front the prefer  %s %d\n",lineName,lineID);
 	
 }
 void cLine::addRegLine(int c)	
@@ -84,13 +85,13 @@ void cLine::addRegLine(int c)
 void * cLine::getNextPreferLineCustomer(int clerkID)
 {
 	if(IsPreferLineEmpty()){
-		printf("No customer in prefer line %d\n",lineID);
+		printf("[Line]No customer in prefer line %d\n",lineID);
 		preferLineLock->Release();
 		return NULL;
 	}
 	preferLineCount--;
 	preferLineCond->Signal(preferLineLock);
-	printf("Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
+	printf("[Line]Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
 	return preferLineQueue->Remove();
 }
 void * cLine::getNextRegLineCustomer(int clerkID)
