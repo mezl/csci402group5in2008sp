@@ -8,6 +8,7 @@
 #include "copyright.h"
 #include "utility.h"
 #include "timer.h"
+#include "thread.h"
 class Office
 {
 	public:
