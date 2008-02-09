@@ -14,7 +14,7 @@ class Customer
 
 	public:
 		Customer(){};		
-	Customer(int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in);
+	Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in);
 	void customerRun();
 	void gotoApplicationLine();
 	void gotoPictureLine();
@@ -24,10 +24,12 @@ class Customer
 	void completePicture();
 	void completePassport();
 	void completeCashier();
-	int getID();
+	int getID(){return customerID;}
+	char *getName(return customerName;)
 
 	private:
-	int ID;
+	int customerID;
+	char *customerName;
 	int money;
 	cLine * applicationLine;
 	cLine * pictureLine;

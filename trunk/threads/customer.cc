@@ -1,10 +1,11 @@
 //customer.cc
 
 #include "customer.h"
-Customer::Customer(int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in)
+Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in)
 {
 	printf("Build Customer %d\n",ID_in);
-	ID = ID_in;
+	customerID = ID_in;
+	customerName= name;
 	money = money_in;
 	applicationLine = applicationLine_in;
 	pictureLine = pictureLine_in;
@@ -47,16 +48,16 @@ void Customer::gotoApplicationLine()
 {
 	if(money > 500)
 	{
-		applicationLine -> preferAcquire();
+		applicationLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 	//	applicationLine -> addPreferLine(this, 500);
-		applicationLine -> preferRelease();
+		applicationLine -> preferRelease(customerName,customerID);
 	}
 	else
 	{
-		applicationLine -> regAcquire();
+		applicationLine -> regAcquire(customerName,customerID);
 	//	applicationLine -> addRegularLine(this);
-		applicationLine -> regRelease();
+		applicationLine -> regRelease(customerName,customerID);
 	}
 }
 
@@ -64,16 +65,16 @@ void Customer::gotoPictureLine()
 {
 	if(money > 500)
 	{
-		pictureLine -> preferAcquire();
+		pictureLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 	//	pictureLine -> addPreferLine(this, 500);
-		pictureLine -> preferRelease();
+		pictureLine -> preferRelease(customerName,customerID);
 	}
 	else
 	{
-		pictureLine -> regAcquire();
+		pictureLine -> regAcquire(customerName,customerID);
 //		pictureLine -> addRegularLine(this);
-		pictureLine -> regRelease();
+		pictureLine -> regRelease(customerName,customerID);
 	}
 }
 
@@ -81,16 +82,16 @@ void Customer::gotoPassportLine()
 {
 	if(money > 500)
 	{
-		passportLine -> preferAcquire();
+		passportLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 	//	passportLine -> addPreferLine(this, 500);
-	//	passportLine -> preferRelease();	
+	//	passportLine -> preferRelease(customerName,customerID);	
 	}
 	else
 	{
-		passportLine -> regAcquire();
+		passportLine -> regAcquire(customerName,customerID);
 //		passportLine -> addRegularLine(this);
-		passportLine -> regRelease();
+		passportLine -> regRelease(customerName,customerID);
 	}
 }
 
@@ -98,22 +99,17 @@ void Customer::gotoCashierLine()
 {
 	if(money > 500)
 	{
-		cashierLine -> preferAcquire();
+		cashierLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 //		cashierLine -> addPreferLine(this, 500);
-		cashierLine -> preferRelease();
+		cashierLine -> preferRelease(customerName,customerID);
 	}
 	else
 	{
-		cashierLine -> regAcquire();
+		cashierLine -> regAcquire(customerName,customerID);
 //		cashierLine -> addRegularLine(this);
-		cashierLine -> regRelease();
+		cashierLine -> regRelease(customerName,customerID);
 	}
-}
-
-int Customer::getID()
-{
-	return ID;
 }
 
 void Customer::completeApplication()
