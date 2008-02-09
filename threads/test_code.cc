@@ -532,6 +532,7 @@ void Manager(int x)
 	pictureTable->acquireLock(name,x);
 	if ((pictureTable->clerkCount() == x) && !pictureLine->nobody())
 	{
+		printf("[Manager]Pic Clerk %d Customer in Line %s\n",pictureTable->clerkCount(),pictureLine->nobody()?"True":"False");
 		pictureTable->addClerk(name,x);
 		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
