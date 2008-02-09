@@ -9,6 +9,7 @@
 #include "utility.h"
 #include "timer.h"
 #include "thread.h"
+/*
 class Office
 {
 	public:
@@ -43,6 +44,6 @@ class Office
 			cTable *cashierTable;
 
 };
-
+*/
 
 #endif	
