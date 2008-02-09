@@ -16,13 +16,13 @@ void Clerk::run()
 		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
 			printf("[Clerk]%s %d check prefer line %d\n",clerkName,clerkID,cline->getID());
-			Customer *c = (Customer *)cline->getNextPreferLineCustomer(clerkID);
+			Customer *c = (Customer *)cline->getNextPreferLineCustomer(clerkName,clerkID);
 			handleCustomer(c);
 		}
 		else if(!cline->IsRegLineEmpty())
 		{
 			printf("[Clerk]%s %d check reg line %d\n",clerkName,clerkID,cline->getID());
-			Customer *c =(Customer *)cline->getNextRegLineCustomer(clerkID);
+			Customer *c =(Customer *)cline->getNextRegLineCustomer(clerkName,clerkID);
 			handleCustomer(c);
 		}else{
 			//Go Sleep
