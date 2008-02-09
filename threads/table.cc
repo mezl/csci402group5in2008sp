@@ -1,7 +1,10 @@
 // table.cc
 
 #include "table.h"
+Table::Table()
+{
 
+}
 Table::Table(int ID_in)
 {
 	tableID = ID_in;
