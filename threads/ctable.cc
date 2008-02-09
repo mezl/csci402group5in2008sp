@@ -1,10 +1,10 @@
 #include "ctable.h"
 
-cTable::cTable(int ID_in)
+cTable::cTable(int ID_in, int initialClerkCount)
 {
 	tableID = ID_in;
 	tableMoney = 0;
-	cCount = 0;
+	cCount = initialClerkCount;
 	tableLock = new Lock("Table Lock");
 	tableCondition = new Condition("Table Condiiton");
 }
