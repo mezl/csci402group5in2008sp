@@ -16,6 +16,8 @@ class cTable
 		void acquireLock(char *name,int id);
 		void releaseLock(char *name,int id);
 		void addMoney(int amount);
+		int reportMoney();
+
 	private:
 		int tableID;
 		int tableMoney;

@@ -44,3 +44,7 @@ void cTable::addMoney(int amount)
 	tableMoney += amount;
 }
 
+int cTable::reportMoney()
+{
+	return tableMoney;
+}

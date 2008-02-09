@@ -30,6 +30,11 @@ class Customer
 	void completePicture();
 	void completePassport();
 	void completeCashier();
+	bool checkApplication();
+	bool checkPicture();
+	bool checkPassport();
+	bool checkCashier();
+	void chargeMoney();
 	int getID(){return customerID;}
 	char *getName(){return customerName;}
 
