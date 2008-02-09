@@ -403,7 +403,7 @@ void myCustomerForkFunc(int x)
 void myClerkForkFunc(int x)
 {
 	Clerk *cl = (Clerk*)x;
-	printf("Clerk  run\n");
+	printf("%s %d run\n",cl->getName(),cl->getID());
 	cl -> run();
 
 	delete cl;
@@ -419,10 +419,10 @@ void office()
 	Clerk *appClerk[CLERK_NUM];
 	Thread *appClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
-		appClerk[i] = new AppClerk(applicationLine,applicationTable,i,"Clerk");
+		appClerk[i] = new AppClerk(applicationLine,applicationTable,i,"AppClerk");
 		printf("Create AppClerk %d Thread\n",appClerk[i]->getID());
-		char msg[12];
-		appClerk_thread[i] = new Thread(msg);
+		
+		appClerk_thread[i] = new Thread("AppClerk");
 		printf("Fork AppClerk %d Thread\n",appClerk[i]->getID());
 		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
 	
