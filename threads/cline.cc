@@ -59,13 +59,13 @@ bool cLine::IsPreferLineEmpty()
 	return count;
 }
 
-void cLine::addPreferLine(void * c,int mount)
+void cLine::addPreferLine(int c,int mount)
 {
 	printf("Customer %d in the prefer line %d\n",c.getID(),lineID);
 	preferLineCount++;
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);
-	preferLineCond->Wait(&preferLineLock);
+	preferLineCond->Wait(preferLineLock);
 	printf("Customer %d in front the prefer line %d\n",c.getID(),lineID);
 	
 }
@@ -81,7 +81,7 @@ void * cLine::getNextPreferLineCustomer(int clerkID)
 		return NULL;
 	}
 	preferLineCount--;
-	preferLineCond->Singal(&preferLineLock);
+	preferLineCond->Singal(preferLineLock);
 	printf("Clerk %d call next customer in prefer line %d\n",clerkID,lineID);
 	return preferLineQueue->Remove();
 }
