@@ -1,4 +1,4 @@
-#include "table.h"
+#include "ctable.h"
 
 cTable::cTable(int ID_in)
 {
