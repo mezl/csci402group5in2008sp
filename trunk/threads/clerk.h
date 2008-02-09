@@ -8,7 +8,7 @@ class Clerk
 {
 	public:
 	Clerk(cLine *l,Table *t,int id);
-	virtual ~Clerk();
+	virtual ~Clerk(){}
 	void run();
 	virtual void handleCustomer(Customer *c){
 	
