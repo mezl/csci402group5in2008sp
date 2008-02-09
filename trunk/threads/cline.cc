@@ -11,6 +11,7 @@ cLine::cLine(char *name,int ID)
 	regLineCond = new Condition("Customer Prefer cLine Cond") ;	
 	regLineLock= new Lock("Customer Prefer cLine Lock") ;	
 	regLineQueue = new List;
+	lineLock= new Lock("Customer both cLine Lock") ;	
 
 	preferLineCount = 0;
 	regLineCount = 0;
@@ -45,16 +46,19 @@ void cLine::regRelease(char *name,int id)
 }
 void cLine::Acquire(char *name,int id)
 {
-
+	lineLock->Acquire();
 	printf("[Line]Both %s%d is acquired lock by %s %d \n",lineName,lineID,name,id);
 	preferAcquire(name,id);
 	regAcquire(name,id);
+	lineLock->Release();
 }
 void cLine::Release(char *name,int id)
 {
+	lineLock->Acquire();
 	printf("[Line]Both %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	preferRelease(name,id);
 	regRelease(name,id);
+	lineLock->Release();
 }
 bool cLine::IsRegLineEmpty()
 {
