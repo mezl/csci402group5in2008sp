@@ -16,7 +16,7 @@ class Clerk
 	}
 	int getID(){return clerkID;}
 	char *getName(){return clerkName;}
-	private:
+	protected:
 	cLine *cline;
 	cTable *table;
 	int clerkID;
