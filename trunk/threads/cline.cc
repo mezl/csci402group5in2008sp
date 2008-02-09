@@ -118,3 +118,8 @@ void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
 	printf("[Line]%s %d call next customer in reg %s%d\n",clerkName,clerkID,lineName,lineID);
 	return regLineQueue->Remove();
 }
+
+int cLine::reportMoney()
+{
+	return amount;
+}

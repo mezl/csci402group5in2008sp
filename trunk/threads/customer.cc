@@ -143,3 +143,28 @@ void Customer::completeCashier()
 {
 	cashierDone = true;
 }
+
+bool Customer::checkApplication()
+{
+	return applicationDone;
+}
+
+bool Customer::checkPicture()
+{
+	return pictureDone;
+}
+
+bool Customer::checkPassport()
+{
+	return passportDone;
+}
+
+bool Customer::checkCashier()
+{
+	return cashierDone;
+}
+
+void Customer::chargeMoney(int mount)
+{
+	money -= mount;
+}

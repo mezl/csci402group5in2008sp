@@ -26,6 +26,9 @@ class cLine
 		bool IsPreferLineEmpty();
 		int getID(){return lineID;}
 		char *getName(){return lineName;}
+		int reportMoney();
+
+
 	private:
 		int preferLineCount;		
 		int regLineCount;		
@@ -37,7 +40,7 @@ class cLine
 		Condition* regLineCond;
 		Lock* regLineLock;
 		Lock* lineLock;//for lock both line
-	        List* preferLineQueue;	
-	        List* regLineQueue;	
+		List* preferLineQueue;	
+		List* regLineQueue;	
 };
 #endif
