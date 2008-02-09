@@ -372,9 +372,11 @@ void TestSuite() {
 #include "cline.h"
 #include "ctable.h"
 #include "utility.h"
-#include "timer.h"
+#include <timer.h>
 #include "appclerk.cc"
 #include "picclerk.cc"
+#include "passclerk.cc"
+#include "cashclerk.cc"
 #define CUSTOMER_NUM 4
 #define CLERK_NUM 4
 cLine *applicationLine = new cLine("app line",1);
@@ -386,6 +388,7 @@ cTable *applicationTable = new cTable(1);
 cTable *pictureTable = new cTable(2);
 cTable *passportTable = new cTable(3);
 cTable *cashierTable= new cTable(4);
+
 
 void Manager(int x);
 void myCustomerForkFunc(int x);
@@ -413,7 +416,7 @@ void office()
 {
 	printf("[Office]Start Office Sim\n");
 	// create the manager
-	//Timer *timer = new Timer(Manager, 0, false);
+	//Timer *managerTimer = new Timer(Manager, 0, false);
 	printf("[Office]Create Manager\n");
 
 
@@ -433,7 +436,7 @@ void office()
 		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
 	
-	// create 4 clerks (1 clerk for each table/job)
+	// create 4 clerks (4 clerk for each table/job)
 	Clerk *appClerk[CLERK_NUM];
 	Thread *appClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
@@ -445,7 +448,7 @@ void office()
 		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
 	
 	}
-	// create 4 clerks (1 clerk for each table/job)
+	// create 4 clerks (4 clerk for each table/job)
 	Clerk *picClerk[CLERK_NUM];
 	Thread *picClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
@@ -456,6 +459,31 @@ void office()
 		printf("[Office]Fork PicClerk %d Thread\n",picClerk[i]->getID());
 		picClerk_thread[i] -> Fork(myClerkForkFunc, (int)picClerk[i]);
 	}
+
+	// create 4 clerks (4 clerk for each table/job)
+	Clerk *passClerk[CLERK_NUM];
+	Thread *passClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		passClerk[i] = new PassClerk(passportLine,passportTable,i,"PassClerk");
+		printf("[Office]Create PassClerk %d Thread\n",passClerk[i]->getID());
+		
+		passClerk_thread[i] = new Thread("PassClerk");
+		printf("[Office]Fork PassClerk %d Thread\n",passClerk[i]->getID());
+		passClerk_thread[i] -> Fork(myClerkForkFunc, (int)passClerk[i]);
+	}
+
+	// create 4 clerks (4 clerk for each table/job)
+	Clerk *cashClerk[CLERK_NUM];
+	Thread *cashClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		cashClerk[i] = new CashClerk(cashierLine,cashierTable,i,"CashClerk");
+		printf("[Office]Create CashClerk %d Thread\n",cashClerk[i]->getID());
+		
+		cashClerk_thread[i] = new Thread("CashClerk");
+		printf("[Office]Fork CashClerk %d Thread\n",cashClerk[i]->getID());
+		cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
+	}
+
 
 /*
 	printf("Create Customer 2\n");
@@ -549,6 +577,14 @@ void Manager(int x)
 	cashierLine->regRelease(name,0);
 	cashierLine->preferRelease(name,0);
 	cashierTable->releaseLock(name,0);
+
+	// check for total amount of money currently collected at the office
+	// Sum up all the money in each lines and all the money in each tables
+	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
+						+ passportLine->reportMoney() + cashierLine->reportMoney()
+						+ applicationTable->reportMoney() + pictureTable->reportMoney()
+						+ passportTable->reportMoney() + cashierTable->reportMoney();
+	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 }
 void Problem2()
 {

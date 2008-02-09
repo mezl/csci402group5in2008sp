@@ -168,3 +168,8 @@ void Customer::chargeMoney(int mount)
 {
 	money -= mount;
 }
+
+void Customer::punished()
+{
+	currentThread -> Yield();
+}

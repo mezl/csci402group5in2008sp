@@ -13,6 +13,7 @@ class AppClerk:public Clerk
 	void handleCustomer(Customer *c){	
 		printf("[AppClerk]%s%d is handling customer %d.................\n",clerkName,clerkID,c->getID());
 		c->completeApplication();
+		printf("[AppClerk]%s%d has customer %d application.................\n",clerkName,clerkID,c->getID());
 	}
 	~AppClerk(){
 	}

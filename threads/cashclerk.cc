@@ -16,16 +16,20 @@ class CashClerk:public Clerk
 		printf("[CashClerk]%s%d is handling customer %d.................\n",clerkName,clerkID,c->getID());
 			
 		// check customer if passport is complete
-		if (c->checkPassport == true)
+		if (c->checkPassport() == true)
 		{
 			// passport is complete, charge 100 dollars and customer complete cashier
 			c->completeCashier();
 			c->chargeMoney(100);
-			t->addMoney(100);
+			table->addMoney(100);
+			printf("[CashClerk]%s%d has complete customer %d cashier.................\n",clerkName,clerkID,c->getID());
 		}
 		else
 		{
-			// passport is not complete, ask the customer to go to back of the cashier line
+			// passport is not complete
+			// customer gets punished to wait for a certain amount of time 
+			// then ask the customer to go to back of the cashier line
+			c->punished();
 			c->gotoCashierLine();
 		}
 	}

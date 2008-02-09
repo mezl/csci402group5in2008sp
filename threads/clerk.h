@@ -2,6 +2,7 @@
 #define CLERK_H_DEFINED
 #include "cline.h"
 #include "ctable.h"
+#include "thread.h"
 #include "customer.h"
 
 class Clerk	
