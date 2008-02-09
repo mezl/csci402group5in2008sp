@@ -374,6 +374,7 @@ void TestSuite() {
 #include "utility.h"
 #include "timer.h"
 #include "appclerk.cc"
+#include "picclerk.cc"
 #define CUSTOMER_NUM 4
 #define CLERK_NUM 4
 cLine *applicationLine = new cLine("app line",1);
@@ -444,7 +445,17 @@ void office()
 		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
 	
 	}
-
+	// create 4 clerks (1 clerk for each table/job)
+	Clerk *picClerk[CLERK_NUM];
+	Thread *picClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		picClerk[i] = new PicClerk(pictureLine,pictureTable,i,"PicClerk");
+		printf("[Office]Create PicClerk %d Thread\n",picClerk[i]->getID());
+		
+		picClerk_thread[i] = new Thread("PicClerk");
+		printf("[Office]Fork PicClerk %d Thread\n",picClerk[i]->getID());
+		picClerk_thread[i] -> Fork(myClerkForkFunc, (int)picClerk[i]);
+	}
 
 /*
 	printf("Create Customer 2\n");

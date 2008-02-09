@@ -1,20 +1,20 @@
-#ifndef  APPCLERK_H_DEFINED
-#define APPCLERK_H_DEFINED
+#ifndef PICCLERK_C_DEFINED
+#define PICCLERK_C_DEFINED
 #include "clerk.h"
 
-class AppClerk:public Clerk
+class PicClerk:public Clerk
 {
 	public:
-	AppClerk(cLine *l,cTable *t,int id,char *name):
+	PicClerk(cLine *l,cTable *t,int id,char *name):
 		Clerk(l,t,id,name)
 	{
 		
 	}
 	void handleCustomer(Customer *c){	
-		printf("[AppClerk]%s%d is handling customer %d\n",clerkName,clerkID,c->getID());
-		c->completeApplication();
+		printf("[PicClerk]%s%d is handling customer %d\n",clerkName,clerkID,c->getID());
+		c->completePicture();
 	}
-	~AppClerk(){
+	~PicClerk(){
 	}
 			
 };
