@@ -515,6 +515,7 @@ void Manager(int x)
 	char *name = "Manager";
        //sprintf(name,"Manager (%d)",x);
 
+	printf("[Manager]%d I am Starting.....\n",x);
 	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,x);
 
