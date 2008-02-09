@@ -415,18 +415,6 @@ void office()
 	//Timer *timer = new Timer(Manager, 0, false);
 	printf("[Office]Create Manager\n");
 
-	// create 4 clerks (1 clerk for each table/job)
-	Clerk *appClerk[CLERK_NUM];
-	Thread *appClerk_thread[CLERK_NUM];
-	for(int i = 0; i < CLERK_NUM; i++){
-		appClerk[i] = new AppClerk(applicationLine,applicationTable,i,"AppClerk");
-		printf("[Office]Create AppClerk %d Thread\n",appClerk[i]->getID());
-		
-		appClerk_thread[i] = new Thread("AppClerk");
-		printf("[Office]Fork AppClerk %d Thread\n",appClerk[i]->getID());
-		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
-	
-	}
 
 	printf("[Office]Create Customer \n");
 	// create 2 customers
@@ -443,6 +431,21 @@ void office()
 		printf("[Office]Fork Customer %d Thread\n",customer[i]->getID());
 		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
+	
+	// create 4 clerks (1 clerk for each table/job)
+	Clerk *appClerk[CLERK_NUM];
+	Thread *appClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		appClerk[i] = new AppClerk(applicationLine,applicationTable,i,"AppClerk");
+		printf("[Office]Create AppClerk %d Thread\n",appClerk[i]->getID());
+		
+		appClerk_thread[i] = new Thread("AppClerk");
+		printf("[Office]Fork AppClerk %d Thread\n",appClerk[i]->getID());
+		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
+	
+	}
+
+
 /*
 	printf("Create Customer 2\n");
 	// customer 2 with ID = 2 and $1100

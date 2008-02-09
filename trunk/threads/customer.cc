@@ -30,14 +30,14 @@ void Customer::customerRun()
 	{
 		printf("[CUST]Customer %d choose app first \n",customerID);
 		gotoApplicationLine();
-		printf("[CUST]Customer %d go to pic line \n",customerID);
+		printf("[CUST]Customer %d then go to pic line \n",customerID);
 		gotoPictureLine();
 	}
 	else
 	{
-		printf("[CUST]Customer %d go to pic line \n",customerID);
+		printf("[CUST]Customer %d choose pic first \n",customerID);
 		gotoPictureLine();
-		printf("[CUST]Customer %d go to app line \n",customerID);
+		printf("[CUST]Customer %d then go to app line \n",customerID);
 		gotoApplicationLine();
 	}
 	gotoPassportLine();
