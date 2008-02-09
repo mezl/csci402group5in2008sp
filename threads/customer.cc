@@ -52,6 +52,9 @@ void Customer::gotoApplicationLine()
 		applicationLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 		applicationLine -> addPreferLine((int)this, 500);
+		printf("[CUST]Customer %d wake up in %s%d \n",customerID,
+				applicationLine->getName(),
+				applicationLine->getID());
 		applicationLine -> preferRelease(customerName,customerID);
 	}
 	else
