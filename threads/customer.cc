@@ -35,9 +35,9 @@ void Customer::customerRun()
 	}
 	else
 	{
-		printf("Customer %d go to pic line \n",ID);
+		printf("Customer %d go to pic line \n",customerID);
 		gotoPictureLine();
-		printf("Customer %d go to app line \n",ID);
+		printf("Customer %d go to app line \n",customerID);
 		gotoApplicationLine();
 	}
 	gotoPassportLine();
