@@ -48,9 +48,9 @@ void Customer::gotoApplicationLine()
 {
 	if(money > 500)
 	{
-		printf("[CUST]Customer %d go to prefer pic line \n",customerID);
+		printf("[CUST]Customer %d go to prefer app line \n",customerID);
 		applicationLine -> preferAcquire(customerName,customerID);
-		printf("[CUST]Customer %d get prefer pic line lock\n",customerID);
+		printf("[CUST]Customer %d get prefer app line lock\n",customerID);
 		money = money-500;
 		applicationLine -> addPreferLine((int)this, 500);
 		printf("[CUST]Customer %d wake up in %s%d \n",customerID,
@@ -60,7 +60,7 @@ void Customer::gotoApplicationLine()
 	}
 	else
 	{
-		printf("[CUST]Customer %d go to reg pic line \n",customerID);
+		printf("[CUST]Customer %d go to reg app line \n",customerID);
 		applicationLine -> regAcquire(customerName,customerID);
 		applicationLine -> addRegLine((int)this);
 		applicationLine -> regRelease(customerName,customerID);
@@ -71,6 +71,7 @@ void Customer::gotoPictureLine()
 {
 	if(money > 500)
 	{
+		printf("[CUST]Customer %d go to prefer pic line \n",customerID);
 		pictureLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 		pictureLine -> addPreferLine((int)this, 500);
@@ -78,6 +79,7 @@ void Customer::gotoPictureLine()
 	}
 	else
 	{
+		printf("[CUST]Customer %d go to reg pic line \n",customerID);
 		pictureLine -> regAcquire(customerName,customerID);
 		pictureLine -> addRegLine((int)this);
 		pictureLine -> regRelease(customerName,customerID);
@@ -88,6 +90,7 @@ void Customer::gotoPassportLine()
 {
 	if(money > 500)
 	{
+		printf("[CUST]Customer %d go to prefer passport line \n",customerID);
 		passportLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 		passportLine -> addPreferLine((int)this, 500);
@@ -95,6 +98,7 @@ void Customer::gotoPassportLine()
 	}
 	else
 	{
+		printf("[CUST]Customer %d go to reg passport line \n",customerID);
 		passportLine -> regAcquire(customerName,customerID);
 		passportLine -> addRegLine((int)this);
 		passportLine -> regRelease(customerName,customerID);
@@ -105,6 +109,7 @@ void Customer::gotoCashierLine()
 {
 	if(money > 500)
 	{
+		printf("[CUST]Customer %d go to prefer cashier line \n",customerID);
 		cashierLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 		cashierLine -> addPreferLine((int)this, 500);
@@ -112,6 +117,7 @@ void Customer::gotoCashierLine()
 	}
 	else
 	{
+		printf("[CUST]Customer %d go to reg cashier line \n",customerID);
 		cashierLine -> regAcquire(customerName,customerID);
 		cashierLine -> addRegLine((int)this);
 		cashierLine -> regRelease(customerName,customerID);
