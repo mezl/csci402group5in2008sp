@@ -8,24 +8,24 @@
 #include "system.h"
 #include <time.h>
 #include "synch.h"
-#include "line.h"
+#include "cline.h"
 
 class Customer
 {
 	private:
 	int ID;
 	int money;
-	Line* applicationLine;
-	Line* pictureLine;
-	Line* passportLine;
-	Line* cashierLine;
+	cLine * applicationLine;
+	cLine * pictureLine;
+	cLine * passportLine;
+	cLine * cashierLine;
 	bool applicationDone;
 	bool pictureDone;
 	bool passportDone;
 	bool cashierDone;
 
 	public:
-	Customer(int ID_in, int money_in, Line* applicationLine_in, Line* pictureLine_in, Line* passportLine_in, Line* cashierLine_in);
+	Customer(int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in);
 	void customerRun();
 	void gotoApplicationLine();
 	void gotoPictureLine();

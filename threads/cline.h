@@ -7,8 +7,8 @@
 class Line
 {
 	public:
-		Line(int ID);
-		~Line();
+		cLine(int ID);
+		~cLine();
 		void addPreferLine(Customer c,int mount);
 		void addRegLine();
 		Customer * getNextPreferLineCustomer(int clerkID);
