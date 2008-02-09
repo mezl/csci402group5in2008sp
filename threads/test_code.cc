@@ -373,6 +373,8 @@ void TestSuite() {
 #include "ctable.h"
 #include "utility.h"
 #include "timer.h"
+
+#define CUSTOMER_NUM 4
 cLine *applicationLine = new cLine(1);
 cLine *pictureLine = new cLine(2);
 cLine *passportLine = new cLine(3);
@@ -415,21 +417,26 @@ void office()
 	// create 4 clerks (1 clerk for each table/job)
 
 
-	printf("Create Customer 1\n");
+	printf("Create Customer \n");
 	// create 2 customers
 	// customer 1 with ID = 1 and $1600
-	Customer *cus1 = new Customer(1, 1600, applicationLine, pictureLine, passportLine, cashierLine);
-	printf("Create Customer %d Thread\n",cus1->getID());
-	Thread *t1 = new Thread("Customer 1");
-	printf("Fork Customer %d Thread\n",cus1->getID());
-	t1 -> Fork(myCustomerForkFunc, (int)cus1);
+	Customer customer[CUSTOMER_NUM];
+	Thread customer_thread[CUSTOMER_NUM];
+	for(int i = 0; i < CUSTOMER_NUM; i++){
+		customer[i] = new Customer(i, 1600, applicationLine, pictureLine, passportLine, cashierLine);
+		printf("Create Customer %d Thread\n",customer[i]->getID());
+		customer_thread[i] = new Thread("Customer");
+		printf("Fork Customer %d Thread\n",customer->getID());
+		customer_thread -> Fork(myCustomerForkFunc, (int)customer[i]);
+	}
 /*
 	printf("Create Customer 2\n");
 	// customer 2 with ID = 2 and $1100
 	Customer *cus2 = new Customer(2, 1100, applicationLine, pictureLine, passportLine, cashierLine);
 	Thread *t2 = new Thread("Customer 2");
-	t2 -> Fork(myCustomerForkFunc, (int) t2);
+	t2 -> Fork(myCustomerForkFunc, (int) cus2);
 */
+
 }
 
 void Manager(int x)
