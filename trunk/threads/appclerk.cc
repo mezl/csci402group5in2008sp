@@ -6,10 +6,11 @@ class AppClerk:public Clerk
 {
 	public:
 	AppClerk(cLine *l,Table *t,int id);
-	void handleCustomer(Customer *c){
+	void handleCustomer(Customer *c){	
+		c->completeApplication();
+	}
 	~AppClerk();
-		
-	};
+			
 };
 #endif
 
