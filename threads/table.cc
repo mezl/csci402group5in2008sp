@@ -1,5 +1,3 @@
-// table.cc
-
 #include "table.h"
 Table::Table()
 {
