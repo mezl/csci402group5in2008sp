@@ -3,7 +3,7 @@ cLine::cLine()
 {
 
 }
-cLine::cLine(int ID)
+cLine::cLine(char *name,int ID)
 {
 	preferLineCond = new Condition("Customer Prefer cLine Cond") ;	
 	preferLineLock= new Lock("Customer Prefer cLine Lock") ;	
@@ -15,6 +15,7 @@ cLine::cLine(int ID)
 	preferLineCount = 0;
 	regLineCount = 0;
 	lineID = ID;
+	lineName = name;
 	amount = 0;
 }
 cLine::~cLine()
