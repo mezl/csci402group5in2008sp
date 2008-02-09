@@ -416,10 +416,12 @@ int managerHandlCount = 0;
 Lock managerLock("Manager Lock");
 void managerHandler(int x)
 {
+	managerLock.Acquire();
 	char msg[20];
 	sprintf(msg,"ManagerT %d",managerHandlCount);
 	Thread *manager_thread = new Thread(msg);
 	manager_thread -> Fork(Manager, managerHandlCount++);
+	managerLocl.Release();
 }
 
 void office()
