@@ -32,12 +32,10 @@ class CashClerk:public Clerk
 			c->punished();
 			c->gotoCashierLine();
 		}
-
 	}
 	~CashClerk(){
 	}
 			
 };
 #endif
-
 
