@@ -57,7 +57,7 @@ void myClerkForkFunc(int x)
 
 	delete cl;
 }
-
+/*
 void Manager()
 {
 	// check each table for number of clerks
@@ -140,4 +140,4 @@ void Manager()
 	cashierLine->regRelease();
 	cashierLine->preferRelease();
 	cashierTable->releaseLock();
-}
+}*/
