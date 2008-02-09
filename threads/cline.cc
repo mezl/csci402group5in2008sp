@@ -23,7 +23,7 @@ cLine::~cLine()
 {
 
 }
-void cLine::preferAcquire(char *name,int id)
+void cLine::preferAcquire(char *name,int id,bool display)
 {
 	printf("[Line]Prefer %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
 	preferLineLock->Acquire();
