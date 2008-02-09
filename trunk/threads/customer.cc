@@ -43,13 +43,13 @@ void Customer::gotoApplicationLine()
 	{
 		applicationLine -> preferAcquire();
 		money = money-500;
-		applicationLine -> addPreferLine(this, 500);
+	//	applicationLine -> addPreferLine(this, 500);
 		applicationLine -> preferRelease();
 	}
 	else
 	{
 		applicationLine -> regAcquire();
-		applicationLine -> addRegularLine(this);
+	//	applicationLine -> addRegularLine(this);
 		applicationLine -> regRelease();
 	}
 }
@@ -60,7 +60,7 @@ void Customer::gotoPictureLine()
 	{
 		pictureLine -> preferAcquire();
 		money = money-500;
-		pictureLine -> addPreferLine(this, 500);
+	//	pictureLine -> addPreferLine(this, 500);
 		pictureLine -> preferRelease();
 	}
 	else
@@ -77,13 +77,13 @@ void Customer::gotoPassportLine()
 	{
 		passportLine -> preferAcquire();
 		money = money-500;
-		passportLine -> addPreferLine(this, 500);
+	//	passportLine -> addPreferLine(this, 500);
 		passportLine -> preferRelease();	
 	}
 	else
 	{
 		passportLine -> regAcquire();
-		passportLine -> addRegularLine(this);
+//		passportLine -> addRegularLine(this);
 		passportLine -> regRelease();
 	}
 }
@@ -94,13 +94,13 @@ void Customer::gotoCashierLine()
 	{
 		cashierLine -> preferAcquire();
 		money = money-500;
-		cashierLine -> addPreferLine(this, 500);
+//		cashierLine -> addPreferLine(this, 500);
 		cashierLine -> preferRelease();
 	}
 	else
 	{
 		cashierLine -> regAcquire();
-		cashierLine -> addRegularLine(this);
+//		cashierLine -> addRegularLine(this);
 		cashierLine -> regRelease();
 	}
 }
