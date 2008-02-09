@@ -510,28 +510,28 @@ void Manager(int x)
 {
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
-	char name[20];
-       sprintf(name,"Manager %d",x);
+	char *name = "Manager";
+       //sprintf(name,"Manager (%d)",x);
 
 	//applicationLine->Acquire(name, 0);
-	applicationTable->acquireLock(name,0);
+	applicationTable->acquireLock(name,x);
 	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
 	{
-		applicationTable->addClerk(name,0);
+		applicationTable->addClerk(name,x);
 		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
-	applicationTable->releaseLock(name,0);
+	applicationTable->releaseLock(name,x);
 	//applicationLine->Release(name, 0);
 
 	//pictureLine->Acquire(name, 0);
-	pictureTable->acquireLock(name,0);
-	if ((pictureTable->clerkCount() == 0) && !pictureLine->nobody())
+	pictureTable->acquireLock(name,x);
+	if ((pictureTable->clerkCount() == x) && !pictureLine->nobody())
 	{
-		pictureTable->addClerk(name,0);
+		pictureTable->addClerk(name,x);
 		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
-	pictureTable->releaseLock(name,0);
-	//pictureLine->Release(name, 0);
+	pictureTable->releaseLock(name,x);
+	//pictureLine->Release(name, 0)
 
 	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
