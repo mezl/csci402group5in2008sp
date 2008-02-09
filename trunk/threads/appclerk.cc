@@ -5,7 +5,9 @@
 class AppClerk:public Clerk
 {
 	public:
+	Clerk(cLine *l,Table *t,int id);
 	void handleCustomer(Customer *c){
+	~Clerk();
 		
 	};
 };
