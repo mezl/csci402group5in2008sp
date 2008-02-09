@@ -1,12 +1,12 @@
-#include "line.h"
+#include "cline.h"
 
-Line::Line(int ID)
+cLine::cLine(int ID)
 {
-	preferLineCond = new Condition("Customer Prefer Line Cond") ;	
-	preferLineLock= new Lock("Customer Prefer Line Lock") ;	
+	preferLineCond = new Condition("Customer Prefer cLine Cond") ;	
+	preferLineLock= new Lock("Customer Prefer cLine Lock") ;	
 	preferLineQueue = new List;
-	regLineCond = new Condition("Customer Prefer Line Cond") ;	
-	regLineLock= new Lock("Customer Prefer Line Lock") ;	
+	regLineCond = new Condition("Customer Prefer cLine Cond") ;	
+	regLineLock= new Lock("Customer Prefer cLine Lock") ;	
 	regLineQueue = new List;
 
 	preferLineCount = 0;
@@ -14,48 +14,48 @@ Line::Line(int ID)
 	lineID = ID;
 	amount = 0;
 }
-Line::~Line()
+cLine::~cLine()
 {
 
 }
-void Line::preferAcquire()
+void cLine::preferAcquire()
 {
 	preferLineLock->Acquire();
 }
-void Line::preferRelease()
+void cLine::preferRelease()
 {
 	preferLineLock->Release();
 }
 
-void Line::regAcquire()
+void cLine::regAcquire()
 {
 	regLineLock->Acquire();
 }
-void Line::regRelease()
+void cLine::regRelease()
 {
 	regLineLock->Release();
 }
-void Line::Acquire()
+void cLine::Acquire()
 {
 	preferAcquire();
 	regAcquire();
 }
-void Line::Release()
+void cLine::Release()
 {
 	preferRelease();
 	regRelease();
 }
-bool Line::IsRegLineEmpty()
+bool cLine::IsRegLineEmpty()
 {
 	bool count =  (regLineCount == 0);
 	return count;
 }
-bool Line::IsPreferLineEmpty()
+bool cLine::IsPreferLineEmpty()
 {
 	bool count =  (preferLineCount == 0);
 	return count;
 }
-void Line::addPreferLine(Customer c,int mount)
+void cLine::addPreferLine(Customer c,int mount)
 {
 	printf("Customer %d in the prefer line %d\n",c.getID(),lineID);
 	preferLineCount++;
@@ -65,11 +65,11 @@ void Line::addPreferLine(Customer c,int mount)
 	printf("Customer %d in front the prefer line %d\n",c.getID(),lineID);
 	
 }
-void Line::addRegLine()	
+void cLine::addRegLine()	
 {
 
 }
-Customer * Line::getNextPreferLineCustomer(int clerkID)
+Customer * cLine::getNextPreferLineCustomer(int clerkID)
 {
 	if(IsPreferLineEmpty()){
 		printf("No customer in prefer line %d\n",lineID);
