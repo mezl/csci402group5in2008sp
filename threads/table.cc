@@ -13,9 +13,6 @@ Table::Table(int ID_in)
 	tableCondiiton = new Condiiton("Table Condiiton");
 }
 
-Table::~Table()
-{
-}
 
 int Table::clerkCount()
 {
