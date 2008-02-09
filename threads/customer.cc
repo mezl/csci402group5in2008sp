@@ -1,7 +1,6 @@
 //customer.cc
+
 #include "customer.h"
-#include "synch.h"
-#include "line.h"
 Customer::Customer(int ID_in, int money_in, Line* applicationLine_in, Line* pictureLine_in, Line* passportLine_in, Line* cashierLine_in)
 {
 	ID = ID_in;
