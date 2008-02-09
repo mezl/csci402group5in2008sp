@@ -34,7 +34,7 @@ class Customer
 	bool checkPicture();
 	bool checkPassport();
 	bool checkCashier();
-	void chargeMoney();
+	void chargeMoney(int mount);
 	int getID(){return customerID;}
 	char *getName(){return customerName;}
 
