@@ -405,18 +405,22 @@ void myClerkForkFunc(int x)
 }
 void office()
 {
+	printf("Start Office Sim\n");
 	// create the manager
 	Timer *timer = new Timer(Manager, 0, false);
+	printf("Create Manager\n");
 
 	// create 4 clerks (1 clerk for each table/job)
 
 
+	printf("Create Customer 1\n");
 	// create 2 customers
 	// customer 1 with ID = 1 and $1600
 	Customer *cus1 = new Customer(1, 1600, applicationLine, pictureLine, passportLine, cashierLine);
 	Thread *t1 = new Thread("Customer 1");
 	t1 -> Fork(myCustomerForkFunc, (int)t1);
 
+	printf("Create Customer 2\n");
 	// customer 2 with ID = 2 and $1100
 	Customer *cus2 = new Customer(2, 1100, applicationLine, pictureLine, passportLine, cashierLine);
 	Thread *t2 = new Thread("Customer 2");
