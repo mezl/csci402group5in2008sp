@@ -12,8 +12,8 @@ class cLine
 		~cLine();
 		void addPreferLine(int c,int mount);
 		void addRegLine(int c);
-		void * getNextPreferLineCustomer(int clerkID);
-		void * getNextRegLineCustomer(int clerkID);
+		void * getNextPreferLineCustomer(char *clerkName,int clerkID);
+		void * getNextRegLineCustomer(char *clerkName,int clerkID);
 		int preferCustomerCount(){return preferLineCount;}
 		int regCustomerCount(){return regLineCount;}
 		void preferAcquire(char *name,int id);
