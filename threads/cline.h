@@ -2,7 +2,6 @@
 #define LINE_H_DEFINED
 #include "list.h"
 #include "synch.h"
-#include "customer.h"
 #include "system.h"
 class cLine
 {
