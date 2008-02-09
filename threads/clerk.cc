@@ -1,8 +1,8 @@
 //Base clerk function
 #include "clerk.h"
-Clerk::Clerk(Line *l,Table *t)
+Clerk::Clerk(cLine *l,Table *t)
 {
-	line = l;
+	cline = l;
 	table = t;//share with manager
 	
 }
@@ -14,22 +14,22 @@ void Clerk::run()
 	while(1)
 	{
 		//Do Lock
-		line->Acquire();
-		if(!line->IsPreferLineEmpty()) //if there is customer in prefer line
+		cline->Acquire();
+		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
-			Customer *c = line->getNextPreferLineCustomer();
+			Customer *c = cline->getNextPreferLineCustomer();
 			handleCustomer(c);
 		}
-		else if(!line->IsRegLineEmpty())
+		else if(!cline->IsRegLineEmpty())
 		{
-			Customer *c = line->getNextRegLineCustomer();
+			Customer *c = cline->getNextRegLineCustomer();
 			handleCustomer(c);
 		}else{
 			//Go Sleep
-			line->Release();			
+			cline->Release();			
 			table->leave();
 		}	
-		line->Release();
+		cline->Release();
 	}
 }
 

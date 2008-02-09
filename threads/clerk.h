@@ -7,12 +7,12 @@
 class Clerk	
 {
 	public:
-	Clerk(Line *l);
+	Clerk(cLine *l);
 	~Clerk();
 	void run();
 	virtual handleCustomer(Customer *c);
 	private:
-	Line *Line;
+	cLine *cline;
 	Table *table;
 };
 #endif
