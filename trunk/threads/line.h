@@ -9,9 +9,10 @@ class Line
 	public:
 		Line(int ID);
 		~Line();
-		void addPreferLine();
+		void addPreferLine(Customer c,int mount);
 		void addRegLine();
-		void Line::preferAcquire();
+		Customer * getNextPreferLineCustomer(int clerkID);
+		void preferAcquire();
 		void preferRelease();
 		void regAcquire();
 		void regRelease();
