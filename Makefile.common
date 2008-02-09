@@ -45,10 +45,11 @@ THREAD_H =../threads/copyright.h\
 	../threads/system.h\
 	../threads/thread.h\
 	../threads/utility.h\
+	../threads/ctable.h\
 	../threads/cline.h\
 	../threads/customer.h\
-	../threads/table.h\
 	../threads/clerk.h\
+	../threads/office.h\
 	../machine/interrupt.h\
 	../machine/sysdep.h\
 	../machine/stats.h\
@@ -67,8 +68,9 @@ THREAD_C =../threads/main.cc\
 	../threads/test_code.cc\
 	../threads/cline.cc\
 	../threads/customer.cc\
-	../threads/table.cc\
+	../threads/ctable.cc\
 	../threads/clerk.cc\
+	../threads/appclerk.cc\
 	../threads/manager.cc\
 	../threads/office.cc\
 	../machine/interrupt.cc\
@@ -80,7 +82,7 @@ THREAD_S = ../threads/switch.s
 
 THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
 	utility.o threadtest.o test_code.o interrupt.o stats.o sysdep.o timer.o cline.o \
-	customer.o table.o clerk.o manager.o office.o
+	customer.o ctable.o clerk.o appclerk.o manager.o office.o
 
 USERPROG_H = ../userprog/addrspace.h\
 	../userprog/bitmap.h\
