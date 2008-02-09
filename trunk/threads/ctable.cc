@@ -18,8 +18,9 @@ int cTable::clerkCount()
 void cTable::addClerk(char *name,int id)
 {
 	cCount++;
+	printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
 	tableCondition->Signal(tableLock);
-	printf("[Table] table %d is adding a clerk\n", tableID);
+	printf("[Table]%s%d table %d is added a clerk\n",name,id, tableID);
 }
 
 void cTable::leaveTable(char *name,int id)
@@ -32,12 +33,16 @@ void cTable::leaveTable(char *name,int id)
 
 void cTable::acquireLock(char *name,int id)
 {
+	printf("[Table]%s %d is acquire lock now\n",name,id);
 	tableLock->Acquire();
+	printf("[Table]%s %d is get lock now\n",name,id);
 }
 
 void cTable::releaseLock(char *name,int id)
 {
+	printf("[Table]%s %d is prepare releasing lock now\n",name,id);
 	tableLock->Release();
+	printf("[Table]%s %d is released lock now\n",name,id);
 }
 	
 void cTable::addMoney(int amount)
