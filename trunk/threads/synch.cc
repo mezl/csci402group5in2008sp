@@ -211,7 +211,7 @@ void Condition::Signal(Lock* conditionLock) {
 	Thread *thread;
 	if(conditionLock != condLock){
 		//check saved lock is match the current lock
-		printf("Thread %s try signal cond %s with wrong lock",currentThread->getName(),name);
+		printf("Thread %s try signal cond %s with wrong lock \n",currentThread->getName(),name);
 	}else if(conditionLock->isHeldByCurrentThread()){
 		//Check for a waiting thread in condition waiting queue
 		thread = (Thread *)condWaitQueue->Remove();
