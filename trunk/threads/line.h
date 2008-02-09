@@ -2,11 +2,12 @@
 #define LINE_H_DEFINED
 #include "list.h"
 #include "synch.h"
+#include "customer.h"
 
 class Line
 {
 	public:
-		Line();
+		Line(int ID);
 		~Line();
 		void addPreferLine();
 		void addRegLine();
