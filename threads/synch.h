@@ -77,6 +77,7 @@ class Lock {
 					// checking in Release, and in
 					// Condition variable ops below.
     void clearLockOwner(){lockOwner = NULL;}//Add this to clear owner
+    bool ownTheLock();
   private:
     char* name;				// for debugging
     //Add by Kai

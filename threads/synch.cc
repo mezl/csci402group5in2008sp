@@ -171,7 +171,9 @@ void Lock::Release() {
 	(void) interrupt->SetLevel(oldLevel);
 	//Above Done by Kai	
 }
-
+bool Lock::ownTheLock(){
+	return (currentThread == lockOwner);
+}
 Condition::Condition(char* debugName) {
 
 	//Add by Kai
@@ -190,7 +192,14 @@ void Condition::Wait(Lock* conditionLock) {
 	//Add by Kai	
 	//Disable interrupts
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-	condLock = conditionLock;//Save lock pt first
+	if(!conditionLock->ownTheLock()){
+		//check saved lock is match the current lock
+		//Restore Interrupt
+		(void) interrupt->SetLevel(oldLevel);
+		return;
+	}
+	if(condLock == NULL)
+		condLock = conditionLock;//Save lock pt first
 	conditionLock->Release();//Leave Monitor
 	//Add myself to condition wait queue
 	condWaitQueue->Append((void *)currentThread);
@@ -222,6 +231,10 @@ void Condition::Signal(Lock* conditionLock) {
 	if(conditionLock != condLock){
 		//check saved lock is match the current lock
 		//Restore Interrupt
+		(void) interrupt->SetLevel(oldLevel);
+		return;
+	}
+	if(!conditionLock->ownLock()){
 		(void) interrupt->SetLevel(oldLevel);
 		return;
 	}
