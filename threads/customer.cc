@@ -3,7 +3,7 @@
 #include "customer.h"
 Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in)
 {
-	printf("Build Customer %d\n",ID_in);
+	printf("[CUST]Build Customer %d\n",ID_in);
 	customerID = ID_in;
 	customerName= name;
 	money = money_in;
@@ -22,22 +22,22 @@ Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in
 void Customer::customerRun()
 {
 	
-	printf("Customer %d Start run \n",customerID);
+	printf("[CUST]Customer %d Start run \n",customerID);
 	// Choose randomly between entering a application line or picture line
 	// the customer will use the 500 dollars to get into the prefered line
 	// whenever possible
 	if ((rand()%2) == 0)
 	{
-		printf("Customer %d choose app first \n",customerID);
+		printf("[CUST]Customer %d choose app first \n",customerID);
 		gotoApplicationLine();
-		printf("Customer %d go to pic line \n",customerID);
+		printf("[CUST]Customer %d go to pic line \n",customerID);
 		gotoPictureLine();
 	}
 	else
 	{
-		printf("Customer %d go to pic line \n",customerID);
+		printf("[CUST]Customer %d go to pic line \n",customerID);
 		gotoPictureLine();
-		printf("Customer %d go to app line \n",customerID);
+		printf("[CUST]Customer %d go to app line \n",customerID);
 		gotoApplicationLine();
 	}
 	gotoPassportLine();
@@ -48,6 +48,7 @@ void Customer::gotoApplicationLine()
 {
 	if(money > 500)
 	{
+		printf("[CUST]Customer %d go to prefer pic line \n",customerID);
 		applicationLine -> preferAcquire(customerName,customerID);
 		money = money-500;
 		applicationLine -> addPreferLine((int)this, 500);
@@ -55,6 +56,7 @@ void Customer::gotoApplicationLine()
 	}
 	else
 	{
+		printf("[CUST]Customer %d go to reg pic line \n",customerID);
 		applicationLine -> regAcquire(customerName,customerID);
 		applicationLine -> addRegLine((int)this);
 		applicationLine -> regRelease(customerName,customerID);
