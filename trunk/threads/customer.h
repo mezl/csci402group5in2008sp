@@ -10,6 +10,8 @@
 #include <list>
 #include <time.h>
 #include <fstream.h>
+#include "synch.h"
+#include "line.h"
 
 class Customer
 {
