@@ -4,7 +4,7 @@
 #include "synch.h"
 #include "customer.h"
 #include "system.h"
-class Line
+class cLine
 {
 	public:
 		cLine(int ID);
