@@ -56,7 +56,7 @@ void Customer::gotoApplicationLine()
 	else
 	{
 		applicationLine -> regAcquire(customerName,customerID);
-		applicationLine -> addRegularLine((int)this);
+		applicationLine -> addRegLine((int)this);
 		applicationLine -> regRelease(customerName,customerID);
 	}
 }
