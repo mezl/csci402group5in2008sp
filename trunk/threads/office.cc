@@ -58,8 +58,7 @@ void office()
 
 }
 
-/*
-void Manager()
+void Manager(int x)
 {
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
@@ -141,4 +140,4 @@ void Manager()
 	cashierLine->regRelease();
 	cashierLine->preferRelease();
 	cashierTable->releaseLock();
-}*/
+}
