@@ -22,15 +22,15 @@ Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in
 void Customer::customerRun()
 {
 	
-	printf("Customer %d Start run \n",ID);
+	printf("Customer %d Start run \n",customerID);
 	// Choose randomly between entering a application line or picture line
 	// the customer will use the 500 dollars to get into the prefered line
 	// whenever possible
 	if ((rand()%2) == 0)
 	{
-		printf("Customer %d choose app first \n",ID);
+		printf("Customer %d choose app first \n",customerID);
 		gotoApplicationLine();
-		printf("Customer %d go to pic line \n",ID);
+		printf("Customer %d go to pic line \n",customerID);
 		gotoPictureLine();
 	}
 	else
