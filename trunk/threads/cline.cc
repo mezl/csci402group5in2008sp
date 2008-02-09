@@ -61,12 +61,12 @@ bool cLine::IsPreferLineEmpty()
 
 void cLine::addPreferLine(int c,int mount)
 {
-	printf("Customer %d in the prefer line %d\n",c.getID(),lineID);
+//	printf("Customer %d in the prefer line %d\n",c.getID(),lineID);
 	preferLineCount++;
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);
 	preferLineCond->Wait(preferLineLock);
-	printf("Customer %d in front the prefer line %d\n",c.getID(),lineID);
+//	printf("Customer %d in front the prefer line %d\n",c.getID(),lineID);
 	
 }
 void cLine::addRegLine()	
