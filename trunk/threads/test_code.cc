@@ -520,7 +520,8 @@ void Manager(int x)
 	printf("[Manager]%d I am Starting.....\n",x);
 	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,x);
-
+	
+	printf("[Manager]%d Get appTable lock.....\n",x);
 	// if no clerk work and some customer in line
 	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
 	{
