@@ -412,11 +412,13 @@ void myClerkForkFunc(int x)
 
 	delete cl;
 }
-
+int managerHandlCount = 0;
 void managerHandler(int x)
 {
-	Thread *manager_thread = new Thread("Manager thread");
-	manager_thread -> Fork(Manager, 0);
+	char msg[20];
+	sprintf(msg,"ManagerT %d",managerHandlCount);
+	Thread *manager_thread = new Thread(msg);
+	manager_thread -> Fork(Manager, managerHandlCount++);
 }
 
 void office()
@@ -508,7 +510,8 @@ void Manager(int x)
 {
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
-	char *name = "Manager";
+	char name[20];
+       sprintf(name,"Manager %d",x);
 
 	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,0);
