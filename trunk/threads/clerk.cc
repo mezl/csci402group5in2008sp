@@ -24,7 +24,7 @@ void Clerk::run()
 			handleCustomer(c);
 		}else{
 			//Go Sleep
-			cline->Release();			
+			cline->Release(clerkName,clerkID);			
 			table->leaveTable();
 		}	
 		cline->Release(clerkName,clerkID);
