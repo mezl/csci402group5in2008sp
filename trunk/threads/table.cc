@@ -1,8 +1,8 @@
 #include "table.h"
-Table::Table()
+/*Table::Table()
 {
 
-}
+}*/
 /*
 Table::Table(int ID_in)
 {
