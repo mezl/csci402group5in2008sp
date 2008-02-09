@@ -13,6 +13,7 @@ class Customer
 {
 
 	public:
+		Customer(){};		
 	Customer(int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in);
 	void customerRun();
 	void gotoApplicationLine();
