@@ -373,7 +373,7 @@ void TestSuite() {
 #include "ctable.h"
 #include "utility.h"
 #include "timer.h"
-
+#include "appclerk.cc"
 #define CUSTOMER_NUM 4
 #define CLERK_NUM 4
 cLine *applicationLine = new cLine(1);
@@ -412,7 +412,7 @@ void office()
 {
 	printf("Start Office Sim\n");
 	// create the manager
-	Timer *timer = new Timer(Manager, 0, false);
+	//Timer *timer = new Timer(Manager, 0, false);
 	printf("Create Manager\n");
 
 	// create 4 clerks (1 clerk for each table/job)
