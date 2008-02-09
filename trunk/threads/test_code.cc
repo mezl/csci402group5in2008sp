@@ -420,8 +420,8 @@ void office()
 	printf("Create Customer \n");
 	// create 2 customers
 	// customer 1 with ID = 1 and $1600
-	Customer customer[CUSTOMER_NUM];
-	Thread customer_thread[CUSTOMER_NUM];
+	Customer *customer[CUSTOMER_NUM];
+	Thread *customer_thread[CUSTOMER_NUM];
 	for(int i = 0; i < CUSTOMER_NUM; i++){
 		customer[i] = new Customer(i, 1600, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("Create Customer %d Thread\n",customer[i]->getID());
