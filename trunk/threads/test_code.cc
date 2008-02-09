@@ -421,7 +421,7 @@ void managerHandler(int x)
 	sprintf(msg,"ManagerT %d",managerHandlCount);
 	Thread *manager_thread = new Thread(msg);
 	manager_thread -> Fork(Manager, managerHandlCount++);
-	managerLocl.Release();
+	managerLock.Release();
 }
 
 void office()
