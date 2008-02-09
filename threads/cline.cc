@@ -1,5 +1,8 @@
 #include "cline.h"
+cLine::cLine()
+{
 
+}
 cLine::cLine(int ID)
 {
 	preferLineCond = new Condition("Customer Prefer cLine Cond") ;	
