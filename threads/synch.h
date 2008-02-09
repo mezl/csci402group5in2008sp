@@ -77,11 +77,9 @@ class Lock {
 					// checking in Release, and in
 					// Condition variable ops below.
     void clearLockOwner(){lockOwner = NULL;}//Add this to clear owner
-    bool ownTheLock();
   private:
     char* name;				// for debugging
     //Add by Kai
-    bool lockBusy;//True when lock is busy
     List *lockWaitQueue;       // threads waiting in lock
     Thread *lockOwner; //lock owner for thread
 

@@ -106,12 +106,12 @@ Lock::Lock(char* debugName) {
 	//Add by Kai
 	name = debugName;
 	lockWaitQueue = new List;
-	lockBusy = false;
 	lockOwner = NULL;
 }
 Lock::~Lock() {
 	//Add by Kai 
 	delete lockWaitQueue;
+	lockOwner = NULL;
 }
 void Lock::Acquire() {
 	//Add by Kai	
@@ -119,13 +119,12 @@ void Lock::Acquire() {
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
 	//If lock is avaiable
-	if(!lockBusy){
+	if(lockOwner == NULL){
 		//I get Lock
-		lockBusy = true;//Make lock busy
 		//Make my self lock owner
 		lockOwner = currentThread;
 		
-	}else{//Lock is not avaiable
+	}else if(currentThread != lockOwner){//Lock is not avaiable
 
 		//Add myself to lock wait queue
 		lockWaitQueue->Append((void *)currentThread);	// so go to sleep
@@ -146,32 +145,26 @@ void Lock::Release() {
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
 	//Check lock ownership
-	if(currentThread != lockOwner){
-		//Print Err message
-		//printf("<Error! Current Thread is not lock owner\n");
-		//Restore Interrupt
-		(void) interrupt->SetLevel(oldLevel);
-		return;
-	}	
-
-	//Check for a waiting thread in lock waiting queue
-	thread = (Thread *)lockWaitQueue->Remove();
-	if (thread != NULL){	   //If found thread in lock wait queue
+	if(isHeldByCurrentThread())
+	{
+		//Check for a waiting thread in lock waiting queue
+		thread = (Thread *)lockWaitQueue->Remove();
+		if (thread != NULL){	   //If found thread in lock wait queue
 	       //1.Wake Next thread up - put it on ReadyToRun Queue
 		scheduler->ReadyToRun(thread);
 	       //2.Remove thread from queue(we did it before)
 	       //3.Make the thread the lock owner
 		lockOwner = thread;
-	}else{//No thread in lock waiting queue
-		lockBusy = false;//Make lock avaiable
-		lockOwner = NULL;//clear lock ownership	
-	}
-
+		}else{//No thread in lock waiting queue
+			lockOwner = NULL;//clear lock ownership	
+		}
+	}// if held by current thread
+	
 	//Restore Interrupt
 	(void) interrupt->SetLevel(oldLevel);
 	//Above Done by Kai	
 }
-bool Lock::ownTheLock(){
+bool Lock::isHeldByCurrentThread(){
 	return (currentThread == lockOwner);
 }
 Condition::Condition(char* debugName) {
@@ -192,25 +185,20 @@ void Condition::Wait(Lock* conditionLock) {
 	//Add by Kai	
 	//Disable interrupts
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-	if(!conditionLock->ownTheLock()){
-		//check saved lock is match the current lock
-		//Restore Interrupt
-		(void) interrupt->SetLevel(oldLevel);
-		return;
+	//check saved lock is match the current lock
+	if(conditionLock->isHeldByCurrentThread()){
+		if(condLock == NULL)
+			condLock = conditionLock;//Save lock pt first
+		conditionLock->Release();//Leave Monitor
+		//Add myself to condition wait queue
+		condWaitQueue->Append((void *)currentThread);
+		currentThread->Sleep(); // so go to sleep
+
+		//After some one wake me up
+		conditionLock->Acquire();//Reenter monitor
 	}
-	if(condLock == NULL)
-		condLock = conditionLock;//Save lock pt first
-	conditionLock->Release();//Leave Monitor
-	//Add myself to condition wait queue
-	condWaitQueue->Append((void *)currentThread);
-	currentThread->Sleep(); // so go to sleep
-
-	//After some one wake me up
-	conditionLock->Acquire();//Reenter monitor
-
 	//Restore Interrupt
 	(void) interrupt->SetLevel(oldLevel);
-	//Above Done by Kai	
 	//Don't know what's this
 	//ASSERT(FALSE); 
 
@@ -218,39 +206,23 @@ void Condition::Wait(Lock* conditionLock) {
 void Condition::Signal(Lock* conditionLock) {
 
 	//Add by Kai	
-	Thread *thread;
 	//Disable interrupts
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
-	if(condWaitQueue->IsEmpty()){
-	       	//If not found thread in condition wait queue
-		//No waiter
-		//Restore Interrupt
-		(void) interrupt->SetLevel(oldLevel);
-		return;
-	}
+	Thread *thread;
 	if(conditionLock != condLock){
 		//check saved lock is match the current lock
-		//Restore Interrupt
-		(void) interrupt->SetLevel(oldLevel);
-		return;
-	}
-	if(!conditionLock->ownTheLock()){
-		(void) interrupt->SetLevel(oldLevel);
-		return;
-	}
-	//Check for a waiting thread in condition waiting queue
-	thread = (Thread *)condWaitQueue->Remove();
-	if (thread != NULL){
-		//Wake Next thread up - put it on ReadyToRun Queue
-		scheduler->ReadyToRun(thread);
-		if(condWaitQueue->IsEmpty())	{
-			//clear lock ownership
-			//if there is no more waiters, clear lock ownership
-			conditionLock->clearLockOwner();
+		printf("Thread %s try signal cond %s with wrong lock",currentThread->getName(),name);
+	}else if(conditionLock->isHeldByCurrentThread()){
+		//Check for a waiting thread in condition waiting queue
+		thread = (Thread *)condWaitQueue->Remove();
+		if (thread != NULL){
+			//Wake Next thread up - put it on ReadyToRun Queue
+			scheduler->ReadyToRun(thread);
 		}
 	}else{	
-	      printf("Error, thread should not empty\n");
-	}
+		//printf("Error, thread should not empty\n");
+	}		
+	
 	//Restore Interrupt
 	(void) interrupt->SetLevel(oldLevel);
 }
