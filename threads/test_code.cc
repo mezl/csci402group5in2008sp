@@ -521,7 +521,7 @@ void Manager(int x)
 	// if no clerk work and some customer in line
 	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
 	{
-		printf("[Manager]App Clerk %d Customer in Line %s\n"applicationTable,applicationLine->nobody()?"True":"False");
+		printf("[Manager]App Clerk %d Customer in Line %s\n"applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
 		applicationTable->addClerk(name,x);
 		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
