@@ -391,6 +391,7 @@ void Manager(int x);
 void myCustomerForkFunc(int x)
 {
 	Customer *c = (Customer*)x;
+	printf("Customer %d run\n",c->getID());
 	c -> customerRun();
 
 	delete c;
@@ -399,6 +400,7 @@ void myCustomerForkFunc(int x)
 void myClerkForkFunc(int x)
 {
 	Clerk *cl = (Clerk*)x;
+	printf("Clerk  run\n");
 	cl -> run();
 
 	delete cl;
