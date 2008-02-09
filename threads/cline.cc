@@ -26,18 +26,18 @@ void cLine::preferAcquire(char *name,int id)
 	printf("Prefer Line %d is acquired lock by %s %d\n",lineID,name,id);
 	preferLineLock->Acquire();
 }
-void cLine::preferRelease()
+void cLine::preferRelease(char *name,int id)
 {
 	printf("Prefer Line %d is release lock by %s %d\n",lineID,name,id);
 	preferLineLock->Release();
 }
 
-void cLine::regAcquire()
+void cLine::regAcquire(char *name,int id)
 {
 	printf("Reg Line %d is acquired lock by %s %d\n",lineID,name,id);
 	regLineLock->Acquire();
 }
-void cLine::regRelease()
+void cLine::regRelease(char *name,int id)
 {
 	printf("Reg Line %d is release lock by %s %d\n",lineID,name,id);
 	regLineLock->Release();
