@@ -27,6 +27,7 @@ class cLine
 		int getID(){return lineID;}
 		char *getName(){return lineName;}
 		int reportMoney();
+		bool nobody();
 
 
 	private:

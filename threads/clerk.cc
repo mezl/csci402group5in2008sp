@@ -26,7 +26,8 @@ void Clerk::run()
 			printf("[Clerk]%s %d check reg line %d\n",clerkName,clerkID,cline->getID());
 			Customer *c =(Customer *)cline->getNextRegLineCustomer(clerkName,clerkID);
 			handleCustomer(c);
-		}else{
+		}
+		else{
 			//Go Sleep
 			printf("[Clerk]%s %d have no customr in line %d,leave table\n",clerkName,clerkID,cline->getID());
 			cline->Release(clerkName,clerkID);			
@@ -35,7 +36,7 @@ void Clerk::run()
 			table->leaveTable(clerkName,clerkID);
 			table->releaseLock(clerkName,clerkID);
 			printf("[Clerk]%s %d now come back to table \n",clerkName,clerkID);
-		}	
+		}
 		cline->Release(clerkName,clerkID);
 	}
 }
