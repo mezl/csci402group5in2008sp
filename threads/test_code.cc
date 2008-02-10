@@ -542,7 +542,7 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,x);
-	pictureLine->Release(name, 0)
+	pictureLine->Release(name, 0);
 
 	passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
