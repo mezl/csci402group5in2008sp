@@ -512,7 +512,7 @@ void office()
 
 void Manager(int x)
 {	
-	bool display = false;
+	bool display = true;
 	//IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
@@ -525,7 +525,7 @@ void Manager(int x)
 	
 	if(display)printf("[Manager]%d Get appTable lock.....\n",x);
 	// if no clerk work and some customer in line
-	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
+	if ((applicationTable->clerkCount() == 0) )//&& !applicationLine->nobody())
 	{
 		if(display)printf("[Manager]<<<<>>>>App Clerk %d Customer in Line %s\n",applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
 		applicationTable->addClerk(name,x);
@@ -536,7 +536,7 @@ void Manager(int x)
 
 	//pictureLine->Acquire(name, 0);
 	pictureTable->acquireLock(name,x);
-	if ((pictureTable->clerkCount() == 0) && !pictureLine->nobody())
+	if ((pictureTable->clerkCount() == 0))//&& !pictureLine->nobody())
 	{
 		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line %s\n",pictureTable->clerkCount(),pictureLine->nobody()?"True":"False");
 		pictureTable->addClerk(name,x);
@@ -547,7 +547,7 @@ void Manager(int x)
 
 	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
-	if ((passportTable->clerkCount() == 0) && !passportLine->nobody())
+	if ((passportTable->clerkCount() == 0))//&& !passportLine->nobody())
 	{
 		passportTable->addClerk(name,0);
 		if(display)printf("[Manager] wakeup a PassClerk to Passport table\n");
@@ -557,7 +557,7 @@ void Manager(int x)
 	
 	//cashierLine->Acquire(name, 0);
 	cashierTable->acquireLock(name,0);
-	if ((cashierTable->clerkCount() == 0) && !cashierLine->nobody())
+	if ((cashierTable->clerkCount() == 0) )//&& !cashierLine->nobody())
 	{
 		cashierTable->addClerk(name,0);
 		if(display)printf("[Manager] wakeup a CashClerk to Cashier table\n");
