@@ -115,6 +115,7 @@ void Customer::gotoPictureLine()
 		printf("[CUST]Customer %d go to reg pic line \n",customerID);
 		pictureLine -> regAcquire(customerName,customerID);
 		pictureLine -> addRegLine((int)this);
+		getClerk();
 		pictureLine -> regRelease(customerName,customerID);
 	}
 	//Customer already go to see the clerk
