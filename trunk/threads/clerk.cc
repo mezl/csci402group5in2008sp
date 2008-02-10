@@ -20,12 +20,14 @@ void Clerk::run()
 			printf("[Clerk]%s %d check prefer line %d\n",clerkName,clerkID,cline->getID());
 			Customer *c = (Customer *)cline->getNextPreferLineCustomer(clerkName,clerkID);
 			handleCustomer(c);
+			cline->Release(clerkName,clerkID);
 		}
 		else if(!cline->IsRegLineEmpty())
 		{
 			printf("[Clerk]%s %d check reg line %d\n",clerkName,clerkID,cline->getID());
 			Customer *c =(Customer *)cline->getNextRegLineCustomer(clerkName,clerkID);
 			handleCustomer(c);
+			cline->Release(clerkName,clerkID);
 		}
 		else{
 			//Go Sleep
@@ -36,7 +38,6 @@ void Clerk::run()
 			table->releaseLock(clerkName,clerkID);
 			printf("[Clerk]%s %d now come back to table \n",clerkName,clerkID);
 		}
-		cline->Release(clerkName,clerkID);
 	}
 }
 
