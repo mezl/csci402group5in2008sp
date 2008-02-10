@@ -78,7 +78,7 @@ void cLine::addPreferLine(int c,int mount)
 	preferLineCount++;
 	printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
 	amount+=mount;//receive money from customer
-	preferLineQueue->Append((void *)c);
+	preferLineQueue->Append((void *)c);	
 	preferLineCond->Wait(preferLineLock);
 	printf("[Line]One Customer in front the prefer %s%d\n",lineName,lineID);
 	

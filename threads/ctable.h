@@ -25,5 +25,6 @@ class cTable
 		int leaveCount;
 		Lock *tableLock;
 		Condition *tableCondition;
+		bool needClerk;
 };
 #endif
