@@ -88,7 +88,7 @@ void Customer::gotoApplicationLine()
 	}
 	//Customer already go to see the clerk
 	//Clerk was pass his cond & lock to cusomer by c->setCustomer
-	wait();	//wait clerk call me
+	//wait();	//wait clerk call me
 /*	
 	clerkLock->Acquire();//Call clerk
 	//Doing the application work;
@@ -123,7 +123,7 @@ void Customer::gotoPictureLine()
 	}
 	//Customer already go to see the clerk
 	//Clerk was pass his cond & lock to cusomer by c->setCustomer
-	wait();
+	//wait();
 	/*	
 	clerkLock->Acquire();//Call clerk
 	//Doing the application work;
