@@ -21,7 +21,7 @@ Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in
 	sprintf(msg,"%s%d",name,ID_in);
 	customerCondition = new Condition(msg);
 	setClerkLock = new Lock("SetClerkLock");//given by free clerk
-	customerLock = new Lock(msg);//given by free clerk
+	customerLock = new Lock("Customer Lock");//given by free clerk
 	//random function initilization
 	srand(time(NULL));
 }
