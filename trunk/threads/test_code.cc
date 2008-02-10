@@ -431,10 +431,6 @@ void office()
 	// create the manager
 	//Timer *t = new Timer(managerHandler, 0, false);
 	
-	Thread *manager_thread = new Thread("Manager");
-	manager_thread -> Fork(Manager, managerHandlCount);
-
-	printf("[Office]Create Manager\n");
 
 
 	printf("[Office]Create Customer \n");
@@ -501,6 +497,10 @@ void office()
 		cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
 	}
 
+	Thread *manager_thread = new Thread("Manager");
+	manager_thread -> Fork(Manager, managerHandlCount);
+
+	printf("[Office]Create Manager\n");
 
 /*
 	printf("Create Customer 2\n");
