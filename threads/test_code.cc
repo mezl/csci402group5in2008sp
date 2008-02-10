@@ -429,9 +429,11 @@ void office()
 {
 	printf("[Office]Start Office Sim\n");
 	// create the manager
-	Timer *t = new Timer(managerHandler, 0, false);
+	//Timer *t = new Timer(managerHandler, 0, false);
 	
-	
+	Thread *manager_thread = new Thread("Manager");
+	manager_thread -> Fork(Manager, managerHandlCount);
+
 	printf("[Office]Create Manager\n");
 
 
@@ -511,7 +513,8 @@ void office()
 }
 
 void Manager(int x)
-{	
+{
+while(1){	
 	bool display = true;
 	//IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	// check each table for number of clerks
@@ -621,7 +624,7 @@ void Manager(int x)
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
 	//printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 	//(void) interrupt->SetLevel(oldLevel);
-
+}
 }
 void Problem2()
 {
