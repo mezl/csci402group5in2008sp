@@ -38,7 +38,24 @@ class Customer
 	void punished();
 	int getID(){return customerID;}
 	char *getName(){return customerName;}
-
+	void setClerk(Lock *l,Condition *c){
+		setClerkLock->Acquire();
+		clerkSet = true;
+		clerkLock = l;
+		clerkCondition = c;
+		setClerkLock->Release();
+	}
+	bool getClerk(){
+		setClerkLock->Acquire();
+		if(!clerSet)
+			printf("[CUST]%s%d say:no clerk can help me\n",customerName,customerID);
+		setClerkLock->Release();
+		return clerkSet;
+	
+	}
+	void wakeup(Lock *l){
+		customerCondition->Signal(l);
+	}
 	private:
 	int customerID;
 	char *customerName;
@@ -51,5 +68,10 @@ class Customer
 	bool pictureDone;
 	bool passportDone;
 	bool cashierDone;
+	bool clerkSet;
+	Lock *setClerkLock;//given by free clerk
+	Lock *clerkLock;//given by free clerk
+	Condition *clerkCondition;//given by free clerk
+	Condition *customerCondition;
 };
 #endif

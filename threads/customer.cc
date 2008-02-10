@@ -11,10 +11,16 @@ Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in
 	pictureLine = pictureLine_in;
 	passportLine = passportLine_in;
 	cashierLine = cashierLine_in;
+
 	applicationDone = false;
 	pictureDone = false;
 	passportDone = false;
 	cashierDone = false;
+	clerkSet = false;
+	char msg[20];
+	sprintf(msg,"%s%d",name,ID_in);
+	customerCondition = new Condition(msg);
+	setClerkLock = new Lock("SetClerkLock");//given by free clerk
 	//random function initilization
 	srand(time(NULL));
 }
@@ -48,25 +54,41 @@ void Customer::customerRun()
 
 void Customer::gotoApplicationLine()
 {
+	bool notGoToPreferLine = true;
+	applicationLine->preferAcquire(customerName,customerID);
+	printf("[CUST]Customer %d get both app line lock\n",customerID);
 	if(money > 500 && (applicationLine->preferCustomerCount() <= applicationLine->regCustomerCount()))
 	{
+		notGoToPreferLine = false;
 		printf("[CUST]Customer %d go to prefer app line \n",customerID);
-		applicationLine -> preferAcquire(customerName,customerID);
-		printf("[CUST]Customer %d get prefer app line lock\n",customerID);
 		money = money-500;
 		applicationLine -> addPreferLine((int)this, 500);
+
+		getClerk();
+
 		printf("[CUST]Customer %d wake up in %s%d \n",customerID,
 				applicationLine->getName(),
 				applicationLine->getID());
-		applicationLine -> preferRelease(customerName,customerID);
 	}
-	else
+	applicationLine->preferRelease(customerName,customerID);
+
+	if(notGoToPrferLine)
 	{
+		applicationLine->regAcquire(customerName,customerID);
 		printf("[CUST]Customer %d go to reg app line \n",customerID);
-		applicationLine -> regAcquire(customerName,customerID);
 		applicationLine -> addRegLine((int)this);
-		applicationLine -> regRelease(customerName,customerID);
+		getClerk();
+		applicationLine->regRelease(customerName,customerID);
 	}
+	//Customer already go to see the clerk
+	//Clerk was pass his cond & lock to cusomer by c->setCustomer
+	
+	clerkLock->Acquire();//Call clerk
+	//Doing the application work;
+	//clerkCondition->Signal(clerkLock);//call clerk say i am done	
+	customerCondition->Wait(clerkLock);//Customer wait clerk done
+
+	clerkLock->Release();//Call clerk
 }
 
 void Customer::gotoPictureLine()

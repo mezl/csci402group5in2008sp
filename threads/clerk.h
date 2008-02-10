@@ -22,6 +22,8 @@ class Clerk
 	cTable *table;
 	int clerkID;
 	char *clerkName;
+	Lock *clerkLock;
+	Condition *clerkCondition;
 };
 #endif
 
