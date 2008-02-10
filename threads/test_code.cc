@@ -377,8 +377,8 @@ void TestSuite() {
 #include "picclerk.cc"
 #include "passclerk.cc"
 #include "cashclerk.cc"
-#define CUSTOMER_NUM 5
-#define CLERK_NUM 3
+#define CUSTOMER_NUM 1
+#define CLERK_NUM 2
 cLine *applicationLine = new cLine("app line",1);
 cLine *pictureLine = new cLine("pic line",2);
 cLine *passportLine = new cLine("passport line",3);
@@ -429,7 +429,7 @@ void office()
 {
 	printf("[Office]Start Office Sim\n");
 	// create the manager
-	//Timer *t = new Timer(managerHandler, 0, false);
+	Timer *t = new Timer(managerHandler, 0, false);
 	
 
 
@@ -497,7 +497,7 @@ void office()
 		cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
 	}
 
-	Timer *t = new Timer(managerHandler, 0, false);
+//	Timer *t = new Timer(managerHandler, 0, false);
 	//Thread *manager_thread = new Thread("Manager");
 	//manager_thread -> Fork(Manager, managerHandlCount);
 
@@ -515,7 +515,7 @@ void office()
 
 void Manager(int x)
 {
-	bool display = true;
+	bool display = false;
 	//IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
@@ -618,12 +618,14 @@ void Manager(int x)
 */
 	// check for total amount of money currently collected at the office
 	// Sum up all the money in each lines and all the money in each tables
+	/*
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
-	//printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
+	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 	//(void) interrupt->SetLevel(oldLevel);
+	*/
 }
 void Problem2()
 {
