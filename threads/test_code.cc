@@ -416,13 +416,13 @@ int managerHandlCount = 0;
 Lock managerLock("Manager Lock");
 void managerHandler(int x)
 {
-	managerLock.Acquire();
+	//managerLock.Acquire();
 	//char msg[20];
 	//sprintf(msg,"ManagerT %d",managerHandlCount);
 	//Thread *manager_thread = new Thread(msg);
 	//manager_thread -> Fork(Manager, managerHandlCount++);
 	Manager(0);
-	managerLock.Release();
+	//managerLock.Release();
 }
 
 void office()
@@ -513,7 +513,7 @@ void office()
 void Manager(int x)
 {	
 	bool display = true;
-	IntStatus oldLevel = interrupt->SetLevel(IntOff);
+	//IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
 	char *name = "Manager";
@@ -620,7 +620,7 @@ void Manager(int x)
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
 	//if(display)printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
-	(void) interrupt->SetLevel(oldLevel);
+	//(void) interrupt->SetLevel(oldLevel);
 }
 void Problem2()
 {
