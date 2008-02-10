@@ -377,8 +377,10 @@ void TestSuite() {
 #include "picclerk.cc"
 #include "passclerk.cc"
 #include "cashclerk.cc"
-#define CUSTOMER_NUM 1
-#define CLERK_NUM 2
+#define CUSTOMER_NUM 5
+#define CLERK_NUM 5
+#define PASSPORT
+#define CASHIER 
 cLine *applicationLine = new cLine("app line",1);
 cLine *pictureLine = new cLine("pic line",2);
 cLine *passportLine = new cLine("passport line",3);

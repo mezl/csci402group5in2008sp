@@ -72,18 +72,20 @@ class Lock {
     void Acquire(); // these are the only operations on a lock
     void Release(); // they are both *atomic*
 
-    bool isHeldByCurrentThread();// true if the current thread
+    bool isHeldByCurrentThread();	// true if the current thread
 					// holds this lock.  Useful for
 					// checking in Release, and in
 					// Condition variable ops below.
-    void clearLockOwner(){lockOwner = NULL;}//Add this to clear owner
+
   private:
     char* name;				// for debugging
-    //Add by Kai
-    List *lockWaitQueue;       // threads waiting in lock
-    Thread *lockOwner; //lock owner for thread
 
-    // plus some other stuff you'll need to define
+#ifdef CHANGED
+    Thread *owner;                      // a pointer to the thread that owns the Lock
+                                        // if no owner, Lock is "free"
+    List *queue;                        // threads waiting in Acquire() for the lock to be FREE
+#endif
+
 };
 
 // The following class defines a "condition variable".  A condition
@@ -132,12 +134,11 @@ class Condition {
     void Signal(Lock *conditionLock);   // conditionLock must be held by
     void Broadcast(Lock *conditionLock);// the currentThread for all of 
 					// these operations
-
   private:
-    char* name;
-    //Add by Kai
-    List *condWaitQueue;       // threads waiting in condition
-    Lock *condLock;//save lock pointer in the condiftion class for the first waithing thread
-    // plus some other stuff you'll need to define
+    char* name;                         // for debugging purposes
+#ifdef CHANGED
+    List *queue;                        // the WaitQueue for the Condition
+    Lock* lock;                         // the current Lock associated with this Condition
+#endif
 };
 #endif // SYNCH_H
