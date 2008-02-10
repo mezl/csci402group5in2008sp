@@ -526,7 +526,7 @@ void Manager(int x)
 	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
 	{
 		printf("[Manager]<<<<>>>>App Clerk %d Customer in Line %s\n",applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
-		applicationTable->addClerk(name,x);
+		//applicationTable->addClerk(name,x);
 		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,x);
@@ -537,7 +537,7 @@ void Manager(int x)
 	if ((pictureTable->clerkCount() == 0) && !pictureLine->nobody())
 	{
 		printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line %s\n",pictureTable->clerkCount(),pictureLine->nobody()?"True":"False");
-		pictureTable->addClerk(name,x);
+		//pictureTable->addClerk(name,x);
 		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,x);
