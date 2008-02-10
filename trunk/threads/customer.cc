@@ -21,6 +21,7 @@ Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in
 	sprintf(msg,"%s%d",name,ID_in);
 	customerCondition = new Condition(msg);
 	setClerkLock = new Lock("SetClerkLock");//given by free clerk
+	customerLock = new Lock(msg);//given by free clerk
 	//random function initilization
 	srand(time(NULL));
 }
@@ -69,7 +70,6 @@ void Customer::gotoApplicationLine()
 			money = money-500;
 			applicationLine -> addPreferLine((int)this, 500);
 
-			getClerk();
 
 			printf("[CUST]Customer %d wake up in %s%d \n",customerID,
 					applicationLine->getName(),
@@ -82,18 +82,21 @@ void Customer::gotoApplicationLine()
 		applicationLine->regAcquire(customerName,customerID);
 		printf("[CUST]Customer %d go to reg app line \n",customerID);
 		applicationLine -> addRegLine((int)this);
-		getClerk();
+
+
 		applicationLine->regRelease(customerName,customerID);
 	}
 	//Customer already go to see the clerk
 	//Clerk was pass his cond & lock to cusomer by c->setCustomer
-	
+	wait();	//wait clerk call me
+/*	
 	clerkLock->Acquire();//Call clerk
 	//Doing the application work;
 	//clerkCondition->Signal(clerkLock);//call clerk say i am done	
 	customerCondition->Wait(clerkLock);//Customer wait clerk done
 
 	clerkLock->Release();//Call clerk
+	*/
 }
 
 void Customer::gotoPictureLine()
@@ -120,13 +123,15 @@ void Customer::gotoPictureLine()
 	}
 	//Customer already go to see the clerk
 	//Clerk was pass his cond & lock to cusomer by c->setCustomer
-	
+	wait();
+	/*	
 	clerkLock->Acquire();//Call clerk
 	//Doing the application work;
 	//clerkCondition->Signal(clerkLock);//call clerk say i am done	
 	customerCondition->Wait(clerkLock);//Customer wait clerk done
 
 	clerkLock->Release();//Call clerk	
+	*/
 }
 
 void Customer::gotoPassportLine()

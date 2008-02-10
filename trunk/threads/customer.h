@@ -53,8 +53,15 @@ class Customer
 		return clerkSet;
 	
 	}
-	void wakeup(Lock *l){
-		customerCondition->Signal(l);
+	void wait(){
+		customerLock->Acquire();
+		customerCondition->Wait(customerLock)
+		customerLock->Release();	
+	}
+	void wakeup(){
+		customerLock->Acquire();
+		customerCondition->Signal(customerLock);
+		customerLock->Release();	
 	}
 	private:
 	int customerID;
@@ -71,6 +78,7 @@ class Customer
 	bool clerkSet;
 	Lock *setClerkLock;//given by free clerk
 	Lock *clerkLock;//given by free clerk
+	Lock *customerLock;//given by free clerk
 	Condition *clerkCondition;//given by free clerk
 	Condition *customerCondition;
 };

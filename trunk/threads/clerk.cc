@@ -18,38 +18,40 @@ void Clerk::run()
 	{
 		//Do Lock
 		bool serviced= false;
+		Customer *c;
 
 		cline->preferAcquire(clerkName,clerkID);		
-		
 		printf("[Clerk]%s %d Get both line lock\n",clerkName,clerkID);
 		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
 			serviced= true;
 			printf("[Clerk]%s %d check prefer line %d\n",clerkName,clerkID,cline->getID());
-			Customer *c = (Customer *)cline->getNextPreferLineCustomer(clerkName,clerkID);
-			c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
-			clerkLock->Acquire();
-			handleCustomer(c);
-			c->wakeup(clerkLock);
-			clerkLock->Release();
+			c = (Customer *)cline->getNextPreferLineCustomer(clerkName,clerkID);
 		}
 		cline->preferRelease(clerkName,clerkID);
+		if(serviced)
+		{
+			c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
+			handleCustomer(c);
+			c->wakeup();
+		}
 
 		if(!serviced)
-		{
+		{	
 			cline->regAcquire(clerkName,clerkID);		
 			if(!cline->IsRegLineEmpty())
 			{
 				serviced = true;
 				printf("[Clerk]%s %d check reg line %d\n",clerkName,clerkID,cline->getID());
-				Customer *c =(Customer *)cline->getNextRegLineCustomer(clerkName,clerkID);
-				c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
-				clerkLock->Acquire();
-				handleCustomer(c);
-				c->wakeup(clerkLock);
-				clerkLock->Release();
+				c =(Customer *)cline->getNextRegLineCustomer(clerkName,clerkID);
 			}
 			cline->regRelease(clerkName,clerkID);		
+			if(serviced)
+			{
+				c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
+				handleCustomer(c);
+				c->wakeup();
+			}	
 		}
 		if(!serviced)
 		{
