@@ -511,7 +511,7 @@ void office()
 
 void Manager(int x)
 {	
-	bool display = false;
+	bool display = true;
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
