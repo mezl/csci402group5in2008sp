@@ -526,7 +526,7 @@ void Manager(int x)
 	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
 	{
 		printf("[Manager]<<<<>>>>App Clerk %d Customer in Line %s\n",applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
-		//applicationTable->addClerk(name,x);
+		applicationTable->addClerk(name,x);
 		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,x);
@@ -537,7 +537,7 @@ void Manager(int x)
 	if ((pictureTable->clerkCount() == 0) && !pictureLine->nobody())
 	{
 		printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line %s\n",pictureTable->clerkCount(),pictureLine->nobody()?"True":"False");
-		//pictureTable->addClerk(name,x);
+		pictureTable->addClerk(name,x);
 		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,x);
@@ -569,27 +569,29 @@ void Manager(int x)
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
 	// must release all locks at completion.
 
-	//applicationLine->Acquire(name, 0);
+	applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,0);
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
+		printf("[Manager]<<<<>>>>App Clerk %d Customer p%d r%d\n",applicationTable->clerkCount(),applicationLine->regCustomerCount(),applicationLine->preferCustomerCount());
 		applicationTable->addClerk(name,0);
 		printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,0);
-	//applicationLine->Release(name, 0);
+	applicationLine->Release(name, 0);
 
-	//pictureLine->Acquire(name, 0);
+	pictureLine->Acquire(name, 0);
 	pictureTable->acquireLock(name,0);
 	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
 		pictureTable->addClerk(name,0);
+		printf("[Manager]<<<<>>>>Pic Clerk %d Customer p%d r%d\n",pictureTable->clerkCount(),pictureLine->regCustomerCount(),pictureLine->preferCustomerCount());
 		printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,0);
-	//pictureLine->Release(name, 0);
+	pictureLine->Release(name, 0);
 
-	//passportLine->Acquire(name, 0);
+	passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
 	if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3))
 	{
@@ -597,9 +599,9 @@ void Manager(int x)
 		printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	passportTable->releaseLock(name,0);
-	//passportLine->Release(name, 0);
+	passportLine->Release(name, 0);
 
-	//cashierLine->Acquire(name, 0);
+	cashierLine->Acquire(name, 0);
 	cashierTable->acquireLock(name,0);
 	if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3))
 	{
@@ -607,7 +609,7 @@ void Manager(int x)
 		printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	cashierTable->releaseLock(name,0);
-	//cashierLine->Release(name, 0);
+	cashierLine->Release(name, 0);
 
 	// check for total amount of money currently collected at the office
 	// Sum up all the money in each lines and all the money in each tables
