@@ -43,6 +43,7 @@ void Customer::customerRun()
 	printf("[CUST]Customer %d finish both app & pic \n",customerID);
 	gotoPassportLine();
 	gotoCashierLine();
+	printf("[CUST]Customer %d finished !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 \n",customerID);
 }
 
 void Customer::gotoApplicationLine()
