@@ -16,12 +16,12 @@ class cLine
 		void * getNextRegLineCustomer(char *clerkName,int clerkID);
 		int preferCustomerCount(){return preferLineCount;}
 		int regCustomerCount(){return regLineCount;}
-		void preferAcquire(char *name = "NoName",int id = 0,bool display=true);
-		void preferRelease(char *name = "NoName",int id = 0,bool display=true);
-		void regAcquire(char *name,int id = 0,bool display=true);
-		void regRelease(char *name,int id =0 ,bool display=true);
-		void Acquire(char *name,int id = 0,bool display=true);
-		void Release(char *name,int id =0 ,bool display=true);
+		void preferAcquire(char *name = "NoName",int id = 0,bool display=false);
+		void preferRelease(char *name = "NoName",int id = 0,bool display=false);
+		void regAcquire(char *name,int id = 0,bool display=false);
+		void regRelease(char *name,int id =0 ,bool display=false);
+		void Acquire(char *name,int id = 0,bool display=false);
+		void Release(char *name,int id =0 ,bool display=false);
 		bool IsRegLineEmpty();
 		bool IsPreferLineEmpty();
 		int getID(){return lineID;}
