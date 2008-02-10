@@ -43,5 +43,7 @@ class cLine
 		Lock* lineLock;//for lock both line
 		List* preferLineQueue;	
 		List* regLineQueue;	
+		int callNext;
+		int regCallNext;
 };
 #endif
