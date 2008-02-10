@@ -81,7 +81,7 @@ void cLine::addPreferLine(int c,int mount)
 	printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);	
-	while(callNext == 0)
+	//while(callNext == 0)
 		preferLineCond->Wait(preferLineLock);
 	callNext --;
 	printf("[Line]One Customer in front the prefer %s%d\n",lineName,lineID);
@@ -94,7 +94,7 @@ void cLine::addRegLine(int c)
 	printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
 	regLineQueue->Append((void *)c);
 
-	while(regCallNext == 0)
+	//while(regCallNext == 0)
 		regLineCond->Wait(regLineLock);
 	regCallNext --;
 

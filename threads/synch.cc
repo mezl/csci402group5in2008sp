@@ -158,14 +158,19 @@ void Lock::Release() {
 		}else{//No thread in lock waiting queue
 			lockOwner = NULL;//clear lock ownership	
 		}
-	}// if held by current thread
-	
+	}else{// if held by current thread
+	printf("[ThreadMsg]%s Release is not handle by current thread\n",currentThread->getName());
+	//printf("[ThreadMsg]Lock owner is %s \n",lockOwner->getName());
+	}
 	//Restore Interrupt
 	(void) interrupt->SetLevel(oldLevel);
 	//Above Done by Kai	
 }
 bool Lock::isHeldByCurrentThread(){
-	return (currentThread == lockOwner);
+	if(currentThread == lockOwner)
+		return true;
+	return false;	
+//	return (currentThread == lockOwner);
 }
 Condition::Condition(char* debugName) {
 
