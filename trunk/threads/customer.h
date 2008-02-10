@@ -55,7 +55,7 @@ class Customer
 	}
 	void wait(){
 		customerLock->Acquire();
-		customerCondition->Wait(customerLock)
+		customerCondition->Wait(customerLock);
 		customerLock->Release();	
 	}
 	void wakeup(){
