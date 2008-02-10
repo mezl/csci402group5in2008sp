@@ -18,6 +18,8 @@ cLine::cLine(char *name,int ID)
 	lineID = ID;
 	lineName = name;
 	amount = 0;
+	callNext = 0;
+	regCallNext = 0;
 }
 cLine::~cLine()
 {
@@ -79,7 +81,9 @@ void cLine::addPreferLine(int c,int mount)
 	printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
 	amount+=mount;//receive money from customer
 	preferLineQueue->Append((void *)c);	
-	preferLineCond->Wait(preferLineLock);
+	while(callNext == 0)
+		preferLineCond->Wait(preferLineLock);
+	callNext --;
 	printf("[Line]One Customer in front the prefer %s%d\n",lineName,lineID);
 	
 }
@@ -89,7 +93,11 @@ void cLine::addRegLine(int c)
 	regLineCount++;
 	printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
 	regLineQueue->Append((void *)c);
-	regLineCond->Wait(regLineLock);
+
+	while(regCallNext == 0)
+		regLineCond->Wait(regLineLock);
+	regCallNext --;
+
 	printf("[Line]One Customer in front the reg %s%d\n",lineName,lineID);
 }
 void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID)
@@ -101,6 +109,7 @@ void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID)
 	}
 	preferLineCount--;
 	printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
+	callNext++;
 	preferLineCond->Signal(preferLineLock);
 	printf("[Line]%s %d call next customer in prefer %s%d\n",clerkName,clerkID,lineName,lineID);
 	return preferLineQueue->Remove();
@@ -113,6 +122,7 @@ void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
 		return NULL;
 	}
 	regLineCount--;
+	regCallNext++;
 	printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
 	regLineCond->Signal(regLineLock);
 	printf("[Line]%s %d call next customer in reg %s%d\n",clerkName,clerkID,lineName,lineID);
