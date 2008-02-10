@@ -7,7 +7,7 @@ Clerk::Clerk(cLine *l,cTable *t,int id,char *name)
 	clerkID = id;
 	clerkName = name;
 	char msg[20];
-	sprintf(msg,"%s%d",name,id)
+	sprintf(msg,"%s%d",name,id);
 	clerkLock = new Lock(msg);
 	clerkCondition = new Condition(msg);
 }
@@ -30,7 +30,7 @@ void Clerk::run()
 			c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
 			clerkLock->Acquire();
 			handleCustomer(c);
-			c->wakeup(ckerkLock);
+			c->wakeup(clerkLock);
 			clerkLock->Release();
 		}
 		cline->preferRelease(clerkName,clerkID);
@@ -46,7 +46,7 @@ void Clerk::run()
 				c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
 				clerkLock->Acquire();
 				handleCustomer(c);
-				c->wakeup(ckerkLock);
+				c->wakeup(clerkLock);
 				clerkLock->Release();
 			}
 			cline->regRelease(clerkName,clerkID);		
