@@ -568,12 +568,11 @@ void Manager(int x)
 	cashierTable->releaseLock(name,0);
 	//cashierLine->Release(name, 0);
 
-/*
 	// check for number of customers in each line
 	// add 1 clerk if # of customer in line is >3
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
 	// must release all locks at completion.
-
+/*
 	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,0);
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
@@ -615,8 +614,8 @@ void Manager(int x)
 	}
 	cashierTable->releaseLock(name,0);
 	//cashierLine->Release(name, 0);
-*/
 	// check for total amount of money currently collected at the office
+	*/
 	// Sum up all the money in each lines and all the money in each tables
 	/*
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
