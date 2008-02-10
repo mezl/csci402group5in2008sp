@@ -47,7 +47,7 @@ class Customer
 	}
 	bool getClerk(){
 		setClerkLock->Acquire();
-		if(!clerSet)
+		if(!clerkSet)
 			printf("[CUST]%s%d say:no clerk can help me\n",customerName,customerID);
 		setClerkLock->Release();
 		return clerkSet;

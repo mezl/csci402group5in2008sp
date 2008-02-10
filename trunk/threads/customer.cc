@@ -72,7 +72,7 @@ void Customer::gotoApplicationLine()
 	}
 	applicationLine->preferRelease(customerName,customerID);
 
-	if(notGoToPrferLine)
+	if(notGoToPreferLine)
 	{
 		applicationLine->regAcquire(customerName,customerID);
 		printf("[CUST]Customer %d go to reg app line \n",customerID);
