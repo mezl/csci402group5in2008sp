@@ -472,7 +472,7 @@ void office()
 		printf("[Office]Fork PicClerk %d Thread\n",picClerk[i]->getID());
 		picClerk_thread[i] -> Fork(myClerkForkFunc, (int)picClerk[i]);
 	}
-/*
+
 	// create 4 clerks (4 clerk for each table/job)
 	Clerk *passClerk[CLERK_NUM];
 	Thread *passClerk_thread[CLERK_NUM];
@@ -496,7 +496,7 @@ void office()
 		printf("[Office]Fork CashClerk %d Thread\n",cashClerk[i]->getID());
 		cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
 	}
-*/
+
 	Timer *t = new Timer(managerHandler, 0, false);
 	//Thread *manager_thread = new Thread("Manager");
 	//manager_thread -> Fork(Manager, managerHandlCount);
