@@ -47,7 +47,7 @@ void Customer::customerRun()
 
 void Customer::gotoApplicationLine()
 {
-	if(money > 500)
+	if(money > 500 && (applicationLine->preferCustomerCount() <= applicationLine->regCustomerCount()))
 	{
 		printf("[CUST]Customer %d go to prefer app line \n",customerID);
 		applicationLine -> preferAcquire(customerName,customerID);
@@ -70,7 +70,7 @@ void Customer::gotoApplicationLine()
 
 void Customer::gotoPictureLine()
 {
-	if(money > 500)
+	if(money > 500 && (pictureLine->preferCustomerCount() <= pictureLine->regCustomerCount()))
 	{
 		printf("[CUST]Customer %d go to prefer pic line \n",customerID);
 		pictureLine -> preferAcquire(customerName,customerID);
@@ -89,7 +89,7 @@ void Customer::gotoPictureLine()
 
 void Customer::gotoPassportLine()
 {
-	if(money > 500)
+	if(money > 500 && (passportLine->preferCustomerCount() <= passportLine->regCustomerCount()))
 	{
 		printf("[CUST]Customer %d go to prefer passport line \n",customerID);
 		passportLine -> preferAcquire(customerName,customerID);
@@ -108,7 +108,7 @@ void Customer::gotoPassportLine()
 
 void Customer::gotoCashierLine()
 {
-	if(money > 500)
+	if(money > 500 && (cashierLine->preferCustomerCount() <= cashierLine->regCustomerCount()))
 	{
 		printf("[CUST]Customer %d go to prefer cashier line \n",customerID);
 		cashierLine -> preferAcquire(customerName,customerID);
