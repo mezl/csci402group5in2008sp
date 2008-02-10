@@ -47,31 +47,36 @@ void Customer::customerRun()
 		gotoApplicationLine();
 	}
 	printf("[CUST]Customer %d finish both app & pic \n",customerID);
+#ifdef PASSPORT	
 	gotoPassportLine();
+#endif
+#ifdef CASHIER	
 	gotoCashierLine();
+#endif	
 	printf("[CUST]Customer %d finished !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 \n",customerID);
 }
 
 void Customer::gotoApplicationLine()
 {
 	bool notGoToPreferLine = true;
-	applicationLine->preferAcquire(customerName,customerID);
-	printf("[CUST]Customer %d get both app line lock\n",customerID);
-	if(money > 500 && (applicationLine->preferCustomerCount() <= applicationLine->regCustomerCount()))
-	{
-		notGoToPreferLine = false;
-		printf("[CUST]Customer %d go to prefer app line \n",customerID);
-		money = money-500;
-		applicationLine -> addPreferLine((int)this, 500);
+	if(money > 500){
+		applicationLine->preferAcquire(customerName,customerID);
+		printf("[CUST]Customer %d get both app line lock\n",customerID);
+		if((applicationLine->preferCustomerCount() == 0));//<= applicationLine->regCustomerCount()))
+		{
+			notGoToPreferLine = false;
+			printf("[CUST]Customer %d go to prefer app line \n",customerID);
+			money = money-500;
+			applicationLine -> addPreferLine((int)this, 500);
 
-		getClerk();
+			getClerk();
 
-		printf("[CUST]Customer %d wake up in %s%d \n",customerID,
-				applicationLine->getName(),
-				applicationLine->getID());
+			printf("[CUST]Customer %d wake up in %s%d \n",customerID,
+					applicationLine->getName(),
+					applicationLine->getID());
+		}
+		applicationLine->preferRelease(customerName,customerID);
 	}
-	applicationLine->preferRelease(customerName,customerID);
-
 	if(notGoToPreferLine)
 	{
 		applicationLine->regAcquire(customerName,customerID);
@@ -93,21 +98,34 @@ void Customer::gotoApplicationLine()
 
 void Customer::gotoPictureLine()
 {
-	if(money > 500 && (pictureLine->preferCustomerCount() <= pictureLine->regCustomerCount()))
-	{
-		printf("[CUST]Customer %d go to prefer pic line \n",customerID);
+	bool notGoToPreferLine = true;
+	if(money >500){
 		pictureLine -> preferAcquire(customerName,customerID);
-		money = money-500;
-		pictureLine -> addPreferLine((int)this, 500);
+		if((pictureLine->preferCustomerCount() == 0));//<= pictureLine->regCustomerCount()))
+		{
+			notGoToPreferLine = false;
+			printf("[CUST]Customer %d go to prefer pic line \n",customerID);
+			money = money-500;
+			pictureLine -> addPreferLine((int)this, 500);
+		}
 		pictureLine -> preferRelease(customerName,customerID);
 	}
-	else
+	if(notGoToPreferLine)
 	{
 		printf("[CUST]Customer %d go to reg pic line \n",customerID);
 		pictureLine -> regAcquire(customerName,customerID);
 		pictureLine -> addRegLine((int)this);
 		pictureLine -> regRelease(customerName,customerID);
 	}
+	//Customer already go to see the clerk
+	//Clerk was pass his cond & lock to cusomer by c->setCustomer
+	
+	clerkLock->Acquire();//Call clerk
+	//Doing the application work;
+	//clerkCondition->Signal(clerkLock);//call clerk say i am done	
+	customerCondition->Wait(clerkLock);//Customer wait clerk done
+
+	clerkLock->Release();//Call clerk	
 }
 
 void Customer::gotoPassportLine()
