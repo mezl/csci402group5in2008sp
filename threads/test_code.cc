@@ -565,7 +565,7 @@ void Manager(int x)
 	cashierTable->releaseLock(name,0);
 	//cashierLine->Release(name, 0);
 
-
+/*
 	// check for number of customers in each line
 	// add 1 clerk if # of customer in line is >3
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
@@ -612,14 +612,14 @@ void Manager(int x)
 	}
 	cashierTable->releaseLock(name,0);
 	//cashierLine->Release(name, 0);
-
+*/
 	// check for total amount of money currently collected at the office
 	// Sum up all the money in each lines and all the money in each tables
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
-	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
+	//printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 	//(void) interrupt->SetLevel(oldLevel);
 
 }
