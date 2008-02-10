@@ -510,24 +510,25 @@ void office()
 }
 
 void Manager(int x)
-{
+{	
+	bool display = false;
 	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
 	char *name = "Manager";
-       //sprintf(name,"Manager (%d)",x);
+       //sif(display)printf(name,"Manager (%d)",x);
 
-	printf("[Manager]%d I am Starting.....\n",x);
+	if(display)printf("[Manager]%d I am Starting.....\n",x);
 	applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,x);
 	
-	printf("[Manager]%d Get appTable lock.....\n",x);
+	if(display)printf("[Manager]%d Get appTable lock.....\n",x);
 	// if no clerk work and some customer in line
 	if ((applicationTable->clerkCount() == 0) && !applicationLine->nobody())
 	{
-		printf("[Manager]<<<<>>>>App Clerk %d Customer in Line %s\n",applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
+		if(display)printf("[Manager]<<<<>>>>App Clerk %d Customer in Line %s\n",applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
 		applicationTable->addClerk(name,x);
-		printf("[Manager] wakeup a AppClerk to Application table\n");
+		if(display)printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,x);
 	applicationLine->Release(name, 0);
@@ -536,9 +537,9 @@ void Manager(int x)
 	pictureTable->acquireLock(name,x);
 	if ((pictureTable->clerkCount() == 0) && !pictureLine->nobody())
 	{
-		printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line %s\n",pictureTable->clerkCount(),pictureLine->nobody()?"True":"False");
+		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line %s\n",pictureTable->clerkCount(),pictureLine->nobody()?"True":"False");
 		pictureTable->addClerk(name,x);
-		printf("[Manager] wakeup a PicClerk to Picture table\n");
+		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,x);
 	pictureLine->Release(name, 0)
@@ -548,7 +549,7 @@ void Manager(int x)
 	if ((passportTable->clerkCount() == 0) && !passportLine->nobody())
 	{
 		passportTable->addClerk(name,0);
-		printf("[Manager] wakeup a PassClerk to Passport table\n");
+		if(display)printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	passportTable->releaseLock(name,0);
 	passportLine->Release(name, 0);
@@ -558,7 +559,7 @@ void Manager(int x)
 	if ((cashierTable->clerkCount() == 0) && !cashierLine->nobody())
 	{
 		cashierTable->addClerk(name,0);
-		printf("[Manager] wakeup a CashClerk to Cashier table\n");
+		if(display)printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	cashierTable->releaseLock(name,0);
 	cashierLine->Release(name, 0);
@@ -573,9 +574,9 @@ void Manager(int x)
 	applicationTable->acquireLock(name,0);
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
-		printf("[Manager]<<<<>>>>App Clerk %d Customer p%d r%d\n",applicationTable->clerkCount(),applicationLine->regCustomerCount(),applicationLine->preferCustomerCount());
+		if(display)printf("[Manager]<<<<>>>>App Clerk %d Customer p%d r%d\n",applicationTable->clerkCount(),applicationLine->regCustomerCount(),applicationLine->preferCustomerCount());
 		applicationTable->addClerk(name,0);
-		printf("[Manager] wakeup a AppClerk to Application table\n");
+		if(display)printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,0);
 	applicationLine->Release(name, 0);
@@ -585,8 +586,8 @@ void Manager(int x)
 	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
 		pictureTable->addClerk(name,0);
-		printf("[Manager]<<<<>>>>Pic Clerk %d Customer p%d r%d\n",pictureTable->clerkCount(),pictureLine->regCustomerCount(),pictureLine->preferCustomerCount());
-		printf("[Manager] wakeup a PicClerk to Picture table\n");
+		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer p%d r%d\n",pictureTable->clerkCount(),pictureLine->regCustomerCount(),pictureLine->preferCustomerCount());
+		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,0);
 	pictureLine->Release(name, 0);
@@ -596,7 +597,7 @@ void Manager(int x)
 	if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3))
 	{
 		passportTable->addClerk(name,0);
-		printf("[Manager] wakeup a PassClerk to Passport table\n");
+		if(display)printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	passportTable->releaseLock(name,0);
 	passportLine->Release(name, 0);
@@ -606,7 +607,7 @@ void Manager(int x)
 	if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3))
 	{
 		cashierTable->addClerk(name,0);
-		printf("[Manager] wakeup a CashClerk to Cashier table\n");
+		if(display)printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	cashierTable->releaseLock(name,0);
 	cashierLine->Release(name, 0);
@@ -617,7 +618,7 @@ void Manager(int x)
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
-	//printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
+	//if(display)printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 	(void) interrupt->SetLevel(oldLevel);
 }
 void Problem2()
