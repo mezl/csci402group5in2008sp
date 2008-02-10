@@ -33,7 +33,7 @@ void Clerk::run()
 		{
 			c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
 			handleCustomer(c);
-			c->wakeup();
+			//c->wakeup();
 		}
 
 		if(!serviced)
@@ -50,7 +50,7 @@ void Clerk::run()
 			{
 				c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
 				handleCustomer(c);
-				c->wakeup();
+				//c->wakeup();
 			}	
 		}
 		if(!serviced)
