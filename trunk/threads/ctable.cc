@@ -8,6 +8,7 @@ cTable::cTable(int ID_in, int initialClerkCount)
 	leaveCount = 0;
 	tableLock = new Lock("Table Lock");
 	tableCondition = new Condition("Table Condiiton");
+	needClerk = false;
 }
 
 
@@ -25,6 +26,7 @@ void cTable::addClerk(char *name,int id,bool display)
 	}
 	//cCount++;
 	leaveCount--;
+	needClerk = true;
 	if(display)printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
 	tableCondition->Signal(tableLock);
 	if(display)printf("[Table]%s%d table %d is added a clerk\n",name,id, tableID);
@@ -35,7 +37,9 @@ void cTable::leaveTable(char *name,int id,bool display)
 	//cCount--;
 	leaveCount++;
 	if(display)printf("[Table]%s %d is leave table now,[%d]still work[%d]leave\n",name,id,cCount,leaveCount);
-	tableCondition->Wait(tableLock);
+	while(needClerk == false)
+		tableCondition->Wait(tableLock);
+	needClerk = false;
 	if(display)printf("[Table]%s %d is come back now\n",name,id);
 }
 
