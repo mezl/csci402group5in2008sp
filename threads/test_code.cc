@@ -520,7 +520,7 @@ void Manager(int x)
        //sif(display)printf(name,"Manager (%d)",x);
 
 	if(display)printf("[Manager]%d I am Starting.....\n",x);
-	applicationLine->Acquire(name, 0);
+	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,x);
 	
 	if(display)printf("[Manager]%d Get appTable lock.....\n",x);
@@ -532,9 +532,9 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,x);
-	applicationLine->Release(name, 0);
+	//applicationLine->Release(name, 0);
 
-	pictureLine->Acquire(name, 0);
+	//pictureLine->Acquire(name, 0);
 	pictureTable->acquireLock(name,x);
 	if ((pictureTable->clerkCount() == 0) && !pictureLine->nobody())
 	{
@@ -543,9 +543,9 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,x);
-	pictureLine->Release(name, 0);
+	//pictureLine->Release(name, 0);
 
-	passportLine->Acquire(name, 0);
+	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
 	if ((passportTable->clerkCount() == 0) && !passportLine->nobody())
 	{
@@ -553,9 +553,9 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	passportTable->releaseLock(name,0);
-	passportLine->Release(name, 0);
+	//passportLine->Release(name, 0);
 	
-	cashierLine->Acquire(name, 0);
+	//cashierLine->Acquire(name, 0);
 	cashierTable->acquireLock(name,0);
 	if ((cashierTable->clerkCount() == 0) && !cashierLine->nobody())
 	{
@@ -563,7 +563,7 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	cashierTable->releaseLock(name,0);
-	cashierLine->Release(name, 0);
+	//cashierLine->Release(name, 0);
 
 
 	// check for number of customers in each line
@@ -571,7 +571,7 @@ void Manager(int x)
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
 	// must release all locks at completion.
 
-	applicationLine->Acquire(name, 0);
+	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,0);
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
@@ -580,9 +580,9 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
 	applicationTable->releaseLock(name,0);
-	applicationLine->Release(name, 0);
+	//applicationLine->Release(name, 0);
 
-	pictureLine->Acquire(name, 0);
+	//pictureLine->Acquire(name, 0);
 	pictureTable->acquireLock(name,0);
 	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
@@ -591,9 +591,9 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,0);
-	pictureLine->Release(name, 0);
+	//pictureLine->Release(name, 0);
 
-	passportLine->Acquire(name, 0);
+	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
 	if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3))
 	{
@@ -601,9 +601,9 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	passportTable->releaseLock(name,0);
-	passportLine->Release(name, 0);
+	//passportLine->Release(name, 0);
 
-	cashierLine->Acquire(name, 0);
+	//cashierLine->Acquire(name, 0);
 	cashierTable->acquireLock(name,0);
 	if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3))
 	{
@@ -611,8 +611,8 @@ void Manager(int x)
 		if(display)printf("[Manager] wakeup a CashClerk to Cashier table\n");
 	}
 	cashierTable->releaseLock(name,0);
-	cashierLine->Release(name, 0);
-
+	//cashierLine->Release(name, 0);
+/*
 	// check for total amount of money currently collected at the office
 	// Sum up all the money in each lines and all the money in each tables
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
@@ -621,6 +621,7 @@ void Manager(int x)
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
 	//if(display)printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 	//(void) interrupt->SetLevel(oldLevel);
+	*/
 }
 void Problem2()
 {
