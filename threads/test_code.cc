@@ -547,7 +547,7 @@ void Manager(int x)
 	}
 	pictureTable->releaseLock(name,x);
 	//pictureLine->Release(name, 0);
-/*
+
 	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
 	if ((passportTable->clerkCount() == 0))//&& !passportLine->nobody())
@@ -567,7 +567,7 @@ void Manager(int x)
 	}
 	cashierTable->releaseLock(name,0);
 	//cashierLine->Release(name, 0);
-*/
+
 /*
 	// check for number of customers in each line
 	// add 1 clerk if # of customer in line is >3
