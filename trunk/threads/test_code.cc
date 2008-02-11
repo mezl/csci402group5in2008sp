@@ -528,10 +528,10 @@ void Manager(int x)
 
 
 	if(application->nobody()){
-		printf("[Manager]%d No body in App Line\n",x)
+		printf("[Manager]%d No body in App Line\n",x);
 	}else{
 	
-		printf("[Manager]%d Some one body in App Line\n",x)
+		printf("[Manager]%d Some one body in App Line\n",x);
 	}
 
 
