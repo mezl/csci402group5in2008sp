@@ -24,7 +24,6 @@ void cTable::addClerk(char *name,int id,bool display)
 		if(display)printf("[Table]No clerk can add!\n");
 		return;
 	}
-	//cCount++;
 	leaveCount--;
 	needClerk  ++;
 	if(display)printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
@@ -34,7 +33,6 @@ void cTable::addClerk(char *name,int id,bool display)
 
 void cTable::leaveTable(char *name,int id,bool display)
 {
-	//cCount--;
 	leaveCount++;
 	if(display)printf("[Table]%s %d is leave table now,[%d]still work[%d]leave\n",name,id,cCount,leaveCount);
 	while(needClerk == 0)

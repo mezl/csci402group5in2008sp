@@ -360,12 +360,13 @@ void TestSuite() {
 
 }
 ///////////////////////////////////////////////////////////////////////////////
-// Problem2()
+// Part 2
+//
+//Enter function are Office
+//use the define below can turn on/off code
 //
 //
-//
-//
-//
+///////////////////////////////////////////////////////////////////////////////
 #include "manager.cc"
 #include "customer.h"
 #include "clerk.h"
@@ -377,6 +378,8 @@ void TestSuite() {
 #include "picclerk.cc"
 #include "passclerk.cc"
 #include "cashclerk.cc"
+
+//Set how many customer and clerk want to run
 #define CUSTOMER_NUM 4
 #define CLERK_NUM 4
 ////////////////////////////////////////////////
@@ -385,25 +388,27 @@ void TestSuite() {
 #define PICTURE
 #define PASSPORT
 #define CASHIER 
+#define MAMAGER
+//#define CHECK_LINE_3
 //#define LINE_CHECK	
 //#define SHOW_MONEY	
 ////////////////////////////////////////////////
 cLine *applicationLine = new cLine("app line",1);
-cLine *pictureLine = new cLine("pic line",2);
-cLine *passportLine = new cLine("passport line",3);
-cLine *cashierLine = new cLine("cashier line",4);
+cLine *pictureLine     = new cLine("pic line",2);
+cLine *passportLine    = new cLine("passport line",3);
+cLine *cashierLine     = new cLine("cashier line",4);
 
 cTable *applicationTable = new cTable(1, CLERK_NUM);
-cTable *pictureTable = new cTable(2, CLERK_NUM);
-cTable *passportTable = new cTable(3, CLERK_NUM);
-cTable *cashierTable= new cTable(4, CLERK_NUM);
+cTable *pictureTable     = new cTable(2, CLERK_NUM);
+cTable *passportTable    = new cTable(3, CLERK_NUM);
+cTable *cashierTable     = new cTable(4, CLERK_NUM);
 
 
 void Manager(int x);
 void myCustomerForkFunc(int x);
 void myClerkForkFunc(int x);
 void office();
-void Manager(int x);
+
 void myCustomerForkFunc(int x)
 {
 	Customer *c = (Customer*)x;
@@ -419,24 +424,19 @@ void myClerkForkFunc(int x)
 	cl -> run();
 	delete cl;
 }
-int managerHandlCount = 0;
-Lock managerLock("Manager Lock");
-void managerHandler(int x)
-{
-	char msg[20];
-	sprintf(msg,"ManagerT %d",managerHandlCount);
-	Thread *manager_thread = new Thread(msg);
-	manager_thread -> Fork(Manager, managerHandlCount++);
-}
 
+//Main program
 void office()
 {
 	printf("[Office]Start Office Sim\n");
+#ifdef MANAGER
 	// create the manager
 	printf("[Office]Create Manager\n");
 	Timer *t = new Timer(managerHandler, 0, false);
-	printf("[Office]Create Customer \n");
+#endif
+
 #ifdef CUSTOMER
+	printf("[Office]Create Customer \n");
 	Customer *customer[CUSTOMER_NUM];
 	Thread *customer_thread[CUSTOMER_NUM];
 	for(int i = 0; i < CUSTOMER_NUM; i++){
@@ -522,7 +522,6 @@ void lineCheck(int x){
 		if(display)printf("[Manager]%d Some one body in App Line\n",x);
 		appNeedClerk = true;
 	}
-
 	if(pictureLine->nobody()){
 		if(display)printf("[Manager]%d No body in Pic Line\n",x);
 		picNeedClerk = false;
@@ -546,15 +545,25 @@ void lineCheck(int x){
 	}
 #endif
 }
+int managerHandlCount = 0;
+Lock managerLock("Manager Lock");
+void managerHandler(int x)
+{
+	char msg[20];
+	sprintf(msg,"ManagerT %d",managerHandlCount);
+	Thread *manager_thread = new Thread(msg);
+	manager_thread -> Fork(Manager, managerHandlCount++);
+}
 void Manager(int x)
 {
 	managerLock.Acquire();
-	bool display = true ;//false;
-	//IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+	bool display = false;//Show debug message or not
+
+
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
 	char *name = "Manager";
-       //if(display)printf(name,"Manager (%d)",x);
 
 	if(display)printf("[Manager]%d I am Starting.....\n",x);
 
@@ -566,8 +575,7 @@ void Manager(int x)
 	// if no clerk work and some customer in line
 	if ((applicationTable->clerkCount() == 0)&& appNeedClerk );//&& !applicationLine->nobody())
 	{
-		if(display)printf("[Manager]<<<<>>>>App Clerk %d ,Customer in Line \n",applicationTable->clerkCount());
-				//applicationLine->nobody()?"True":"False");
+		if(display)printf("[Manager]App Clerk %d ,Customer in Line \n",applicationTable->clerkCount());
 		applicationTable->addClerk(name,x,display);
 		if(display)printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
@@ -580,8 +588,7 @@ void Manager(int x)
 	lineCheck(x);
 	if ((pictureTable->clerkCount() == 0)&& picNeedClerk);//&& !pictureLine->nobody())
 	{
-		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line \n",pictureTable->clerkCount());//
-//			,pictureLine->nobody()?"True":"False");
+		if(display)printf("[Manager]Pic Clerk %d Customer in Line \n",pictureTable->clerkCount());
 		pictureTable->addClerk(name,x,display);
 		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
@@ -621,7 +628,7 @@ void Manager(int x)
 	applicationTable->acquireLock(name,0);
 	if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3))
 	{
-		if(display)printf("[Manager]<<<<>>>>App Clerk %d Customer p%d r%d\n",applicationTable->clerkCount(),applicationLine->regCustomerCount(),applicationLine->preferCustomerCount());
+		if(display)printf("[Manager]App Clerk %d ,Customer \n",applicationTable->clerkCount());
 		applicationTable->addClerk(name,0);
 		if(display)printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
@@ -633,7 +640,8 @@ void Manager(int x)
 	if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3))
 	{
 		pictureTable->addClerk(name,0);
-		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer p%d r%d\n",pictureTable->clerkCount(),pictureLine->regCustomerCount(),pictureLine->preferCustomerCount());
+		if(display)printf("[Manager]Pic Clerk %d Customer p%d r%d\n",pictureTable->clerkCount(),
+				pictureLine->regCustomerCount(),pictureLine->preferCustomerCount());
 		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
 	pictureTable->releaseLock(name,0);
@@ -658,22 +666,21 @@ void Manager(int x)
 	}
 	cashierTable->releaseLock(name,0);
 	//cashierLine->Release(name, 0);
-	// check for total amount of money currently collected at the office
+	
 #endif	
-	// Sum up all the money in each lines and all the money in each tables
 #ifdef SHOW_MONEY	
+	// check for total amount of money currently collected at the office
+	// Sum up all the money in each lines and all the money in each tables
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
 	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
-	//(void) interrupt->SetLevel(oldLevel);
 #endif	
 	managerLock.Release();
 }
 void Problem2()
 {
 	office();
-
 }
 #endif

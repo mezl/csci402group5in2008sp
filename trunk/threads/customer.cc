@@ -7,7 +7,9 @@
 #ifndef CASHIER 
 #define CASHIER 
 #endif
-Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in)
+Customer::Customer(char *name,int ID_in, int money_in, 
+		cLine* applicationLine_in, cLine* pictureLine_in,
+	       	cLine* passportLine_in, cLine* cashierLine_in)
 {
 	printf("[CUST]Build Customer %d\n",ID_in);
 	customerID = ID_in;
@@ -60,7 +62,7 @@ void Customer::customerRun()
 #ifdef CASHIER	
 	gotoCashierLine();
 #endif	
-	printf("[CUST]Customer %d finished !!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n",customerID);
+	printf("[CUST]!!!!!!!!!!!!!!!!!!!Customer %d finished !!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n",customerID);
 }
 
 void Customer::gotoApplicationLine()
@@ -92,17 +94,6 @@ void Customer::gotoApplicationLine()
 
 		applicationLine->regRelease(customerName,customerID);
 	}
-	//Customer already go to see the clerk
-	//Clerk was pass his cond & lock to cusomer by c->setCustomer
-	//wait();	//wait clerk call me
-/*	
-	clerkLock->Acquire();//Call clerk
-	//Doing the application work;
-	//clerkCondition->Signal(clerkLock);//call clerk say i am done	
-	customerCondition->Wait(clerkLock);//Customer wait clerk done
-
-	clerkLock->Release();//Call clerk
-	*/
 }
 
 void Customer::gotoPictureLine()
@@ -126,19 +117,7 @@ void Customer::gotoPictureLine()
 		pictureLine -> addRegLine((int)this);
 		pictureLine -> regRelease(customerName,customerID);
 	}
-	//Customer already go to see the clerk
-	//Clerk was pass his cond & lock to cusomer by c->setCustomer
-	//wait();
-	/*	
-	clerkLock->Acquire();//Call clerk
-	//Doing the application work;
-	//clerkCondition->Signal(clerkLock);//call clerk say i am done	
-	customerCondition->Wait(clerkLock);//Customer wait clerk done
-
-	clerkLock->Release();//Call clerk	
-	*/
 }
-
 void Customer::gotoPassportLine()
 {
 	bool notGoToPreferLine = true;
