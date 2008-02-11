@@ -1,13 +1,23 @@
-#ifndef  APPCLERK_H_DEFINED
-#define APPCLERK_H_DEFINED
+#ifndef APPCLERK_C_DEFINED
+#define APPCLERK_C_DEFINED
 #include "clerk.h"
 
-class AppClerk::Clerk();	
+class AppClerk:public Clerk
 {
 	public:
-	void handleCustomer(Customer *c){
+	AppClerk(cLine *l,cTable *t,int id,char *name):
+		Clerk(l,t,id,name)
+	{
 		
-	};
+	}
+	void handleCustomer(Customer *c){	
+		printf("[AppClerk]%s%d is handling customer %d.................\n",clerkName,clerkID,c->getID());
+		c->completeApplication();
+		printf("[AppClerk]%s%d has complete customer %d application.................\n",clerkName,clerkID,c->getID());
+	}
+	~AppClerk(){
+	}
+			
 };
 #endif
 
