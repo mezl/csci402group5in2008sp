@@ -425,7 +425,9 @@ void myClerkForkFunc(int x)
 	delete cl;
 }
 
+// --------------------------------------------------
 //Main program
+// --------------------------------------------------
 void office()
 {
 	printf("[Office]Start Office Sim\n");
