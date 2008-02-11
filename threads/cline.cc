@@ -104,7 +104,7 @@ void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID)
 {
 	if(IsPreferLineEmpty()){
 		printf("[Line]No customer in prefer %s%d\n",lineName,lineID);
-		preferLineLock->Release();
+		//preferLineLock->Release();
 		return NULL;
 	}
 	preferLineCount--;
@@ -118,7 +118,7 @@ void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
 {
 	if(IsRegLineEmpty()){
 		printf("[Line]No customer in reg %s%d\n",lineName,lineID);
-		regLineLock->Release();
+		//regLineLock->Release();
 		return NULL;
 	}
 	regLineCount--;
