@@ -380,7 +380,7 @@ void TestSuite() {
 #define CUSTOMER_NUM 5
 #define CLERK_NUM 5
 #define PASSPORT
-//#define CASHIER 
+#define CASHIER 
 cLine *applicationLine = new cLine("app line",1);
 cLine *pictureLine = new cLine("pic line",2);
 cLine *passportLine = new cLine("passport line",3);
