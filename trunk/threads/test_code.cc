@@ -380,7 +380,7 @@ void TestSuite() {
 #define CUSTOMER_NUM 5
 #define CLERK_NUM 5
 #define PASSPORT
-#define CASHIER 
+//#define CASHIER 
 cLine *applicationLine = new cLine("app line",1);
 cLine *pictureLine = new cLine("pic line",2);
 cLine *passportLine = new cLine("passport line",3);
@@ -551,9 +551,9 @@ void Manager(int x)
 #ifdef PASSPORT
 	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
-	if ((passportTable->clerkCount() == 0)&& !passportLine->nobody())
+	if ((passportTable->clerkCount() == 0));//&& !passportLine->nobody())
 	{
-		passportTable->addClerk(name,0);
+		passportTable->addClerk(name,x);
 		if(display)printf("[Manager] wakeup a PassClerk to Passport table\n");
 	}
 	passportTable->releaseLock(name,0);

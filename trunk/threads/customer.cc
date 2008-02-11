@@ -1,6 +1,9 @@
 //customer.cc
 
 #include "customer.h"
+#ifndef PASSPORT
+#define PASSPORT
+#endif
 Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in)
 {
 	printf("[CUST]Build Customer %d\n",ID_in);
