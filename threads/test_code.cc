@@ -519,7 +519,7 @@ bool passNeedClerk = false;
 bool cashNeedClerk = false;
 
 void lineCheck(int x){
-
+	bool display = true;
 	if(applicationLine->nobody()){
 		if(display)printf("[Manager]%d No body in App Line\n",x);
 		appNeedClerk = false;
