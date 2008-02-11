@@ -172,7 +172,7 @@ void Customer::gotoCashierLine()
 	{ 
 
 		cashierLine -> preferAcquire(customerName,customerID);
-		if (cashierLine->preferCustomerCount() <= cashierLine->regCustomerCount()))
+		if (cashierLine->preferCustomerCount()==0)// <= cashierLine->regCustomerCount()))
 		{
 			notGoToPreferLine = false;
 			printf("[CUST]Customer %d go to prefer cashier line \n",customerID);
