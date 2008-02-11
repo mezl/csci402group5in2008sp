@@ -527,7 +527,7 @@ void Manager(int x)
 
 
 
-	if(application->nobody()){
+	if(applicationLine->nobody()){
 		printf("[Manager]%d No body in App Line\n",x);
 	}else{
 	
