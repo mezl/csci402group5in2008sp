@@ -522,16 +522,18 @@ void Manager(int x)
 	// add 1 clerk if table is empty
 	char *name = "Manager";
        //if(display)printf(name,"Manager (%d)",x);
-
+	bool appNeedClerk = false;
 	if(display)printf("[Manager]%d I am Starting.....\n",x);
 
 
 
 	if(applicationLine->nobody()){
 		printf("[Manager]%d No body in App Line\n",x);
+		appNeedClerk = false;
 	}else{
 	
 		printf("[Manager]%d Some one body in App Line\n",x);
+		appNeedClerk = true;
 	}
 
 
@@ -540,7 +542,7 @@ void Manager(int x)
 	
 	if(display)printf("[Manager]%d Get appTable lock.....\n",x);
 	// if no clerk work and some customer in line
-	if ((applicationTable->clerkCount() == 0) );//&& !applicationLine->nobody())
+	if ((applicationTable->clerkCount() == 0)&& appNeedClerk );//&& !applicationLine->nobody())
 	{
 		if(display)printf("[Manager]<<<<>>>>App Clerk %d Customer in Line %s\n",applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
 		applicationTable->addClerk(name,x,display);
