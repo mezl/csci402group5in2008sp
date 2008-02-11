@@ -431,7 +431,8 @@ void office()
 {
 	printf("[Office]Start Office Sim\n");
 	// create the manager
-	Timer *t = new Timer(managerHandler, 0, false);
+	printf("[Office]Create Manager\n");
+	//Timer *t = new Timer(managerHandler, 0, false);
 	printf("[Office]Create Customer \n");
 	// create 2 customers
 	// customer 1 with ID = 1 and $1600
@@ -501,7 +502,6 @@ void office()
 	//Thread *manager_thread = new Thread("Manager");
 	//manager_thread -> Fork(Manager, managerHandlCount);
 
-	printf("[Office]Create Manager\n");
 
 /*
 	printf("Create Customer 2\n");
@@ -520,7 +520,6 @@ bool cashNeedClerk = false;
 
 void lineCheck(int x){
 	bool display = true;
-/*	
 	if(applicationLine->nobody()){
 		if(display)printf("[Manager]%d No body in App Line\n",x);
 		appNeedClerk = false;
@@ -550,7 +549,7 @@ void lineCheck(int x){
 	}else{
 		if(display)printf("[Manager]%d Some one body in Cash Line\n",x);
 		cashNeedClerk = true;
-	}*/
+	}
 }
 void Manager(int x)
 {
