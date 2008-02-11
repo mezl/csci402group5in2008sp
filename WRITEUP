@@ -1,0 +1,495 @@
+Ttitle: Writeup for Project 1, Spring 2008
+
+Date: 02/10/08
+
+Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
+		Yang-Hsuen Liu		yanghsul@usc.edu	2925356804
+		Cheng-Yu Lee		chengyul@usc.edu	9027332848
+
+********************
+* I. Requirements: *
+********************
+====================================================== PART 1 ======================================================
+	- To create a scenario of LOCK and CONDITION to solve the synchronization problems.
+
+	+ LOCK:
+		- LOCK is not allowed to be acquired by Thread if other thread already acquired. 
+		- Thread can not acquire the same LOCK which it already acquired.
+		- Acquire and Release functions must be atomic.
+		- Thread must wake up the waiting thread if current thread releases the LOCK.
+		- If thread already acquired one LOCK, no second LOCK allow to acquire.
+		- Thread can not release a LOCK if it doesn't have the LOCK.
+
+	+ CONDITION:
+		- Wait, Signal, and Broadcast functions can be called by Thread with LOCK only.
+		- Wait, Signal, and Broadcast functions must be atomic.
+		- Sleep function can be called by Thread without LOCK only.
+		- Signal function wake up next thread.
+		- Broadcast function wake up waiting threads.
+
+====================================================== PART 2 ======================================================
+	- To create a scenario of customers applying passport at United States Passport Office.
+
+	+ CUSTOMERS:
+		- Upon entering Passport Office, Customers have choices of entering Application Clerk line or Picture Clerk line.
+		- Upon entering the line, Customers have choice of preferred line or regular line in front of each Clerk.
+		- Have some percentage chance of not liking their picture.
+		- After complete the picture and application, Customers must line up at the Passport Clerk line.
+		- After complete the passport line, Customers must line up at the Cashier Clerk line.
+		- Leave the Passport Office and remember the type of line they are in when Senator shown.
+		- Only being serviced Customer can stay in the Passport Office until they are handled.
+		- Back to the line they were in the Passport Office only if senator leave.
+		- Leaves the Passport Office after obtaining the passport.
+
+	+ APPLICATION CLERKS:
+		- Record that Customer has a completed application.
+		- Money received by Application Clerk must be added up to received amount.
+		- Go on break if no Customer on the line.
+
+	+ PICTURE CLERKS:
+		- Shown Customer's picture to Customer, once Customer accept the picture, official picture field by Picture Clerk.
+		- Money received by Picture Clerk must be added up to received amount.
+		- Go on break if no Customer on the line.
+
+	+ PASSPORT CLERKS:
+		- Checks that a Customer has filed their completed application and has an official picture taken.
+		- Money received by Passport Clerk must be added up to received amount.
+		- Go on break if no Customer on the line.
+
+	+ CASHIER CLERKS:
+		- Take $100 passport fee from Customer if both Customer's application and picture filed. 
+		- Money received by Cashier Clerk must be added up to received amount.
+		- provide completed passport to Customer after Customer paid and record it.
+		- Go on break if no Customer on the line.
+
+	+ MANAGER:
+		- Go on break if no Customer on the line.
+		- Wake up Clerks when more than three Customers get in any particular line.
+		- Keep track of how much money the office has made. 
+		- Print the total received from each Clerk type and a total from all Clerks.
+
+	+ SENATOR:
+		- Gets to go to each Clerk type and get their passport.
+		- Wait until all Customers currently being serviced are handled.
+
+
+********************
+* II. Assumptions: *
+********************
+====================================================== PART 1 ======================================================
+	- None
+
+====================================================== PART 2 ======================================================
+	- Customers have up to $1,600 to help reduce the time required to get their passport completed.
+	- The application is assumed to be passed, it is not explicitly provided in the shared data between the 2 threads.
+	- Customers have some percentage chance of not liking their picture, but it cannot be zero.
+
+****************
+* III. Design: *
+****************
+====================================================== PART 1 ======================================================
+	+ void Lock::Acquire()
+		- Disable interrupt.
+		- If the LCOK is available, make thread as LOCK owner.
+		- If the LOCK is not available, add thread to LOCK waiting queue.
+		- Restore interrupt.
+
+	+ void Lock::Release()
+		- Disable interrupt.
+		- Check LOCK's ownership, print error message if thread did not own the LOCK. 
+		- Check for a waiting thread in lock waiting queue.
+			- If thread found in LOCK's waiting queue.
+				1. Wake Next thread up - put it on ReadyToRun Queue
+				2. Remove thread from queue.
+				3. Make the thread the lock owner
+			- If no thread found in LOCK's waiting queue.
+				1. Clear LOCK's ownership.
+		- Restore interrupt.
+
+	+ void Condition::Wait(Lock* conditionLock)
+		- Disable interrupt.
+		- Check if current LOCK matches with saved LOCK.
+			- Save LOCK's pointer.
+			- Add myself to condition wait queue and sleep until LOCK available.
+		- Restore interrupt.
+
+	+ void Condition::Signal(Lock* conditionLock)
+		- Disable interrupt.
+		- Check if current LOCK matches with save LOCK.
+			- Print error message about signal wrong LOCK.
+		- Check for a waiting thread in condition waiting queue.
+			- If waiting threads founded.
+				1. Wake Next thread up - put it on ReadyToRun Queue.
+			- If no waiting threads founded.
+				1. Clear LOCK's ownership.
+		- Restore interrupt.
+
+	+ void Condition::Broadcast(Lock* conditionLock)
+		- Thread with condition's LOCK can be broadcast only.
+		- Wake up all threads if waiting queue is not empty.
+
+====================================================== PART 2 ======================================================
+	+ clerk.cc
+		- void Clerk::run()
+			- Clerk starts running.
+			- LOCK both regular line and preferred line.
+			- If there is Customers in the preferred line.
+				- Informs Customers served by clerk.
+			- If there is Customers in the regular line.
+				- Informs Customers served by clerk.
+			- If no Customers in the line.
+				- Clerks go on break.
+			- Release the LOCK for both regular line and preferred line. 	
+
+	+ appClerk.cc (Children Object of clerk.cc)
+		- void handleCustomer(Customer *c)
+			- Application Clerk Handles and completes Customers.
+
+	+ cashclerk.cc (Children Object of clerk.cc)
+		- void handleCustomer(Customer *c)
+			- Cashier Clerk handles Customers.
+			- Check Customers if passport complete.
+				- If complete, charge $100 for passport fee.
+				- If not complete, Customers get punshined to wait certain amount of time and back to Cashier Clerk's line.
+			- Cashier Clerk completes Customers.
+
+	+ passclerk.cc (Children Object of clerk.cc)
+		- void handleCustomer(Customer *c)
+			- Passport Clerk Handles Customers.
+			- Passport Clerk checks customer's both application and picture completeness.
+			- Passport Clerk completes Customers.
+	
+	+ picclerk.cc (Children Object of clerk.cc)
+		- void handleCustomer(Customer *c)
+			- Picture Clerk Handles Customers.
+			- Customer might has 25% of not liking his/her picture, retakes the picture until the customer is satisfied
+			- Picture Clerk completes Customers.
+
+	+ cline.cc
+		- void cLine::preferAcquire(char *name,int id,bool display)
+			- Preferred line is acquired by Customers.
+
+		- void cLine::preferRelease(char *name,int id,bool display)
+			- Preferred line is released by Customers.
+
+		- void cLine::regAcquire(char *name,int id,bool display)
+			- Regular line is acquired by Customers.
+
+		- void cLine::regRelease(char *name,int id,bool display)
+			- Regular line is released by Customers.
+
+		- void cLine::Acquire(char *name,int id,bool display)
+			- Both regular line and preferred line are acquired by Customers.
+
+		- void cLine::Release(char *name,int id,bool display)
+			- Both regular line and preferred line are released by Customers.
+
+		- void cLine::addPreferLine(int c,int mount)
+			- One Customer go to preferred line and enter the preferred line.
+
+		- void cLine::addRegLine(int c)	
+			- One Customer go to regular line and enter the regular line.
+
+		- void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID)
+			- If there are Customers in the preferred line.
+				- Call next Customers in the preferred line.
+				
+		- void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
+			- If there are Customers in the regular line.
+				- Call next Customers in the regular line.
+
+		- int cLine::reportMoney()
+			- Report amount of money the line has.
+
+	+ ctable.cc
+		- int cTable::clerkCount()
+			- Caclulate how many Clerks are there now.
+
+		- void cTable::addClerk(char *name,int id,bool display)
+			- If no Clerk leave the table, no Clerk should allow to added.
+			- If no enought Clerk, table will add a clerk.
+
+		- void cTable::leaveTable(char *name,int id,bool display)
+			- Display which Clerk is go on break, how many Clerk is still working, how many Clerk is leaving.
+			- Display which Clerk is come back.
+
+		- void cTable::acquireLock(char *name,int id,bool display)
+			- Display which Clerk is acquire LOCK now.
+			- Display which Clerk get the LOCK now.
+
+		- void cTable::releaseLock(char *name,int id,bool display)
+			- Display which Clerk is release LOCK now.
+			- Display which Clerk released the LOCK now.
+
+		- void cTable::addMoney(int amount)
+			- Sum up the amount of money.
+
+		- int cTable::reportMoney()
+			- Report amount of money the table has.
+
+	+ customer.cc
+		- void Customer::customerRun()
+			- Customer start the scenario.
+			- Customer choose randomly between entering a application line or picture line.
+			- the customer will use the 500 dollars to get into the prefered line whenever possible.
+
+		- void Customer::gotoApplicationLine()
+			- If Customers have more than $500 and less Customers in the preferred application line than regular application line.
+				- Customers choose to go preferred application line, $500 removed from Customer. 
+			- If Customers do not go preferred application line.
+				- Customers go to regular application line.
+			
+		- void Customer::gotoPictureLine()
+			- If Customers have more than $500 and less Customers in the preferred Picture line than regular picture line.
+				- Customers choose to go preferred Picture line, $500 removed from Customer. 
+			- If Customers do not go preferred Picture line.
+				- Customers go to regular Picture line.
+			
+		- void Customer::gotoPassportLine()
+			- If Customers have more than $500 and less Customers in the preferred Passport line than regular Passport line.
+				- Customers choose to go preferred Passport line, $500 removed from Customer. 
+			- If Customers do not go preferred Passport line.
+				- Customers go to regular Passport line.
+
+		- void Customer::gotoCashierLine()
+			- If Customers have more than $500 and less Customers in the preferred Cashier line than regular Cashier line.
+				- Customers choose to go preferred Cashier line, $500 removed from Customer. 
+			- If Customers do not go preferred Cashier line.
+				- Customers go to regular Cashier line.
+
+	+ office.cc
+		- void Office::myCustomerForkFunc(int x)
+			- To forks the customerRun() function from Customer.cc
+
+		- void Office::myClerkForkFunc(int x)
+			- To forks the run() function from Clerk.cc.
+
+		- void Office::run()
+			- Creates Manager, Clerks, and Customers.
+
+		- void Office::Manager(int x)
+			- Check each table for numbers of Clerk and add one Clerk to table if empty.
+			- check each line for numbers of Customer and add one Clerk to if greater than three Customers in the line.
+ 			- Must acquire the LOCK for both line and table before adding a Clerk or checking customer
+			- Must release all locks at completion.
+
+***********************
+* IV. Implementation: *
+***********************
+====================================================== PART 1 ======================================================
+	+ Files Modified
+		- synch.cc
+		- synch.cc
+
+	+ Files added
+		- None.
+
+	+ Data Structures added, and the file they were added to.
+		- None.
+
+	+ Data Structures modified, and the file they were added to.
+		- None.
+
+	+ Functions added and in which file.
+		- None.
+
+	+ Functions modified and in which file.
+		- Synch.cc
+			void Lock::Acquire() {	
+				//Disable interrupts
+				IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+				//If lock is avaiable
+				if(lockOwner == NULL){
+					//I get Lock
+					//Make my self lock owner
+					lockOwner = currentThread;
+				}else if(currentThread != lockOwner){//Lock is not avaiable
+					//Add myself to lock wait queue
+					lockWaitQueue->Append((void *)currentThread);	// so go to sleep
+					//Go to sleep
+					currentThread->Sleep();
+				}
+				//Restore Interrupt
+				(void) interrupt->SetLevel(oldLevel);
+
+			}
+			void Lock::Release() {
+				Thread *thread;
+
+				//Disable interrupts
+				IntStatus oldLevel = interrupt->SetLevel(IntOff);
+
+				//Check lock ownership
+				if(isHeldByCurrentThread()){
+					//Check for a waiting thread in lock waiting queue
+					thread = (Thread *)lockWaitQueue->Remove();
+				
+					if (thread != NULL){	   //If found thread in lock wait queue
+	       					//1.Wake Next thread up - put it on ReadyToRun Queue
+						scheduler->ReadyToRun(thread);
+	       					//2.Remove thread from queue(we did it before)
+	       					//3.Make the thread the lock owner
+						lockOwner = thread;
+					}
+					else{//No thread in lock waiting queue
+					lockOwner = NULL;//clear lock ownership	
+					}
+				}// if held by current thread
+	
+				//Restore Interrupt
+				(void) interrupt->SetLevel(oldLevel);	
+			}
+
+			void Condition::Wait(Lock* conditionLock) { 	
+				//Disable interrupts
+				IntStatus oldLevel = interrupt->SetLevel(IntOff);
+				//check saved lock is match the current lock
+				if(conditionLock->isHeldByCurrentThread()){
+					if(condLock == NULL)
+						condLock = conditionLock;//Save lock pt first
+					conditionLock->Release();//Leave Monitor
+					//Add myself to condition wait queue
+					condWaitQueue->Append((void *)currentThread);
+					currentThread->Sleep(); // so go to sleep
+
+					//After some one wake me up
+					conditionLock->Acquire();//Reenter monitor
+				}
+
+				//Restore Interrupt
+				(void) interrupt->SetLevel(oldLevel);
+				//Don't know what's this
+				//ASSERT(FALSE); 
+
+			}
+
+			void Condition::Signal(Lock* conditionLock) {
+				//Disable interrupts
+				IntStatus oldLevel = interrupt->SetLevel(IntOff);
+				Thread *thread;
+				if(conditionLock != condLock){
+					//check saved lock is match the current lock
+					printf("Thread %s try signal cond %s with wrong lock",currentThread->getName(),name);
+				}
+				else if(conditionLock->isHeldByCurrentThread()){
+					//Check for a waiting thread in condition waiting queue
+					thread = (Thread *)condWaitQueue->Remove();
+					if (thread != NULL){
+						//Wake Next thread up - put it on ReadyToRun Queue
+						scheduler->ReadyToRun(thread);
+					}
+				}
+				else{	
+					//printf("Error, thread should not empty\n");
+				}		
+	
+				//Restore Interrupt
+				(void) interrupt->SetLevel(oldLevel);
+			}
+
+			void Condition::Broadcast(Lock* conditionLock) {
+				while(!condWaitQueue->IsEmpty() ) {
+					Signal(conditionLock);
+				}
+			}
+
+====================================================== PART 2 ======================================================
+	+ Files Modified
+		- test_code.cc
+
+	+ Files added
+		- appClerk.cc		
+		- cashclerk.cc
+		- clerk.cc		- clerk.h
+		- cline.cc		- cline.h
+		- ctable.cc		- ctable.h
+		- customer.cc		- customer.h
+		- manager.cc
+		- office.cc		- office.h
+		- picclerk.cc
+		- passclerk
+
+	+ Data Structures added, and the file they were added to.
+		- None
+		
+	+ Data Structures modified, and the file they were added to.
+		- None
+
+	+ Functions added and in which file.
+		-
+		-
+
+	+ Functions modified and in which file.
+		- None
+
+***************
+* V. Testing: *
+***************
+====================================================== PART 1 ======================================================
+	+ How to test
+		- Input "gmake" under /code/ directory for compile from command prompt.
+		- Input "./nachos -T" under /code/Threads/ director from command prompt.
+
+	+ Test output
+		- Test 1: Threads trying to acquire LOCK where LOCK already acquired by other thread.
+			  Another thread trying to release a LOCK which it doesn't acquire and system shows error message.
+		- Test 2: Signals are not stored, but Signal with no thread waiting is ignored.
+		- Test 3: Signal function wake up next one thread only.
+		- Test 4: Broadcast function wake up all waiting threads. 
+		- Test 5: Signalling a thread waiting under one lock while holding another is a Fatal error.
+
+====================================================== PART 2 ======================================================
+	+ How to test
+		- Input "gmake" under /code/ directory for compile from command prompt.
+		- Input "./nachos -rs -P2" under /code/Threads/ director from command prompt.
+
+	+ Test output
+		- Computer generates and create Customers, Manager, Application Clerks, Picture Clerks, Passport Clerks, Senators and Cashier clerks.
+		- Upon Customers entering the Passport Office, the computer randomly generated which clerk (Application or Picture) that customer will enter.
+		- By entering the line, the computer randomly generated which line (preferred or regular) that customer will enter if customer has more than $500.
+		- Picture Clerk shown Customer's picture to Customer and the computer randomly generated percentage that Customer might not like their picture.
+		- Application Clerk records Customer's application and pass to Passport Clerk.
+		- Passport Clerk checked both Customer's application and picture.
+		- Cashier Clerk checked Customer's Certification by Passpport Clerk and takes $100 from Customer for passport fee.
+		- Finally, Cashier Clerk gives passport to Customer and Customer leaves the Passport Office.
+		- When senator enters Passport Office, he waits until all Customers currently being serviced are handled.
+		- After all Customers leave the Passport Office, senator enters each clerk line and apply passport.
+		- Customers back to the line they were when Senator leaves.
+		- Clerks go on break when no Customers wait in the line.
+		- Manager wake up one Clerk when Customer informs Manager that no Clerk available or more than three Customers waiting in the line.
+
+*******************
+* VI. Discussion: *
+*******************
+====================================================== PART 1 ======================================================
+	+ Experiment expectation.  (What you hope will happen.)
+		- LOCK and CONDITION will function perfectly and meet the requirements on the CSCI-402 class website.
+ 
+	+ Experiment result.  (What actually happens.)
+		- Functioned perfectly.
+		- The result of this program meets the requirements.
+
+	+ Explanation
+		- Most codes were given in class, just grab and input the codes.
+
+====================================================== PART 2 ======================================================
+	+ Experiment expectation.  (What you hope will happen.) 
+		- Continue to use LOCK and CONDITION, we expected the new codes will run a scenario of Passport Office. 
+
+	+ Experiment result.  (What actually happens.)
+		- Functioned perfectly.
+		- The result of this program meets the requirements.
+
+	+ Explanation
+		- By using huge amount of LOCK and CONDITION functions, the program run as desired.
+
+***********************
+* VII. Miscellaneous: *
+***********************
+====================================================== PART 1 ======================================================
+	- None.
+
+====================================================== PART 2 ======================================================
+	- None.
+
