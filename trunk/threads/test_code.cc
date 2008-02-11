@@ -405,6 +405,7 @@ cTable *cashierTable     = new cTable(4, CLERK_NUM);
 
 
 void Manager(int x);
+void managerHandler(int x);
 void myCustomerForkFunc(int x);
 void myClerkForkFunc(int x);
 void office();
