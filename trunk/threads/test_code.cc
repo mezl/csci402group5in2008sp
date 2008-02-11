@@ -432,7 +432,7 @@ void office()
 	printf("[Office]Start Office Sim\n");
 	// create the manager
 	printf("[Office]Create Manager\n");
-	//Timer *t = new Timer(managerHandler, 0, false);
+	Timer *t = new Timer(managerHandler, 0, false);
 	printf("[Office]Create Customer \n");
 	// create 2 customers
 	// customer 1 with ID = 1 and $1600
