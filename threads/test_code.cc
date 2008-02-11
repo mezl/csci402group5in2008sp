@@ -518,7 +518,7 @@ bool picNeedClerk = false;
 bool passNeedClerk = false;
 bool cashNeedClerk = false;
 
-void lineCheck(){
+void lineCheck(int x){
 
 	if(applicationLine->nobody()){
 		if(display)printf("[Manager]%d No body in App Line\n",x);
@@ -566,7 +566,7 @@ void Manager(int x)
 
 	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,x);
-	lineCheck();
+	lineCheck(x);
 	if(display)printf("[Manager]%d Get appTable lock.....\n",x);
 	// if no clerk work and some customer in line
 	if ((applicationTable->clerkCount() == 0)&& appNeedClerk );//&& !applicationLine->nobody())
@@ -581,7 +581,7 @@ void Manager(int x)
 
 	//pictureLine->Acquire(name, 0);
 	pictureTable->acquireLock(name,x);
-	lineCheck();
+	lineCheck(x);
 	if ((pictureTable->clerkCount() == 0)&& picNeedClerk);//&& !pictureLine->nobody())
 	{
 		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line \n",pictureTable->clerkCount());//
@@ -594,7 +594,7 @@ void Manager(int x)
 #ifdef PASSPORT
 	//passportLine->Acquire(name, 0);
 	passportTable->acquireLock(name,0);
-	lineCheck();
+	lineCheck(x);
 	if ((passportTable->clerkCount() == 0)&& passNeedClerk);//&& !passportLine->nobody())
 	{
 		passportTable->addClerk(name,x,display);
@@ -606,7 +606,7 @@ void Manager(int x)
 #ifdef CASHIER
 	//cashierLine->Acquire(name, 0);
 	cashierTable->acquireLock(name,0);
-	lineCheck();
+	lineCheck(x);
 	if ((cashierTable->clerkCount() == 0) && cashNeedClerk)
 	{
 		cashierTable->addClerk(name,x,display);
