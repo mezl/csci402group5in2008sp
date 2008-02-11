@@ -4,6 +4,11 @@
 #ifndef PASSPORT
 #define PASSPORT
 #endif
+/*
+#ifndef CASHIER 
+#define CASHIER 
+#endif
+*/
 Customer::Customer(char *name,int ID_in, int money_in, cLine* applicationLine_in, cLine* pictureLine_in, cLine* passportLine_in, cLine* cashierLine_in)
 {
 	printf("[CUST]Build Customer %d\n",ID_in);
@@ -57,7 +62,7 @@ void Customer::customerRun()
 #ifdef CASHIER	
 	gotoCashierLine();
 #endif	
-	printf("[CUST]Customer %d finished !!!!!!!!!!!!!!!!!!!!!!!!!!!!!1 \n",customerID);
+	printf("[CUST]Customer %d finished !!!!!!!!!!!!!!!!!!!!!!!!!!!!! \n",customerID);
 }
 
 void Customer::gotoApplicationLine()
@@ -121,7 +126,6 @@ void Customer::gotoPictureLine()
 		printf("[CUST]Customer %d go to reg pic line \n",customerID);
 		pictureLine -> regAcquire(customerName,customerID);
 		pictureLine -> addRegLine((int)this);
-		getClerk();
 		pictureLine -> regRelease(customerName,customerID);
 	}
 	//Customer already go to see the clerk
@@ -139,15 +143,20 @@ void Customer::gotoPictureLine()
 
 void Customer::gotoPassportLine()
 {
-	if(money > 500 && (passportLine->preferCustomerCount() <= passportLine->regCustomerCount()))
-	{
-		printf("[CUST]Customer %d go to prefer passport line \n",customerID);
+	bool notGoToPreferLine = true;
+	if(money > 500 )
+	{	
 		passportLine -> preferAcquire(customerName,customerID);
-		money = money-500;
-		passportLine -> addPreferLine((int)this, 500);
+		if (passportLine->preferCustomerCount() ==0)//<= passportLine->regCustomerCount()))
+		{
+			notGoToPreferLine = false;
+			printf("[CUST]Customer %d go to prefer passport line \n",customerID);
+			money = money-500;
+			passportLine -> addPreferLine((int)this, 500);
+		}
 		passportLine -> preferRelease(customerName,customerID);	
 	}
-	else
+	if(notGoToPreferLine)	
 	{
 		printf("[CUST]Customer %d go to reg passport line \n",customerID);
 		passportLine -> regAcquire(customerName,customerID);
@@ -158,15 +167,21 @@ void Customer::gotoPassportLine()
 
 void Customer::gotoCashierLine()
 {
-	if(money > 500 && (cashierLine->preferCustomerCount() <= cashierLine->regCustomerCount()))
-	{
-		printf("[CUST]Customer %d go to prefer cashier line \n",customerID);
+	bool notGoToPreferLine = true;
+	if(money > 500)
+	{ 
+
 		cashierLine -> preferAcquire(customerName,customerID);
-		money = money-500;
-		cashierLine -> addPreferLine((int)this, 500);
+		if (cashierLine->preferCustomerCount() <= cashierLine->regCustomerCount()))
+		{
+			notGoToPreferLine = false;
+			printf("[CUST]Customer %d go to prefer cashier line \n",customerID);
+			money = money-500;
+			cashierLine -> addPreferLine((int)this, 500);
+		}
 		cashierLine -> preferRelease(customerName,customerID);
 	}
-	else
+	if(notGoToPreferLine)
 	{
 		printf("[CUST]Customer %d go to reg cashier line \n",customerID);
 		cashierLine -> regAcquire(customerName,customerID);
