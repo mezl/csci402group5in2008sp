@@ -32,13 +32,15 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 
 	+ CUSTOMERS:
 		- Upon entering Passport Office, Customers have choices of entering Application Clerk line or Picture Clerk line.
+		- The chance of choosing Applicatiion Line before Picture Line is 50%
 		- Upon entering the line, Customers have choice of preferred line or regular line in front of each Clerk.
-		- Have some percentage chance of not liking their picture.
+		- The Customer will determine which line has fewer waiting customer to enter the faster line.
+		- Customer have 25% chance of not liking their picture.
 		- After complete the picture and application, Customers must line up at the Passport Clerk line.
 		- After complete the passport line, Customers must line up at the Cashier Clerk line.
-		- Leave the Passport Office and remember the type of line they are in when Senator shown.
+		- Leave the Passport Office and remember the type and order of the line they were located in when the Senator show up.
 		- Only being serviced Customer can stay in the Passport Office until they are handled.
-		- Back to the line they were in the Passport Office only if senator leave.
+		- Back to the line they were in the Passport Office only if senator leave, in the exact order when they left.
 		- Leaves the Passport Office after obtaining the passport.
 
 	+ APPLICATION CLERKS:
@@ -47,7 +49,8 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 		- Go on break if no Customer on the line.
 
 	+ PICTURE CLERKS:
-		- Shown Customer's picture to Customer, once Customer accept the picture, official picture field by Picture Clerk.
+		- Shown Customer's picture to Customer, once Customer accept the picture, official picture filed by Picture Clerk.
+		- If the customer is not satisfied with the picture, the clerk retake the customer's picture
 		- Money received by Picture Clerk must be added up to received amount.
 		- Go on break if no Customer on the line.
 
@@ -57,14 +60,18 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 		- Go on break if no Customer on the line.
 
 	+ CASHIER CLERKS:
-		- Take $100 passport fee from Customer if both Customer's application and picture filed. 
+		- Take $100 passport fee from Customer if customer's passport has been filed.
+		- If the customer's passport has not been filed upon the time the customer has been called by the cashier clerk,
+		- the customer gets punshed by being forced to wait for a peirod of time (yield)
+		- the customer goes to the back of the cashier line after being punished to wait for a period of time.
 		- Money received by Cashier Clerk must be added up to received amount.
 		- provide completed passport to Customer after Customer paid and record it.
 		- Go on break if no Customer on the line.
 
 	+ MANAGER:
-		- Go on break if no Customer on the line.
-		- Wake up Clerks when more than three Customers get in any particular line.
+		- The manager constantly monitor the number of clerk and customer in the office for a defined regular interval.
+		- Wake up Clerks when there are no clerks at a specific table while having customer waiting in the line.		
+		- Wake up Clerks when more than three Customers get in any particular line.		
 		- Keep track of how much money the office has made. 
 		- Print the total received from each Clerk type and a total from all Clerks.
 
@@ -80,9 +87,11 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 	- None
 
 ====================================================== PART 2 ======================================================
-	- Customers have up to $1,600 to help reduce the time required to get their passport completed.
+	- All customers are given $600 to help reduce the time required to get their passport completed.
 	- The application is assumed to be passed, it is not explicitly provided in the shared data between the 2 threads.
-	- Customers have some percentage chance of not liking their picture, but it cannot be zero.
+	- Customers have 25% chance of not liking their picture.
+	- Customers have 50% chance of entering application line before picture line, and vice vesa.
+	- Customers acknowledge the sequence of tasks to be completed upon entering the office.
 
 ****************
 * III. Design: *
@@ -130,13 +139,17 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 
 ====================================================== PART 2 ======================================================
 	+ clerk.cc
+		- Notes: This is a parents class that defines the behavior of all types of clerks in the passport office
+		-		  The specific handling procedures for each type of clerk is implemented in the children objects of clerk.cc
+
 		- void Clerk::run()
 			- Clerk starts running.
-			- LOCK both regular line and preferred line.
+			- Acquire LOCKs for both regular line and preferred line.
 			- If there is Customers in the preferred line.
-				- Informs Customers served by clerk.
+				- Informs/Signals Customers served by clerk.
+			- If there is no Customers in the preferred line, the clerks checks the regular line
 			- If there is Customers in the regular line.
-				- Informs Customers served by clerk.
+				- Informs/Signals Customers served by clerk.
 			- If no Customers in the line.
 				- Clerks go on break.
 			- Release the LOCK for both regular line and preferred line. 	
@@ -166,6 +179,13 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 			- Picture Clerk completes Customers.
 
 	+ cline.cc
+		- Notes: The cline class manages two lines (or queues) for each tasks(Application/Picture/Passport/Cashier).
+		-        The cline class contains two locks and conditions (one for each line)
+		-        to enforce mutual exclusion and synchronization when accessing line object.
+		-        A clerk/customer must acquire both locks before calling/queueing a specific line.
+		-        A clerk/customer must release both locks after calling/queueing a specific line.
+		-		  The Line also keep track of the money the customers spent while getting into the prefered line.
+	
 		- void cLine::preferAcquire(char *name,int id,bool display)
 			- Preferred line is acquired by Customers.
 
@@ -186,48 +206,65 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 
 		- void cLine::addPreferLine(int c,int mount)
 			- One Customer go to preferred line and enter the preferred line.
+			- The customer went to sleep after being added to the preferred line.
+			- The customer is charged $500 dollars getting into the preferred line.	
+			- The Line adds $500 dollars to keep track of the money collected.
 
 		- void cLine::addRegLine(int c)	
 			- One Customer go to regular line and enter the regular line.
+			- The customer went to sleep after being added to the regular line.
 
 		- void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID)
 			- If there are Customers in the preferred line.
-				- Call next Customers in the preferred line.
+				- Call/Signal next Customers in the preferred line.
 				
 		- void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
 			- If there are Customers in the regular line.
-				- Call next Customers in the regular line.
+				- Call/Signal next Customers in the regular line.
 
 		- int cLine::reportMoney()
 			- Report amount of money the line has.
 
 	+ ctable.cc
+		- Notes: The table is used by clerk/manager to keep track of the number of clerk sleeping or working
+		-        Each table is created for each task (application/picture/passport/cashier)
+		-		  Each table contains a lock and a condition variable.
+		-		  Clerk/Manager must acquire the lock before add/remove a clerk from the table
+		-        Clerk/Manager must release the lock after add/remove a clerk from the table
+		-		  The condition variable queue is used to keep track the number/order of sleeping clerks
+		- 		  The table keeps track of the money of all the money of all the clerks working at that specific table 
+		-		  have collected from the customers.
+
 		- int cTable::clerkCount()
-			- Caclulate how many Clerks are there now.
+			- Calculate how many Clerks are working at the table now.
 
 		- void cTable::addClerk(char *name,int id,bool display)
-			- If no Clerk leave the table, no Clerk should allow to added.
-			- If no enought Clerk, table will add a clerk.
+			- If no Clerk is sleeping (in the conditional queue), no Clerk is added to the table.
+			- Else, the table will signal a clerk from the conditional queue.
+			- A new clerk is now working at the table
 
 		- void cTable::leaveTable(char *name,int id,bool display)
-			- Display which Clerk is go on break, how many Clerk is still working, how many Clerk is leaving.
-			- Display which Clerk is come back.
+			- Display which Clerk is going on a break, how many Clerks are still working, how many Clerk are asleep.
+			- Add the specified clerk to the conditional queue.
+			- The specified clerk is now asleep.
 
 		- void cTable::acquireLock(char *name,int id,bool display)
-			- Display which Clerk is acquire LOCK now.
+			- Display which Clerk is acquiring the LOCK to access the table.
 			- Display which Clerk get the LOCK now.
 
 		- void cTable::releaseLock(char *name,int id,bool display)
-			- Display which Clerk is release LOCK now.
+			- Display which Clerk is releasing LOCK after accessing the table.
 			- Display which Clerk released the LOCK now.
 
 		- void cTable::addMoney(int amount)
-			- Sum up the amount of money.
+			- Add amount of money collected by all the clerk working at the specific table.
 
 		- int cTable::reportMoney()
-			- Report amount of money the table has.
+			- Report the amount of money collected by all the clerk working at the specific table.
 
 	+ customer.cc
+		- Notes: This class define the customer's behavior, amount of money they carry once entering the passport office.
+
 		- void Customer::customerRun()
 			- Customer start the scenario.
 			- Customer choose randomly between entering a application line or picture line.
@@ -258,6 +295,9 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 				- Customers go to regular Cashier line.
 
 	+ office.cc
+		- Notes: This class simulates the entire passport office by adding customers, clerks and manager.
+		-        Four tables and four lines are created to be handled by customers, clerks and manager.
+
 		- void Office::myCustomerForkFunc(int x)
 			- To forks the customerRun() function from Customer.cc
 
@@ -268,7 +308,8 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 			- Creates Manager, Clerks, and Customers.
 
 		- void Office::Manager(int x)
-			- Check each table for numbers of Clerk and add one Clerk to table if empty.
+			- This function is being called by the timer object as interrupt handler
+			- Check each table for numbers of Clerk and add one Clerk to table if empty, while there are customer waiting.
 			- check each line for numbers of Customer and add one Clerk to if greater than three Customers in the line.
  			- Must acquire the LOCK for both line and table before adding a Clerk or checking customer
 			- Must release all locks at completion.
@@ -442,7 +483,16 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 ====================================================== PART 2 ======================================================
 	+ How to test
 		- Input "gmake" under /code/ directory for compile from command prompt.
-		- Input "./nachos -rs -P2" under /code/Threads/ director from command prompt.
+		- Input "./nachos -rs -P2" under /code/Threads/ directory from command prompt, this display the entire office behavior.
+		- Input "./nachos -rs -P2 | grep CUST" to observe only customers' behaviors.
+		- Input "./nachos -rs -P2 | grep Manager" to observe only Manager's behaviors.
+		- Input "./nachos -rs -P2 | grep Clerk" to observe only clerks' behaviors.
+		- Input "./nachos -rs -P2 | grep Line" to observe only Line's behaviors.
+		- Input "./nachos -rs -P2 | grep Table" to observe only Table's behaviors.
+		- The current program supports 4 clerks at each table and 4 customers entering the office
+		- To increase/decrease the number of clerks working at each table, modify the defined "CLERK_NUM" value in test_code.cc
+		- To increase/decrease the number of customer entering the office, modify the defined "CUSTOMER_NUM" value in test_code.cc
+		- To display the total amount of money collected by the office, uncomment the "#define SHOW_MONEY" line in test_code.cc
 
 	+ Test output
 		- Computer generates and create Customers, Manager, Application Clerks, Picture Clerks, Passport Clerks, Senators and Cashier clerks.
@@ -453,11 +503,9 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 		- Passport Clerk checked both Customer's application and picture.
 		- Cashier Clerk checked Customer's Certification by Passpport Clerk and takes $100 from Customer for passport fee.
 		- Finally, Cashier Clerk gives passport to Customer and Customer leaves the Passport Office.
-		- When senator enters Passport Office, he waits until all Customers currently being serviced are handled.
-		- After all Customers leave the Passport Office, senator enters each clerk line and apply passport.
-		- Customers back to the line they were when Senator leaves.
 		- Clerks go on break when no Customers wait in the line.
-		- Manager wake up one Clerk when Customer informs Manager that no Clerk available or more than three Customers waiting in the line.
+		- On regular interval, the Manager checks each table/line, and determine whether to add/wakeup a clerk to each table.
+		
 
 *******************
 * VI. Discussion: *
@@ -475,14 +523,35 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 
 ====================================================== PART 2 ======================================================
 	+ Experiment expectation.  (What you hope will happen.) 
-		- Continue to use LOCK and CONDITION, we expected the new codes will run a scenario of Passport Office. 
+		- Continue to use LOCK and CONDITION
+		- Simulate a scenario that satisfy all the behaviors of passport office described in the design specification.
 
 	+ Experiment result.  (What actually happens.)
-		- Functioned perfectly.
-		- The result of this program meets the requirements.
+		- Customers:
+		- 		Customer behaviors meet the design requirement.
+		- 		The customers complete each tasks and obtain their own passport in orderly fashion.
+		-		The customers are able to complete all the task and leave the office.
+		- Clerks:
+		- 		Clerk behaviors meet the design requirement.
+		- 		The clerks execute tasks and go to sleep in orderly fashion
+		- 		The clerks go to sleep correctly when there are no more customers to be handled.
+		- 		The clerks come back to work correctly when being called by the manager.
+		- Manager:
+		-		The Manager determine whether to add/wakeup a clerk to each table. (partially broken)
+		- 		The manager, suppose to wake up clerks only when certain requirements are satisfied, 
+		-      and wakes up a clerk no matter what condiiton are present in the program.
+		- 		Manager is able to check the number of clerk at each table, and number of customers in line
+		-		but forcefully wakeup a clerk at each table, ignoring line condition.
+		- Senator:
+		-		Senator related features is incomplete, therefore no senator is presented in the office.
+		- 		Mechanism to handle when the senator is incomplete.
 
 	+ Explanation
-		- By using huge amount of LOCK and CONDITION functions, the program run as desired.
+		- We believe part of the problem lie in the fact that as each time the timer interrupt is handled, a new manager is created,as the manager tries to acquire locks for tables and line to make modification, the manager thread must wait for a amount of time until the other clerk or customer has given up the lock. While the current manager thread is waiting to acquire its lock, a new timer interupt has occured result in creating a new unwanted manager thread. The new unwated manager thread also tried to acquire identical lock for accessing table/line variables. In the end, countless manager threads are being created and stacked trying to acquire the same lock. Finally, when a waiting manager threads obtain the lock of its interests, the office condition have already been change which results in adding unwanted clerk to each table. Eventually the program crash when there are too many manager thread stacking up in the memory but too few of them being able to complete. Fortunately, the customers and clerks are usually able to complete their tasks before the program crash.
+		- Since there are no ways to kill an existing waiting manager thread or stop a new manager thread being created by timer until it has run to completion, the office money variable is being announced countless times by the manager thread overloading the program log. To view the amount of money collected by the office, user must use the method described in the above "How to test" section, and perform the necessary modification.
+		- There are also no methods given to adjust the frequency at which the timer creates the manager threads.
+		- If allowed to deviate from the design specification, we should be able to implement working manager thread (just one) without using a timer.
+		- Due to lack of time and majority of effort being spent on debugging our broken manager system, we didn't get the chance to implemente much of the senator features.
 
 ***********************
 * VII. Miscellaneous: *

@@ -243,7 +243,8 @@ test_code.o: ../threads/test_code.cc ../threads/copyright.h \
   ../machine/stats.h ../machine/timer.h ../network/post.h \
   ../machine/network.h ../threads/synchlist.h ../threads/synch.h \
   ../threads/manager.cc ../threads/customer.h ../threads/cline.h \
-  ../threads/clerk.h ../threads/ctable.h
+  ../threads/clerk.h ../threads/ctable.h ../threads/appclerk.cc \
+  ../threads/picclerk.cc ../threads/passclerk.cc ../threads/cashclerk.cc
 cline.o: ../threads/cline.cc ../threads/cline.h ../threads/list.h \
   ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -345,6 +346,81 @@ clerk.o: ../threads/clerk.cc ../threads/clerk.h ../threads/cline.h \
 appclerk.o: ../threads/appclerk.cc ../threads/clerk.h ../threads/cline.h \
   ../threads/list.h ../threads/copyright.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdarg.h \
+  /usr/include/iso/stdio_iso.h /usr/include/sys/feature_tests.h \
+  /usr/include/sys/isa_defs.h /usr/include/sys/va_list.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio_tag.h \
+  /usr/include/stdio_impl.h /usr/include/string.h \
+  /usr/include/iso/string_iso.h /usr/include/stdlib.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/stdlib_iso.h \
+  /usr/include/sys/wait.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/sys/types.h \
+  /usr/include/sys/machtypes.h /usr/include/sys/int_types.h \
+  /usr/include/sys/select.h /usr/include/sys/time.h /usr/include/time.h \
+  /usr/include/iso/time_iso.h /usr/include/sys/time_impl.h \
+  /usr/include/sys/resource.h /usr/include/sys/siginfo.h \
+  /usr/include/sys/machsig.h /usr/include/sys/procset.h \
+  ../threads/synch.h ../threads/thread.h ../machine/machine.h \
+  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+  ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
+  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
+  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
+  ../threads/ctable.h ../threads/customer.h
+picclerk.o: ../threads/picclerk.cc ../threads/clerk.h ../threads/cline.h \
+  ../threads/list.h ../threads/copyright.h ../threads/utility.h \
+  ../threads/bool.h ../machine/sysdep.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdarg.h \
+  /usr/include/iso/stdio_iso.h /usr/include/sys/feature_tests.h \
+  /usr/include/sys/isa_defs.h /usr/include/sys/va_list.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio_tag.h \
+  /usr/include/stdio_impl.h /usr/include/string.h \
+  /usr/include/iso/string_iso.h /usr/include/stdlib.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/stdlib_iso.h \
+  /usr/include/sys/wait.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/sys/types.h \
+  /usr/include/sys/machtypes.h /usr/include/sys/int_types.h \
+  /usr/include/sys/select.h /usr/include/sys/time.h /usr/include/time.h \
+  /usr/include/iso/time_iso.h /usr/include/sys/time_impl.h \
+  /usr/include/sys/resource.h /usr/include/sys/siginfo.h \
+  /usr/include/sys/machsig.h /usr/include/sys/procset.h \
+  ../threads/synch.h ../threads/thread.h ../machine/machine.h \
+  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+  ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
+  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
+  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
+  ../threads/ctable.h ../threads/customer.h
+passclerk.o: ../threads/passclerk.cc ../threads/clerk.h \
+  ../threads/cline.h ../threads/list.h ../threads/copyright.h \
+  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdarg.h \
+  /usr/include/iso/stdio_iso.h /usr/include/sys/feature_tests.h \
+  /usr/include/sys/isa_defs.h /usr/include/sys/va_list.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio_tag.h \
+  /usr/include/stdio_impl.h /usr/include/string.h \
+  /usr/include/iso/string_iso.h /usr/include/stdlib.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/stdlib_iso.h \
+  /usr/include/sys/wait.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/sys/types.h \
+  /usr/include/sys/machtypes.h /usr/include/sys/int_types.h \
+  /usr/include/sys/select.h /usr/include/sys/time.h /usr/include/time.h \
+  /usr/include/iso/time_iso.h /usr/include/sys/time_impl.h \
+  /usr/include/sys/resource.h /usr/include/sys/siginfo.h \
+  /usr/include/sys/machsig.h /usr/include/sys/procset.h \
+  ../threads/synch.h ../threads/thread.h ../machine/machine.h \
+  ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
+  ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
+  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
+  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
+  ../threads/ctable.h ../threads/customer.h
+cashclerk.o: ../threads/cashclerk.cc ../threads/clerk.h \
+  ../threads/cline.h ../threads/list.h ../threads/copyright.h \
+  ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdarg.h \
   /usr/include/iso/stdio_iso.h /usr/include/sys/feature_tests.h \
