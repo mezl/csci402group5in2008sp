@@ -388,7 +388,7 @@ void TestSuite() {
 #define PICTURE
 #define PASSPORT
 #define CASHIER 
-#define MAMAGER
+#define MANAGER
 //#define CHECK_LINE_3
 //#define LINE_CHECK	
 //#define SHOW_MONEY	
