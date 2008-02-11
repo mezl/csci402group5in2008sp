@@ -377,8 +377,8 @@ void TestSuite() {
 #include "picclerk.cc"
 #include "passclerk.cc"
 #include "cashclerk.cc"
-#define CUSTOMER_NUM 5
-#define CLERK_NUM 5
+#define CUSTOMER_NUM 4
+#define CLERK_NUM 4
 #define PASSPORT
 #define CASHIER 
 cLine *applicationLine = new cLine("app line",1);
@@ -440,7 +440,7 @@ void office()
 	Thread *customer_thread[CUSTOMER_NUM];
 
 	for(int i = 0; i < CUSTOMER_NUM; i++){
-		customer[i] = new Customer("customer",i, 100, applicationLine, pictureLine, passportLine, cashierLine);
+		customer[i] = new Customer("customer",i, 600, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("[Office]Create Customer %d Thread\n",customer[i]->getID());
 		char msg[12];
 		sprintf(msg,"Customer %d",i);
@@ -513,12 +513,13 @@ void office()
 
 }
 
-bool appNeedClerk = false;
-bool picNeedClerk = false;
-bool passNeedClerk = false;
-bool cashNeedClerk = false;
+bool appNeedClerk = true;
+bool picNeedClerk = true;
+bool passNeedClerk = true;
+bool cashNeedClerk = true;
 
 void lineCheck(int x){
+/*
 	bool display = true;
 	if(applicationLine->nobody()){
 		if(display)printf("[Manager]%d No body in App Line\n",x);
@@ -550,6 +551,7 @@ void lineCheck(int x){
 		if(display)printf("[Manager]%d Some one body in Cash Line\n",x);
 		cashNeedClerk = true;
 	}
+*/
 }
 void Manager(int x)
 {
@@ -664,14 +666,14 @@ void Manager(int x)
 	// check for total amount of money currently collected at the office
 	*/
 	// Sum up all the money in each lines and all the money in each tables
-/*	
+	
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
 	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 	//(void) interrupt->SetLevel(oldLevel);
-*/	
+	
 	managerLock.Release();
 }
 void Problem2()
