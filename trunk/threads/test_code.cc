@@ -567,7 +567,8 @@ void Manager(int x)
 	// if no clerk work and some customer in line
 	if ((applicationTable->clerkCount() == 0)&& appNeedClerk );//&& !applicationLine->nobody())
 	{
-		if(display)printf("[Manager]<<<<>>>>App Clerk %d Customer in Line %s\n",applicationTable->clerkCount(),applicationLine->nobody()?"True":"False");
+		if(display)printf("[Manager]<<<<>>>>App Clerk %d Customer in Line \n",applicationTable->clerkCount());
+				//applicationLine->nobody()?"True":"False");
 		applicationTable->addClerk(name,x,display);
 		if(display)printf("[Manager] wakeup a AppClerk to Application table\n");
 	}
@@ -578,7 +579,8 @@ void Manager(int x)
 	pictureTable->acquireLock(name,x);
 	if ((pictureTable->clerkCount() == 0)&& picNeedClerk);//&& !pictureLine->nobody())
 	{
-		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line %s\n",pictureTable->clerkCount(),pictureLine->nobody()?"True":"False");
+		if(display)printf("[Manager]<<<<>>>>Pic Clerk %d Customer in Line \n",pictureTable->clerkCount());//
+//			,pictureLine->nobody()?"True":"False");
 		pictureTable->addClerk(name,x,display);
 		if(display)printf("[Manager] wakeup a PicClerk to Picture table\n");
 	}
