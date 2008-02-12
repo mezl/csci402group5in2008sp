@@ -71,8 +71,9 @@ void cTable::releaseLock(char *name,int id,bool display)
 	
 void cTable::addMoney(int amount)
 {
+	bool display = true;
 	tableLock->Acquire();
-	if(display)printf("[Table]Now we add money %d total %d\n",amount,totalMoney);
+	if(display)printf("[Table]Now we add money %d total %d\n",amount,tableMoney);
 	tableMoney += amount;
 	tableLock->Release();
 }
