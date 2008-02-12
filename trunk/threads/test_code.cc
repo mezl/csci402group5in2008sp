@@ -552,17 +552,19 @@ int managerHandlCount = 0;
 Lock managerLock("Manager Lock");
 void managerHandler(int x)
 {
-	char msg[20];
-	sprintf(msg,"ManagerT %d",managerHandlCount);
-	Thread *manager_thread = new Thread(msg);
-	manager_thread -> Fork(Manager, managerHandlCount++);
-}
-void Manager(int x)
-{
+
 	//Slow down timer
 	if(x%2 == 0 || x%3 == 0 || x%7 == 0){		
 		return;
 	}
+	char msg[20];
+	sprintf(msg,"ManagerT %d",managerHandlCount);
+	Thread *manager_thread = new Thread(msg);
+	manager_thread -> Fork(Manager, managerHandlCount++);
+	delete(manager_thread);
+}
+void Manager(int x)
+{
 	managerLock.Acquire();
 
 	bool display = false;//Show debug message or not
@@ -587,7 +589,7 @@ void Manager(int x)
 		passportTable->addClerk(name,x,display);
 	if(cashierLine->preferNeedClerk())
 		cashierTable->addClerk(name,x,display);
-	if(cashierLine->clerkNeedClerk())
+	if(cashierLine->regNeedClerk())
 		cashierTable->addClerk(name,x,display);
 	
 /*	
