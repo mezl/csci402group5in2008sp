@@ -160,7 +160,7 @@ bool cLine::preferNeedClerk()
 {
 	bool state = false;
 	preferLineLock->Acquire();
-	if(preferLineCount==0 || preferLineCount >=3)
+	if(preferLineCount>=1 || preferLineCount >=3)
 		state = true;
 	preferLineLock->Release();
 	return state;
@@ -170,7 +170,7 @@ bool cLine::regNeedClerk()
 
 	bool state = false;
 	regLineLock->Acquire();
-	if(regLineCount==0 || regLineCount >=3)
+	if(regLineCount>=1 || regLineCount >=3)
 		state = true;
 	regLineLock->Release();
 	return state;
