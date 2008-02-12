@@ -570,6 +570,12 @@ void Manager(int x)
 
 	if(display)printf("[Manager]%d I am Starting.....\n",x);
 
+	applicationTable->addClerk(name,x,display);
+	pictureTable->addClerk(name,x,display);
+	passportTable->addClerk(name,x,display);
+	cashierTable->addClerk(name,x,display);
+	
+/*	
 #ifdef APPLICATION
 	//applicationLine->Acquire(name, 0);
 	applicationTable->acquireLock(name,x);
@@ -622,6 +628,7 @@ void Manager(int x)
 	cashierTable->releaseLock(name,0);
 	//cashierLine->Release(name, 0);
 #endif
+*/
 	// check for number of customers in each line
 	// add 1 clerk if # of customer in line is >3
 	// must acquire the lock for both line and table before adding a clerk or checkin customer
