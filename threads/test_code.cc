@@ -443,15 +443,14 @@ void office()
 #endif
 #ifdef CUSTOMER
 	const int MONEY[]={100,600,1100,1600};
-	//random function initilization
-	srand(time(NULL));	
 	printf("[Office]Create Customer \n");
 	Customer *customer[CUSTOMER_NUM];
 	Thread *customer_thread[CUSTOMER_NUM];
 	for(int i = 0; i < CUSTOMER_NUM; i++){
+		srand(time(NULL));	
 		int mindex = rand()%3;
 		int my_money = MONEY[mindex];
-		printf("[Office]money for customer %d is [%d] %d-------------------------------\n",i,mindex,my_money);		
+		printf("[Office]money for customer %d is [%d] %d\n",i,mindex,my_money);		
 		
 		sumOfMoney += my_money;
 		customer[i] = new Customer("customer",i, my_money, applicationLine, pictureLine, passportLine, cashierLine);
@@ -462,7 +461,7 @@ void office()
 		printf("[Office]Fork Customer %d Thread\n",customer[i]->getID());
 		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
-	printf("[Office]Total Money for Customer is %d-------------------------------------------\n",sumOfMoney);
+	printf("[Office]Total Money for Customer is %d---------\n",sumOfMoney);
 #endif
 #ifdef APPLICATION	
 	// create app clerks ( clerk for each table/job)
