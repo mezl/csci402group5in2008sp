@@ -19,26 +19,39 @@ int cTable::clerkCount()
 
 void cTable::addClerk(char *name,int id,bool display)
 {
+	tableLock->Acquire();
 	display = true;
 	if(leaveCount == 0){
 		if(display)printf("[Table]No clerk can add!\n");
 		return;
 	}
-	leaveCount--;
-	needClerk  ++;
-	if(display)printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
-	tableCondition->Signal(tableLock);
-	if(display)printf("[Table]%s%d table %d is added a clerk\n",name,id, tableID);
+	//if all clerk are leave, no one on table
+	if(cCount == leaveCount)
+	{	
+		leaveCount--;
+		needClerk  ++;
+		if(display)printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
+		tableCondition->Signal(tableLock);
+		if(display)printf("[Table]%s%d table %d is added a clerk\n",name,id, tableID);
+	}else{
+		
+		if(display)printf("[Table]%s%d table %d is not need add clerk\n",name,id, tableID);
+	}
+	tableLock->Release();
+
 }
 
 void cTable::leaveTable(char *name,int id,bool display)
 {
+
+	tableLock->Acquire();
 	leaveCount++;
 	if(display)printf("[Table]%s %d is leave table now,[%d]still work[%d]leave\n",name,id,cCount,leaveCount);
 	while(needClerk == 0)
 		tableCondition->Wait(tableLock);
 	needClerk--;
 	if(display)printf("[Table]%s %d is come back now\n",name,id);
+	tableLock->Release();
 }
 
 void cTable::acquireLock(char *name,int id,bool display)
