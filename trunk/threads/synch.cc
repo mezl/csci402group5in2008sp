@@ -226,7 +226,7 @@ void Condition::Signal(Lock* conditionLock) {
 			
 		}
 		if(condWaitQueue->IsEmpty()){
-			conditionLock->clearLockOwner();
+			//conditionLock->clearLockOwner();
 		}
 
 	}else{	
