@@ -391,7 +391,7 @@ void TestSuite() {
 #define MANAGER
 //#define CHECK_LINE_3
 //#define LINE_CHECK	
-#define SHOW_MONEY	
+//#define SHOW_MONEY	
 ////////////////////////////////////////////////
 cLine *applicationLine = new cLine("app line",1);
 cLine *pictureLine     = new cLine("pic line",2);
@@ -409,10 +409,6 @@ void managerHandler(int x);
 void myCustomerForkFunc(int x);
 void myClerkForkFunc(int x);
 void office();
-
-int sumOfMoney = 0;
-int managerHandlCount = 0;
-Lock managerLock("Manager Lock");
 
 void myCustomerForkFunc(int x)
 {
@@ -441,19 +437,13 @@ void office()
 	printf("[Office]Create Manager\n");
 	Timer *t = new Timer(managerHandler, 0, false);
 #endif
+
 #ifdef CUSTOMER
-	const int MONEY[]={100,600,1100,1600};
 	printf("[Office]Create Customer \n");
 	Customer *customer[CUSTOMER_NUM];
 	Thread *customer_thread[CUSTOMER_NUM];
 	for(int i = 0; i < CUSTOMER_NUM; i++){
-		srand(time(NULL));	
-		int mindex = rand()%3;
-		int my_money = MONEY[mindex];
-		//printf("[Office]money for customer %d is [%d] %d\n",i,mindex,my_money);		
-		
-		sumOfMoney += my_money;
-		customer[i] = new Customer("customer",i,600, applicationLine, pictureLine, passportLine, cashierLine);
+		customer[i] = new Customer("customer",i, 600, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("[Office]Create Customer %d Thread\n",customer[i]->getID());
 		char msg[12];
 		sprintf(msg,"Customer %d",i);
@@ -461,7 +451,6 @@ void office()
 		printf("[Office]Fork Customer %d Thread\n",customer[i]->getID());
 		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
-	printf("[Office]Total Money for Customer is %d\n",sumOfMoney);
 #endif
 #ifdef APPLICATION	
 	// create app clerks ( clerk for each table/job)
@@ -559,16 +548,15 @@ void lineCheck(int x){
 	}
 #endif
 }
+int managerHandlCount = 0;
+Lock managerLock("Manager Lock");
 void managerHandler(int x)
 {
-
-	//Slow down timer, not necessary
-	if(x%2 == 0 || x%3 == 0 || x%7 == 0){		
-		return;
-	}
-	Thread *manager_thread = new Thread("Manager");
+	char msg[20];
+	sprintf(msg,"ManagerT %d",managerHandlCount);
+	Thread *manager_thread = new Thread(msg);
 	manager_thread -> Fork(Manager, managerHandlCount++);
-	//delete(manager_thread); TODO: fix this bug
+	//delete manager_thread; 
 }
 void Manager(int x)
 {
@@ -580,7 +568,7 @@ void Manager(int x)
 	// check each table for number of clerks
 	// add 1 clerk if table is empty
 	char *name = "Manager";
-
+	//kainew check
 	if(display)printf("[Manager]%d I am Starting.....\n",x);
 	if(applicationLine->preferNeedClerk())
 		applicationTable->addClerk(name,x,display);
@@ -588,7 +576,7 @@ void Manager(int x)
 		applicationTable->addClerk(name,x,display);
 	if(pictureLine->preferNeedClerk())
 		pictureTable->addClerk(name,x,display);
-	if(applicationLine->regNeedClerk())
+	if(pictureLine->regNeedClerk())
 		pictureTable->addClerk(name,x,display);
 	if(passportLine->preferNeedClerk())
 		passportTable->addClerk(name,x,display);
@@ -702,16 +690,14 @@ void Manager(int x)
 	//cashierLine->Release(name, 0);
 	
 #endif	
-#ifdef SHOW_MONEY
-		
+#ifdef SHOW_MONEY	
 	// check for total amount of money currently collected at the office
 	// Sum up all the money in each lines and all the money in each tables
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
-	//if(sumOfMoney == officeMoney)
-		printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
+	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 #endif	
 	managerLock.Release();
 }
