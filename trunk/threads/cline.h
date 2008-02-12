@@ -29,6 +29,8 @@ class cLine
 		int reportMoney();
 		bool nobody();
 
+		bool preferNeedClerk();
+		bool regNeedClerk();
 
 	private:
 		int preferLineCount;		

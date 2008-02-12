@@ -569,9 +569,14 @@ void Manager(int x)
 	char *name = "Manager";
 
 	if(display)printf("[Manager]%d I am Starting.....\n",x);
-
-	applicationTable->addClerk(name,x,display);
-	pictureTable->addClerk(name,x,display);
+	if(applicationLine->preferNeedClerk())
+		applicationTable->addClerk(name,x,display);
+	if(applicationLine->regNeedClerk())
+		applicationTable->addClerk(name,x,display);
+	if(pictureLine->preferNeedClerk())
+		pictureTable->addClerk(name,x,display);
+	if(applicationLine->regNeedClerk())
+		pictureTable->addClerk(name,x,display);
 	passportTable->addClerk(name,x,display);
 	cashierTable->addClerk(name,x,display);
 	
