@@ -449,7 +449,10 @@ void office()
 	Customer *customer[CUSTOMER_NUM];
 	Thread *customer_thread[CUSTOMER_NUM];
 	for(int i = 0; i < CUSTOMER_NUM; i++){
-		int my_money = MONEY[(rand()%3)];
+		int mindex = rand()%3;
+		int my_money = MONEY[mindex];
+		printf("[Office]money for customer %d is [%d] %d-------------------------------\n",i,mindex,my_money);		
+		
 		sumOfMoney += my_money;
 		customer[i] = new Customer("customer",i, my_money, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("[Office]Create Customer %d Thread\n",customer[i]->getID());
