@@ -577,8 +577,14 @@ void Manager(int x)
 		pictureTable->addClerk(name,x,display);
 	if(applicationLine->regNeedClerk())
 		pictureTable->addClerk(name,x,display);
-	passportTable->addClerk(name,x,display);
-	cashierTable->addClerk(name,x,display);
+	if(passportLine->preferNeedClerk())
+		passportTable->addClerk(name,x,display);
+	if(passportLine->regNeedClerk())
+		passportTable->addClerk(name,x,display);
+	if(cashierLine->preferNeedClerk())
+		cashierTable->addClerk(name,x,display);
+	if(cashierLine->clerkNeedClerk())
+		cashierTable->addClerk(name,x,display);
 	
 /*	
 #ifdef APPLICATION
