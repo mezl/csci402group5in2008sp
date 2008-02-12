@@ -33,6 +33,7 @@ void cLine::preferAcquire(char *name,int id,bool display)
 }
 void cLine::preferRelease(char *name,int id,bool display)
 {
+	display = true;
 	if(display)printf("[Line]Prefer %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	preferLineLock->Release();
 }
@@ -44,6 +45,7 @@ void cLine::regAcquire(char *name,int id,bool display)
 }
 void cLine::regRelease(char *name,int id,bool display)
 {
+	display = true;
 	if(display)printf("[Line]Reg %s%d is release lock by %s %d\n",lineName,lineID,name,id);
 	regLineLock->Release();
 }
