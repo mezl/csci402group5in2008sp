@@ -453,7 +453,7 @@ void office()
 		//printf("[Office]money for customer %d is [%d] %d\n",i,mindex,my_money);		
 		
 		sumOfMoney += my_money;
-		customer[i] = new Customer("customer",i, my_money, applicationLine, pictureLine, passportLine, cashierLine);
+		customer[i] = new Customer("customer",i,600, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("[Office]Create Customer %d Thread\n",customer[i]->getID());
 		char msg[12];
 		sprintf(msg,"Customer %d",i);
@@ -566,11 +566,9 @@ void managerHandler(int x)
 	if(x%2 == 0 || x%3 == 0 || x%7 == 0){		
 		return;
 	}
-	char msg[20];
-	sprintf(msg,"ManagerT %d",managerHandlCount);
-	Thread *manager_thread = new Thread(msg);
+	Thread *manager_thread = new Thread("Manager");
 	manager_thread -> Fork(Manager, managerHandlCount++);
-	delete(manager_thread);
+	//delete(manager_thread); TODO: fix this bug
 }
 void Manager(int x)
 {
