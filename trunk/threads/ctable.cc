@@ -71,10 +71,16 @@ void cTable::releaseLock(char *name,int id,bool display)
 	
 void cTable::addMoney(int amount)
 {
+	tableLock->Acquire();
 	tableMoney += amount;
+	tableLock->Release();
 }
 
 int cTable::reportMoney()
 {
-	return tableMoney;
+	int m = 0;
+	tableLock->Acquire();
+	m = tableMoney;
+	tableLock->Release();
+	return m;
 }

@@ -145,7 +145,11 @@ void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
 
 int cLine::reportMoney()
 {
-	return amount;
+	int m = 0;
+	preferLineLock->Acquire();
+	m = amount;
+	preferLineLock->Release();
+	return m;
 }
 
 bool cLine::nobody()
