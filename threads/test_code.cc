@@ -391,7 +391,7 @@ void TestSuite() {
 #define MANAGER
 //#define CHECK_LINE_3
 //#define LINE_CHECK	
-//#define SHOW_MONEY	
+#define SHOW_MONEY	
 ////////////////////////////////////////////////
 cLine *applicationLine = new cLine("app line",1);
 cLine *pictureLine     = new cLine("pic line",2);
@@ -409,6 +409,10 @@ void managerHandler(int x);
 void myCustomerForkFunc(int x);
 void myClerkForkFunc(int x);
 void office();
+
+int sumOfMoney = 0;
+int managerHandlCount = 0;
+Lock managerLock("Manager Lock");
 
 void myCustomerForkFunc(int x)
 {
@@ -437,13 +441,17 @@ void office()
 	printf("[Office]Create Manager\n");
 	Timer *t = new Timer(managerHandler, 0, false);
 #endif
-
 #ifdef CUSTOMER
+	const int MONEY[]={100,600,1100,1600};
+	//random function initilization
+	srand(time(NULL))	
 	printf("[Office]Create Customer \n");
 	Customer *customer[CUSTOMER_NUM];
 	Thread *customer_thread[CUSTOMER_NUM];
 	for(int i = 0; i < CUSTOMER_NUM; i++){
-		customer[i] = new Customer("customer",i, 600, applicationLine, pictureLine, passportLine, cashierLine);
+		int my_money = MONEY[(rand()%3)];
+		sumOfMoney += my_money;
+		customer[i] = new Customer("customer",i, my_money, applicationLine, pictureLine, passportLine, cashierLine);
 		printf("[Office]Create Customer %d Thread\n",customer[i]->getID());
 		char msg[12];
 		sprintf(msg,"Customer %d",i);
@@ -548,12 +556,10 @@ void lineCheck(int x){
 	}
 #endif
 }
-int managerHandlCount = 0;
-Lock managerLock("Manager Lock");
 void managerHandler(int x)
 {
 
-	//Slow down timer
+	//Slow down timer, not necessary
 	if(x%2 == 0 || x%3 == 0 || x%7 == 0){		
 		return;
 	}
@@ -695,14 +701,16 @@ void Manager(int x)
 	//cashierLine->Release(name, 0);
 	
 #endif	
-#ifdef SHOW_MONEY	
+#ifdef SHOW_MONEY
+		
 	// check for total amount of money currently collected at the office
 	// Sum up all the money in each lines and all the money in each tables
 	int officeMoney = applicationLine->reportMoney() + pictureLine->reportMoney() 
 						+ passportLine->reportMoney() + cashierLine->reportMoney()
 						+ applicationTable->reportMoney() + pictureTable->reportMoney()
 						+ passportTable->reportMoney() + cashierTable->reportMoney();
-	printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
+	if(sumOfMoney == officeMoney)
+		printf("[Manager] announce the office has collected total of %d dollars.........\n", officeMoney);
 #endif	
 	managerLock.Release();
 }
