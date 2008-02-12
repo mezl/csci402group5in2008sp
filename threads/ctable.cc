@@ -23,6 +23,7 @@ void cTable::addClerk(char *name,int id,bool display)
 	display = true;
 	if(leaveCount == 0){
 		if(display)printf("[Table]No clerk can add!\n");
+		tableLock->Release();
 		return;
 	}
 	//if all clerk are leave, no one on table
