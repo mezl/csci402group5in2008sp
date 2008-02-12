@@ -7,6 +7,7 @@
 #ifndef CASHIER 
 #define CASHIER 
 #endif
+//#define SMARTLINE
 Customer::Customer(char *name,int ID_in, int money_in, 
 		cLine* applicationLine_in, cLine* pictureLine_in,
 	       	cLine* passportLine_in, cLine* cashierLine_in)
@@ -71,8 +72,10 @@ void Customer::gotoApplicationLine()
 	if(money > 500){
 		applicationLine->preferAcquire(customerName,customerID);
 		printf("[CUST]Customer %d get both app line lock\n",customerID);
+#ifdef SMARTLINE
 		if((applicationLine->preferCustomerCount() == 0));//<= applicationLine->regCustomerCount()))
 		{
+#endif
 			notGoToPreferLine = false;
 			printf("[CUST]Customer %d go to prefer app line \n",customerID);
 			money = money-500;
@@ -82,7 +85,9 @@ void Customer::gotoApplicationLine()
 			printf("[CUST]Customer %d wake up in %s%d \n",customerID,
 					applicationLine->getName(),
 					applicationLine->getID());
+#ifdef SMARTLINE
 		}
+#endif
 		applicationLine->preferRelease(customerName,customerID);
 	}
 	if(notGoToPreferLine)
@@ -101,13 +106,17 @@ void Customer::gotoPictureLine()
 	bool notGoToPreferLine = true;
 	if(money >500){
 		pictureLine -> preferAcquire(customerName,customerID);
+#ifdef SMARTLINE
 		if((pictureLine->preferCustomerCount() == 0));//<= pictureLine->regCustomerCount()))
 		{
+#endif
 			notGoToPreferLine = false;
 			printf("[CUST]Customer %d go to prefer pic line \n",customerID);
 			money = money-500;
 			pictureLine -> addPreferLine((int)this, 500);
+#ifdef SMARTLINE
 		}
+#endif
 		pictureLine -> preferRelease(customerName,customerID);
 	}
 	if(notGoToPreferLine)
@@ -124,13 +133,17 @@ void Customer::gotoPassportLine()
 	if(money > 500 )
 	{	
 		passportLine -> preferAcquire(customerName,customerID);
+#ifdef SMARTLINE
 		if (passportLine->preferCustomerCount() ==0)//<= passportLine->regCustomerCount()))
 		{
+#endif
 			notGoToPreferLine = false;
 			printf("[CUST]Customer %d go to prefer passport line \n",customerID);
 			money = money-500;
 			passportLine -> addPreferLine((int)this, 500);
+#ifdef SMARTLINE
 		}
+#endif
 		passportLine -> preferRelease(customerName,customerID);	
 	}
 	if(notGoToPreferLine)	
@@ -149,13 +162,17 @@ void Customer::gotoCashierLine()
 	{ 
 
 		cashierLine -> preferAcquire(customerName,customerID);
+#ifdef SMARTLINE
 		if (cashierLine->preferCustomerCount()==0)// <= cashierLine->regCustomerCount()))
 		{
+#endif
 			notGoToPreferLine = false;
 			printf("[CUST]Customer %d go to prefer cashier line \n",customerID);
 			money = money-500;
 			cashierLine -> addPreferLine((int)this, 500);
+#ifdef SMARTLINE
 		}
+#endif
 		cashierLine -> preferRelease(customerName,customerID);
 	}
 	if(notGoToPreferLine)
