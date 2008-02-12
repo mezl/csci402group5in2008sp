@@ -559,6 +559,10 @@ void managerHandler(int x)
 }
 void Manager(int x)
 {
+	//Slow down timer
+	if(x%2 == 0 || x%3 == 0 || x%7 == 0){		
+		return;
+	}
 	managerLock.Acquire();
 
 	bool display = false;//Show debug message or not

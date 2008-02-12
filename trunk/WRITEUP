@@ -1082,15 +1082,15 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 		
 		- Manager:
 		
-		-		The Manager determine whether to add/wakeup a clerk to each table. (partially broken)
+		-		The Manager determine whether to add/wakeup a clerk to each table as the requirement. 
 		
 		- 		The manager, suppose to wake up clerks only when certain requirements are satisfied, 
 		
-		-      		and wakes up a clerk no matter what condiiton are present in the program.
+		-      		and wakes up a clerk only as customer need in the program.
 		
 		- 		Manager is able to check the number of clerk at each table, and number of customers in line
 		
-		-		but forcefully wakeup a clerk at each table, ignoring line condition.
+		-		and wakeup a clerk at each table if need.
 		- Senator:
 		
 		-		Senator related features is incomplete, therefore no senator is presented in the office.
@@ -1098,7 +1098,7 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 		- 		Mechanism to handle when the senator is incomplete.
 
 	+ Explanation
-		- We believe part of the problem lie in the fact that as each time the timer interrupt is handled, a new manager is created,as the manager tries to acquire locks for tables and line to make modification, the manager thread must wait for a amount of time until the other clerk or customer has given up the lock. While the current manager thread is waiting to acquire its lock, a new timer interupt has occured result in creating a new unwanted manager thread. The new unwated manager thread also tried to acquire identical lock for accessing table/line variables. In the end, countless manager threads are being created and stacked trying to acquire the same lock. Finally, when a waiting manager threads obtain the lock of its interests, the office condition have already been change which results in adding unwanted clerk to each table. Eventually the program crash when there are too many manager thread stacking up in the memory but too few of them being able to complete. Fortunately, the customers and clerks are usually able to complete their tasks before the program crash.
+		- We believe part of the problem lie in the fact that as each time the timer interrupt is handled, a new manager is created,as the manager tries to acquire locks for manager lock. The it will keep pipe up the stack until stack crash.  The manager thread must wait for a amount of time until the other clerk or customer has given up the lock. While the current manager thread is waiting to acquire its lock, a new timer interupt has occured result in creating a new unwanted manager thread. The new unwated manager thread also tried to acquire identical lock for accessing variables. In the end, countless manager threads are being created and stacked trying to acquire the same lock. Finally, when a waiting manager threads obtain the lock of its interests, the office condition have already been change which results in adding unwanted clerk to each table. Eventually the program crash when there are too many manager thread stacking up in the memory but too few of them being able to complete. Fortunately, the customers and clerks are usually able to complete their tasks before the program crash.
 		
 		- Since there are no ways to kill an existing waiting manager thread or stop a new manager thread being created by timer until it has run to completion, the office money variable is being announced countless times by the manager thread overloading the program log. To view the amount of money collected by the office, user must use the method described in the above "How to test" section, and perform the necessary modification.
 		
