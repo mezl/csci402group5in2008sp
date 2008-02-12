@@ -459,6 +459,7 @@ void office()
 		printf("[Office]Fork Customer %d Thread\n",customer[i]->getID());
 		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
+	printf("[Office]Total Money for Customer is %d-------------------------------------------\n");
 #endif
 #ifdef APPLICATION	
 	// create app clerks ( clerk for each table/job)
