@@ -7,7 +7,7 @@
 #ifndef CASHIER 
 #define CASHIER 
 #endif
-//#define SMARTLINE
+#define SMARTLINE
 Customer::Customer(char *name,int ID_in, int money_in, 
 		cLine* applicationLine_in, cLine* pictureLine_in,
 	       	cLine* passportLine_in, cLine* cashierLine_in)

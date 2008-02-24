@@ -549,14 +549,31 @@ void lineCheck(int x){
 #endif
 }
 int managerHandlCount = 0;
+int managerHandlCount1 = 0;
+int managerCount = 0;
 Lock managerLock("Manager Lock");
 void managerHandler(int x)
 {
-	char msg[20];
-	sprintf(msg,"ManagerT %d",managerHandlCount);
-	Thread *manager_thread = new Thread(msg);
-	manager_thread -> Fork(Manager, managerHandlCount++);
-	//delete manager_thread; 
+	if(managerHandlCount == 500)
+	{
+		managerHandlCount = 0; 
+		if(managerHandlCount1 == 100)
+		{
+			managerHandlCount1 = 0; 
+			if(managerCount == 30000)
+				managerCount = 0;
+			char msg[20];
+			sprintf(msg,"ManagerT %d",managerCount);
+			Thread *manager_thread = new Thread(msg);
+			manager_thread -> Fork(Manager, managerCount++);
+			//delete manager_thread; 
+		}else{
+
+			managerHandlCount1 ++ ; 
+		}
+	}else{
+		managerHandlCount ++ ; 
+	}
 }
 void Manager(int x)
 {
