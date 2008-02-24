@@ -126,6 +126,25 @@ void Fork(void (*func)());
  */
 void Yield();		
 
+
+//---------------------- PROJECT 2 (part 1) ---------------------
+
+// system calls for locks
+int CreateLock();
+void DestroyLock(int);
+void Acquire(int);
+void Release(int);
+
+
+// system calls for conditions
+int CreateCondition();
+void DestroyCondition(int);
+void Signal(int);
+void Wait(int);
+void Broadcast(int);
+
+
+
 #endif /* IN_ASM */
 
 #endif /* SYSCALL_H */
