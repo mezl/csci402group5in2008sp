@@ -22,10 +22,11 @@
 // of liability and disclaimer of warranty provisions.
 
 #include "copyright.h"
-#include "system.h"
+#include "../threads/system.h"
 #include "syscall.h"
 #include <stdio.h>
 #include <iostream>
+#include "../threads/synch.h"
 
 using namespace std;
 
@@ -275,3 +276,150 @@ void ExceptionHandler(ExceptionType which) {
       interrupt->Halt();
     }
 }
+
+
+
+// -------------- PROJECT 2 (part 1) ---------------------
+#ifdef USER_PROGRAM
+int CreateLock_Syscall()
+{
+	// create a new lock
+	Lock* myLock = new Lock("New Lock");
+	
+	// get index of the new lock
+	int id;
+	id = lockTable.Put(myLock);
+
+	// failure creating a lock
+	if(id < 0)
+	{
+		delete myLock;
+		printf("Failure creating a lock of index %d \n", id);
+	}
+
+	// return lock index
+	return id;
+}
+
+void DestroyLock_Syscall(int id)
+{
+	Lock* myLock = (Lock*)lockTable.Remove(id);
+
+	if(myLock == NULL)
+	{
+		printf("Failure deleting a lock of index %d \n", id);
+		return;
+	}
+	delete myLock;
+}
+
+void Acquire_Syscall(int id)
+{
+	Lock* myLock = (Lock*)lockTable.Get(id);
+
+	if(myLock == NULL)
+	{
+		printf("Failure Acquiring a lock of index %d \n", id);
+		return;
+	}
+
+	myLock -> Acquire();
+}
+
+void Release_Syscall(int id)
+{
+	Lock* myLock = (Lock*)lockTable.Get(id);
+
+	if(myLock == NULL)
+	{
+		printf("Failure Releasing a lock of index %d \n", id);
+		return;
+	}
+
+	myLock -> Release();
+}
+
+int CreateCondition_Syscall()
+{
+	Condition* myCondition = new Condition("New Condition");
+	int id = conditionTable.Put(myCondition);
+
+	if(id < 0)
+	{
+		printf("Failure creating a condition of index %d \n", id);
+		delete myCondition;
+	}
+	return id;
+}
+
+void DestroyCondition_Syscall(int id)
+{
+	Condition* myCondition = (Condition*)conditionTable.Remove(id);
+	
+	if(myCondition == NULL)
+	{	
+		printf("Failure destroying a condition of index %d \n", id);
+		return;
+	}	
+	delete myCondition;
+}
+
+void Signal_Syscall(int conditionID, int lockID)
+{
+	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
+	Lock* myLock = (Lock*)lockTable.Get(lockID);
+
+	if(myCondition == NULL)
+	{
+		printf("Failure Signaling a condition (condition %d dont exist)", conditionID);
+		return;
+	}	
+	if(myLock == NULL)
+	{
+		printf("Failure Signaling a condition (lock %d dont exist)", lockID);	
+		return;
+	}
+	
+	myCondition -> Signal(myLock);
+}
+
+void Wait_Syscall(int conditionID, int lockID)
+{
+	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
+	Lock* myLock = (Lock*)lockTable.Get(lockID);
+
+	if(myCondition == NULL)
+	{
+		printf("Failure waiting a condition (condition %d dont exist)", conditionID);
+		return;
+	}	
+	if(myLock == NULL)
+	{
+		printf("Failure waiting a condition (lock %d dont exist)", lockID);	
+		return;
+	}
+	
+	myCondition -> Wait(myLock);
+}
+
+void Broadcast_Syscall(int conditionID, int lockID)
+{
+	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
+	Lock* myLock = (Lock*)lockTable.Get(lockID);
+
+	if(myCondition == NULL)
+	{
+		printf("Failure waiting a condition (condition %d dont exist)", conditionID);
+		return;
+	}	
+	if(myLock == NULL)
+	{
+		printf("Failure waiting a condition (lock %d dont exist)", lockID);	
+		return;
+	}
+	
+	myCondition -> Broadcast(myLock);
+}
+
+#endif
+
