@@ -22,6 +22,9 @@
 #include "table.h"
 #include "synch.h"
 
+#ifndef PROJ2
+#define PROJ2
+#endif
 extern "C" { int bzero(char *, int); };
 
 Table::Table(int s) : map(s), table(0), lock(0), size(s) {
@@ -148,7 +151,19 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     pageTable = new TranslationEntry[numPages];
     for (i = 0; i < numPages; i++) {
 	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
+#ifdef PROJ2
+	int newpage = memoryTable.Put(0);//Find the new space in memory table
+	//Just booking the space, but not put anything in to it yet
+	if(newpage == -1){
+		printf("Can't not creat new addr space, no more memory");
+		return;
+	}	
+	pageTable[i].physicalPage = newpage;
+#else
+/////////////////////////////////////////////////////////////////////////////
 	pageTable[i].physicalPage = i;
+#endif
+/////////////////////////////////////////////////////////////////////////////
 	pageTable[i].valid = TRUE;
 	pageTable[i].use = FALSE;
 	pageTable[i].dirty = FALSE;
@@ -157,10 +172,112 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 					// pages to be read-only
     }
     
+//---------------------------------------------------------------------------//
+#ifdef PROJ2
+//Doing the memory load from the user code and data seg.
+//-----
+//|   |
+//|   |
+//|   |
+//|   |
+//-----
+int mainMemAddr = 0; 
+int fileMemAddr = 0; 
+int currentBytes = 0;
+int notReadBytes = 0;
+    if (noffH.code.size > 0) {
+        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+			noffH.code.virtualAddr, noffH.code.size);
+
+		//Set start & end address range
+		//Then we need divide the code to several page
+		//They will load to different place
+		notReadBytes = noffH.code.size;
+		currentBytes = 0;
+		
+		//Start to load data to each page
+		for(i = 0; notReadBytes >= PageSize; i++){
+				mainMemAddr = pageTable[i].physicalPage * PageSize;
+				fileMemAddr = noffH.code.inFileAddr + currentBytes;
+				//Only load one page size;
+				executable->ReadAt(&(machine->mainMemory[mainMemAddr]), PageSize, fileMemAddr);
+
+				currentBytes += PageSize;
+				notReadBytes -= PageSize;
+		}
+
+		//The last bytes is less than a page size, but we still need allocated
+		//A space for those data
+		if(notReadBytes > 0)
+		{
+				mainMemAddr = pageTable[i].physicalPage * PageSize;
+				fileMemAddr = noffH.code.inFileAddr + currentBytes;
+				//Only load left memory size;
+				executable->ReadAt(&(machine->mainMemory[mainMemAddr]), notReadBytes, fileMemAddr);
+				
+				//Now we read all the code in to memory
+				//currentBytes += notReadBytes; //currentBytes equal noffH.code.size now
+				//notReadBytes = 0;// notReadBytes is zero
+		}
+
+    }//finish noffH.code.size load
+
+	//Now we will start to handle to initData
+	//If the last page from prev page still have some space
+	//We will also fill that unuse space before we move to next page
+	
+	int lastFreeSpaceSize  = PageSize - notReadBytes;
+
+    if (noffH.initData.size > 0) 
+	{
+			DEBUG('a', "Initializing data segment, at 0x%x, size %d\n", 
+							noffH.initData.virtualAddr, noffH.initData.size);
+			currentBytes = 0;//reset current read location
+
+			//Handle the last free space	
+			if(notReadBytes > 0)
+			{
+					//Check the initData is even samller than the last free space			
+					if(noffH.initData.size < lastFreeSpaceSize)
+							lastFreeSpaceSize = noffH.initData.size;							
+
+					mainMemAddr = pageTable[i].physicalPage * PageSize + notReadBytes;
+					fileMemAddr = noffH.initData.inFileAddr ;
+					executable->ReadAt(&(machine->mainMemory[mainMemAddr]), lastFreeSpaceSize, fileMemAddr);
+					currentBytes = lastFreeSpaceSize;
+			}
+			i++;//Move to next empty page
+			//Now we may already some of initData
+			//So we start count the current initData location
+			notReadBytes = noffH.initData.size - currentBytes;
+
+			//Keep going don't need reset page index
+			for(;notReadBytes >= PageSize;i++)
+			{
+					mainMemAddr = pageTable[i].physicalPage * PageSize ;
+					fileMemAddr = noffH.initData.inFileAddr + currentBytes;
+					executable->ReadAt(&(machine->mainMemory[mainMemAddr]), PageSize, fileMemAddr);
+					currentBytes += PageSize;
+					notReadBytes -= PageSize;
+			}
+			//The last part for initData
+			if(notReadBytes > 0)	
+			{
+					mainMemAddr = pageTable[i].physicalPage * PageSize ;
+					fileMemAddr = noffH.initData.inFileAddr + currentBytes;
+					executable->ReadAt(&(machine->mainMemory[mainMemAddr]), notReadBytes, fileMemAddr);
+			}
+			// now currentBytes + notReadbytes should == initData.size
+			// And notReadbytes will be zero;
+
+	}
+ 
+#else
+//---------------------------------------------------------------------------//
+
 // zero out the entire address space, to zero the unitialized data segment 
 // and the stack segment
     bzero(machine->mainMemory, size);
-
 // then, copy in the code and data segments into memory
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
@@ -174,7 +291,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
         executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
 			noffH.initData.size, noffH.initData.inFileAddr);
     }
-
+#endif
 }
 
 //----------------------------------------------------------------------
