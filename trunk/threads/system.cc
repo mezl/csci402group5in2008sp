@@ -29,6 +29,13 @@ SynchDisk   *synchDisk;
 
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 Machine *machine;	// user program memory and registers
+
+//--------------- Project 2 (part 1) ------------------
+Table lockTable(300);
+Table conditionTable(300);
+Table processTable(300);
+Table memoryTable(300);
+
 #endif
 
 #ifdef NETWORK
