@@ -23,9 +23,7 @@ void cTable::addClerk(char *name,int id,bool display)
 	display = true;
 	if(leaveCount == 0){
 		if(display)printf("[Table]No clerk can add!\n");
-		tableLock->Release();
-		return;
-	}
+	}else{
 	//if all clerk are leave, no one on table
 	if(cCount == leaveCount)
 	{	
@@ -38,6 +36,7 @@ void cTable::addClerk(char *name,int id,bool display)
 		
 		if(display)printf("[Table]%s%d table %d is not need add clerk\n",name,id, tableID);
 	}
+}
 	tableLock->Release();
 
 }
@@ -54,7 +53,7 @@ void cTable::leaveTable(char *name,int id,bool display)
 	if(display)printf("[Table]%s %d is come back now\n",name,id);
 	tableLock->Release();
 }
-
+/*
 void cTable::acquireLock(char *name,int id,bool display)
 {
 	if(display)printf("[Table]%s %d is acquire lock now\n",name,id);
@@ -68,7 +67,7 @@ void cTable::releaseLock(char *name,int id,bool display)
 	tableLock->Release();
 	if(display)printf("[Table]%s %d is released lock now\n",name,id);
 }
-	
+*/	
 void cTable::addMoney(int amount)
 {
 	bool display = true;
