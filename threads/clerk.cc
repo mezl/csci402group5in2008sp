@@ -25,7 +25,7 @@ void Clerk::run()
 		if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
 		{
 			serviced= true;
-			printf("[Clerk]%s %d check prefer line %d\n",clerkName,clerkID,cline->getID());
+			//printf("[Clerk]%s %d check prefer line %d\n",clerkName,clerkID,cline->getID());
 			c = (Customer *)cline->getNextPreferLineCustomer(clerkName,clerkID);
 		}
 		cline->preferRelease(clerkName,clerkID);
