@@ -67,16 +67,16 @@ void cLine::Release(char *name,int id,bool display)
 }
 bool cLine::IsRegLineEmpty()
 {
-	lineLock->Acquire();
+	//lineLock->Acquire();
 	bool count =  (regLineCount == 0);
-	lineLock->Release();
+	//lineLock->Release();
 	return count;
 }
 bool cLine::IsPreferLineEmpty()
 {
-	lineLock->Acquire();
+	//lineLock->Acquire();
 	bool count =  (preferLineCount == 0);
-	lineLock->Release();
+	//lineLock->Release();
 	return count;
 }
 
