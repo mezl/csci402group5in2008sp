@@ -48,7 +48,7 @@ void Clerk::run()
 			cline->regRelease(clerkName,clerkID);		
 			if(serviced)
 			{
-				c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
+				//c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
 				handleCustomer(c);
 				//c->wakeup();
 			}	
@@ -56,7 +56,7 @@ void Clerk::run()
 		if(!serviced)
 		{
 			//Go Sleep
-			printf("[Clerk]%s %d have no customer in line %d,leave table\n",clerkName,clerkID,cline->getID());
+			//printf("[Clerk]%s %d have no customer in line %d,leave table\n",clerkName,clerkID,cline->getID());
 			//table->acquireLock(clerkName,clerkID);
 			table->leaveTable(clerkName,clerkID);
 			//table->releaseLock(clerkName,clerkID);
