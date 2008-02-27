@@ -69,6 +69,7 @@ int main()
   cond2 = CreateCondition();
   cond3 = CreateCondition();
 
+  Write("Create All Lock & Cond\n",23,ConsoleOutput);
   Acquire(lock1);
   Write("func1 forked by main\n",21,ConsoleOutput);
   Fork(func1);
