@@ -62,6 +62,7 @@ void func2(){
 int main()
 {
 
+  Write("Start test\n",11,ConsoleOutput);
   lock1 = CreateLock();
   lock2 = CreateLock();
   cond1 = CreateCondition();
