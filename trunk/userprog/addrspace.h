@@ -22,6 +22,9 @@
 #define MaxOpenFiles 256
 #define MaxChildSpaces 256
 
+#ifndef PROJ2
+#define PROJ2
+#endif
 class AddrSpace {
   public:
     AddrSpace(OpenFile *executable);	// Create an address space,
@@ -41,6 +44,11 @@ class AddrSpace {
 					// for now!
     unsigned int numPages;		// Number of pages in the virtual 
 					// address space
+	int itsSpaceID;
+	int itsMaxForkAddr;					
+	bool valid;
+	int newStack();
+	Lock *spaceLock;
 };
 
 #endif // ADDRSPACE_H

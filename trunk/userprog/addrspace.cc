@@ -123,7 +123,9 @@ SwapHeader (NoffHeader *noffH)
 AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     NoffHeader noffH;
     unsigned int i, size;
-
+#ifdef PROJ2
+	spaceLock = new Lock("AddrSpace lock");
+#endif
     // Don't allocate the input or output to disk files
     fileTable.Put(0);
     fileTable.Put(0);
@@ -185,6 +187,12 @@ int mainMemAddr = 0;
 int fileMemAddr = 0; 
 int currentBytes = 0;
 int notReadBytes = 0;
+// zero out the page table space, to zero the unitialized data segment 
+// and the stack segment
+mainMemAddr = pageTable[i].physicalPage * PageSize;
+bzero(machine->mainMemory[mainMemAddr], PageSize);
+itsSpaceID = pageTable[0].physicalPage;
+itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
 			noffH.code.virtualAddr, noffH.code.size);
@@ -362,3 +370,57 @@ void AddrSpace::RestoreState()
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
 }
+#ifdef PROJ2
+int AddrSpace::GetSpcaeID()
+{
+	return itsSpaceID;
+}
+int AddrSpace::GetMaxForkAddr()
+{
+	return itsMaxForkAddr;
+}
+int AddrSpace::newStack()
+{
+		spaceLock->Acquire();
+		int newNumPages =  divRoundUp(UserStackSize,PageSize);
+		TranslationEntry *newTable;
+		//int stackAddr[newNumPages];
+		newTable = new TranslationEntry[newNumPages + numPages];
+		int i;
+		
+		for(i = 0 ;i < numPages+newNumPages ; i++)
+		{
+				if(i<numPages){
+						newTable[i].physicalPage = pageTable[i].physicalPage ;
+						newTable[i].valid        = pageTable[i].valid ;
+						newTable[i].use          = pageTable[i].use ;
+						newTable[i].dirty        = pageTable[i].dirty ;
+						newTable[i].readOnly     = pageTable[i].readOnly ; 
+				}else{
+						newTable[i].physicalPage = memoryTable.Put(0);
+						if(newTable[i].physicalPage == -1){
+								printf("Not Enough Memory Space!\n");
+								return 0;
+						}
+							
+						newTable[i].valid        = TRUE; 
+						newTable[i].use          = FALSE;
+						newTable[i].dirty        = FALSE;
+						newTable[i].readOnly     = FALSE;
+
+						mainMemAddr = newTable[i].physicalPage * PageSize;
+						bzero(machine->mainMemory[mainMemAddr], PageSize);
+
+				}
+
+		}
+	//Replace to the new Table
+	
+	pageTable->~TranslationEntry();
+	pageTable = newTable;
+	numPages+=newNumPages;
+	spaceLock->Release();
+	return numPages*PageSize -16 ;
+
+}
+#endif
