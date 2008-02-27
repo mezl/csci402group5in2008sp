@@ -7,6 +7,7 @@ cTable::cTable(int ID_in, int initialClerkCount)
 	cCount = initialClerkCount;
 	leaveCount = 0;
 	tableLock = new Lock("Table Lock");
+	tableMoneyLock = new Lock("Table Money Lock");
 	tableCondition = new Condition("Table Condiiton");
 	needClerk = 0;
 }
@@ -71,17 +72,17 @@ void cTable::releaseLock(char *name,int id,bool display)
 void cTable::addMoney(int amount)
 {
 	bool display = true;
-	tableLock->Acquire();
+	tableMoneyLock->Acquire();
 	if(display)printf("[Table]Now we add money %d total %d\n",amount,tableMoney);
 	tableMoney += amount;
-	tableLock->Release();
+	tableMoneyLock->Release();
 }
 
 int cTable::reportMoney()
 {
 	int m = 0;
-	tableLock->Acquire();
+	tableMoneyLock->Acquire();
 	m = tableMoney;
-	tableLock->Release();
+	tableMoneyLock->Release();
 	return m;
 }
