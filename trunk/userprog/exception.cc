@@ -505,7 +505,7 @@ void ExceptionHandler(ExceptionType which) {
 		break;
 		case SC_Exec:
 		DEBUG('a', "Exec syscall.\n");
-		Exec_Syscall(machine->ReadRegister(4));
+		// Exec_Syscall(machine->ReadRegister(4)); ---------------------------!!!!!!!!!!!!!!!!!!!!!!!!
 		break;
 		case SC_Exit:
 		DEBUG('a', "Exit syscall.\n");
