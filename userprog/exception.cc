@@ -377,10 +377,17 @@ void Broadcast_Syscall(int conditionID, int lockID)
 
 // --------------- PROJECT 2 PART 2 -------------------
 #ifdef USER_PROGRAM
-/*SpaceId Exec_Syscall(char* name)
+
+void exec_thread()
+{
+	currentThread->space->InitRegisters();
+	currentThread->space->RestoreState();
+	machine->Run();
+}
+SpaceId Exec_Syscall(char* name)
 {
 	return;
-}*/
+}
 
 void kernel_thread(int virtualaddress)
 {
