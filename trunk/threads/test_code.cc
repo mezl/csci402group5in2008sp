@@ -554,10 +554,10 @@ int managerCount = 0;
 Lock managerLock("Manager Lock");
 void managerHandler(int x)
 {
-	//if(managerHandlCount == 1)
+	if(managerHandlCount == 1)
 	{
-		//managerHandlCount = 0; 
-		//if(managerHandlCount1 == 1)
+		managerHandlCount = 0; 
+		if(managerHandlCount1 == 1)
 		{
 			managerHandlCount1 = 0; 
 			if(managerCount == 30000)
@@ -567,13 +567,13 @@ void managerHandler(int x)
 			Thread *manager_thread = new Thread(msg);
 			manager_thread -> Fork(Manager, managerCount++);
 			//delete manager_thread; 
-		}//else{
+		}else{
 
-			//managerHandlCount1 ++ ; 
-		//}
-	}//else{
-	//	managerHandlCount ++ ; 
-	//}
+			managerHandlCount1 ++ ; 
+		}
+	}else{
+		managerHandlCount ++ ; 
+	}
 }
 void Manager(int x)
 {
