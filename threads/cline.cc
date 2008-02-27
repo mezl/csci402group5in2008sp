@@ -104,7 +104,7 @@ void cLine::addRegLine(int c)
 	printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
 	regLineQueue->Append((void *)c);
 
-	//while(regCallNext == 0)
+	while(regCallNext == 0)
 		regLineCond->Wait(regLineLock);
 	regCallNext --;
 
