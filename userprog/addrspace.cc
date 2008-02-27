@@ -172,6 +172,8 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
 					// a separate page, we could set its 
 					// pages to be read-only
+int mainMemAddr = pageTable[i].physicalPage * PageSize;
+bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
     }
     
 //---------------------------------------------------------------------------//
@@ -187,10 +189,6 @@ int mainMemAddr = 0;
 int fileMemAddr = 0; 
 int currentBytes = 0;
 int notReadBytes = 0;
-// zero out the page table space, to zero the unitialized data segment 
-// and the stack segment
-mainMemAddr = pageTable[i].physicalPage * PageSize;
-bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
 itsSpaceID = pageTable[0].physicalPage;
 itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
     if (noffH.code.size > 0) {
@@ -422,4 +420,5 @@ int AddrSpace::newStack()
 	return numPages*PageSize -16 ;
 
 }
-#endif
+#endif}
+
