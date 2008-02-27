@@ -104,7 +104,7 @@ void cLine::addRegLine(int c)
 	printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
 	regLineQueue->Append((void *)c);
 
-	while(regCallNext == 0)
+	//while(regCallNext == 0)
 		regLineCond->Wait(regLineLock);
 	regCallNext --;
 
@@ -131,16 +131,18 @@ void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
 	if(IsRegLineEmpty()){
 		printf("[Line]No customer in reg %s%d\n",lineName,lineID);
 		//regLineLock->Release();
-		return NULL;
+		//return NULL;
+	}else{
+			//	lineLock->Acquire();
+			regLineCount--;
+			//	lineLock->Release();
+			regCallNext++;
+			printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
+			regLineCond->Signal(regLineLock);
+			printf("[Line]%s %d call next customer in reg %s%d\n",clerkName,clerkID,lineName,lineID);
+			return regLineQueue->Remove();
 	}
-//	lineLock->Acquire();
-	regLineCount--;
-//	lineLock->Release();
-	regCallNext++;
-	printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
-	regLineCond->Signal(regLineLock);
-	printf("[Line]%s %d call next customer in reg %s%d\n",clerkName,clerkID,lineName,lineID);
-	return regLineQueue->Remove();
+	return NULL;
 }
 
 int cLine::reportMoney()
