@@ -567,8 +567,8 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
   ../userprog/bitmap.h ../threads/scheduler.h ../threads/list.h \
   ../machine/interrupt.h ../machine/stats.h
-addrspace.o: ../userprog/addrspace.cc ../threads/copyright.h \
-  ../threads/system.h ../threads/utility.h ../threads/bool.h \
+addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
+  ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdarg.h \
@@ -720,7 +720,8 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/limits \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/typeinfo \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/istream \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/istream.tcc
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/istream.tcc \
+  ../threads/synch.h
 progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
   ../threads/system.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \

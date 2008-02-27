@@ -227,56 +227,6 @@ void Close_Syscall(int fd) {
     }
 }
 
-void ExceptionHandler(ExceptionType which) {
-    int type = machine->ReadRegister(2); // Which syscall?
-    int rv=0; 	// the return value from a syscall
-
-    if ( which == SyscallException ) {
-	switch (type) {
-	    default:
-		DEBUG('a', "Unknown syscall - shutting down.\n");
-	    case SC_Halt:
-		DEBUG('a', "Shutdown, initiated by user program.\n");
-		interrupt->Halt();
-		break;
-	    case SC_Create:
-		DEBUG('a', "Create syscall.\n");
-		Create_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
-		break;
-	    case SC_Open:
-		DEBUG('a', "Open syscall.\n");
-		rv = Open_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
-		break;
-	    case SC_Write:
-		DEBUG('a', "Write syscall.\n");
-		Write_Syscall(machine->ReadRegister(4),
-			      machine->ReadRegister(5),
-			      machine->ReadRegister(6));
-		break;
-	    case SC_Read:
-		DEBUG('a', "Read syscall.\n");
-		rv = Read_Syscall(machine->ReadRegister(4),
-			      machine->ReadRegister(5),
-			      machine->ReadRegister(6));
-		break;
-	    case SC_Close:
-		DEBUG('a', "Close syscall.\n");
-		Close_Syscall(machine->ReadRegister(4));
-		break;
-	}
-
-	// Put in the return value and increment the PC
-	machine->WriteRegister(2,rv);
-	machine->WriteRegister(PrevPCReg,machine->ReadRegister(PCReg));
-	machine->WriteRegister(PCReg,machine->ReadRegister(NextPCReg));
-	machine->WriteRegister(NextPCReg,machine->ReadRegister(PCReg)+4);
-	return;
-    } else {
-      cout<<"Unexpected user mode exception - which:"<<which<<"  type:"<< type<<endl;
-      interrupt->Halt();
-    }
-}
-
 
 
 // -------------- PROJECT 2 (part 1) ---------------------
@@ -350,8 +300,7 @@ int CreateCondition_Syscall()
 		printf("Failure creating a condition of index %d \n", id);
 		delete myCondition;
 	}
-	else{
-		return id;}
+	return id;
 }
 
 void DestroyCondition_Syscall(int id)
@@ -425,4 +374,95 @@ void Broadcast_Syscall(int conditionID, int lockID)
 }
 
 #endif
+
+// --------------- PROJECT 2 PART 2 -------------------
+#ifdef USER_PROGRAM
+/*SpaceId Exec_Syscall(char* name)
+{
+	return;
+}*/
+
+void kernel_thread(int virtualaddress)
+{
+	int myIncrementPC = virtualaddress + 4;
+
+	machine -> WriteRegister(PCReg, virtualaddress);	
+	machine -> WriteRegister(NextPCReg, myIncrementPC);
+	currentThread -> space -> RestoreState();
+	machine -> WriteRegister(StackReg, currentThread->space->newStack());
+	machine -> Run();
+}
+
+void Fork_Syscall(int virtualaddress)
+{
+	char* threadName = currentThread->getName();
+
+	Thread* myThread = new Thread(threadName);
+	processTable.Put(myThread);
+	myThread->space = currentThread->space;
+	myThread->Fork((VoidFunctionPtr)kernel_thread, virtualaddress);
+}
+void Yield_Syscall()
+{	
+	currentThread -> Yield();
+}
+
+void Exit_Syscall(int status)
+{
+
+
+}
+#endif
+
+//---------------- EXCEPTION HANDLER ------------------
+
+void ExceptionHandler(ExceptionType which) {
+    int type = machine->ReadRegister(2); // Which syscall?
+    int rv=0; 	// the return value from a syscall
+
+    if ( which == SyscallException ) {
+	switch (type) {
+	    default:
+		DEBUG('a', "Unknown syscall - shutting down.\n");
+	    case SC_Halt:
+		DEBUG('a', "Shutdown, initiated by user program.\n");
+		interrupt->Halt();
+		break;
+	    case SC_Create:
+		DEBUG('a', "Create syscall.\n");
+		Create_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+		break;
+	    case SC_Open:
+		DEBUG('a', "Open syscall.\n");
+		rv = Open_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+		break;
+	    case SC_Write:
+		DEBUG('a', "Write syscall.\n");
+		Write_Syscall(machine->ReadRegister(4),
+			      machine->ReadRegister(5),
+			      machine->ReadRegister(6));
+		break;
+	    case SC_Read:
+		DEBUG('a', "Read syscall.\n");
+		rv = Read_Syscall(machine->ReadRegister(4),
+			      machine->ReadRegister(5),
+			      machine->ReadRegister(6));
+		break;
+	    case SC_Close:
+		DEBUG('a', "Close syscall.\n");
+		Close_Syscall(machine->ReadRegister(4));
+		break;
+	}
+
+	// Put in the return value and increment the PC
+	machine->WriteRegister(2,rv);
+	machine->WriteRegister(PrevPCReg,machine->ReadRegister(PCReg));
+	machine->WriteRegister(PCReg,machine->ReadRegister(NextPCReg));
+	machine->WriteRegister(NextPCReg,machine->ReadRegister(PCReg)+4);
+	return;
+    } else {
+      cout<<"Unexpected user mode exception - which:"<<which<<"  type:"<< type<<endl;
+      interrupt->Halt();
+    }
+}
 

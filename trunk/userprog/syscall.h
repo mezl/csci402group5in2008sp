@@ -30,6 +30,19 @@
 #define SC_Fork		9
 #define SC_Yield	10
 
+// Project 2 Part 1 Addition
+#define SC_CreateLock 	11
+#define SC_DestroyLock 	12
+#define SC_Acquire 		13
+#define SC_Release 		14
+#define SC_CreateCondition 15
+#define SC_DestroyCondition 16
+#define SC_Signal 		17
+#define SC_Wait 			18
+#define SC_Broadcast 		19
+
+
+
 #define MAXFILENAME 256
 
 #ifndef IN_ASM
