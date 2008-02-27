@@ -24,6 +24,7 @@ class cTable
 		int cCount;
 		int leaveCount;
 		Lock *tableLock;
+		Lock *tableMoneyLock;
 		Condition *tableCondition;
 		int needClerk;
 };
