@@ -310,7 +310,8 @@ void DestroyLock_Syscall(int id)
 		printf("Failure deleting a lock of index %d \n", id);
 		return;
 	}
-	delete myLock;
+	else{
+		delete myLock;}
 }
 
 void Acquire_Syscall(int id)
@@ -322,8 +323,8 @@ void Acquire_Syscall(int id)
 		printf("Failure Acquiring a lock of index %d \n", id);
 		return;
 	}
-
-	myLock -> Acquire();
+	else{
+		myLock -> Acquire();}
 }
 
 void Release_Syscall(int id)
@@ -335,8 +336,8 @@ void Release_Syscall(int id)
 		printf("Failure Releasing a lock of index %d \n", id);
 		return;
 	}
-
-	myLock -> Release();
+	else{
+		myLock -> Release();}
 }
 
 int CreateCondition_Syscall()
@@ -349,7 +350,8 @@ int CreateCondition_Syscall()
 		printf("Failure creating a condition of index %d \n", id);
 		delete myCondition;
 	}
-	return id;
+	else{
+		return id;}
 }
 
 void DestroyCondition_Syscall(int id)
@@ -361,7 +363,8 @@ void DestroyCondition_Syscall(int id)
 		printf("Failure destroying a condition of index %d \n", id);
 		return;
 	}	
-	delete myCondition;
+	else{
+		delete myCondition;}
 }
 
 void Signal_Syscall(int conditionID, int lockID)
