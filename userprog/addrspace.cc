@@ -190,7 +190,7 @@ int notReadBytes = 0;
 // zero out the page table space, to zero the unitialized data segment 
 // and the stack segment
 mainMemAddr = pageTable[i].physicalPage * PageSize;
-bzero(machine->mainMemory[mainMemAddr], PageSize);
+bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
 itsSpaceID = pageTable[0].physicalPage;
 itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
     if (noffH.code.size > 0) {
@@ -382,13 +382,12 @@ int AddrSpace::GetMaxForkAddr()
 int AddrSpace::newStack()
 {
 		spaceLock->Acquire();
-		int newNumPages =  divRoundUp(UserStackSize,PageSize);
+		unsigned int newNumPages =  divRoundUp(UserStackSize,PageSize);
 		TranslationEntry *newTable;
 		//int stackAddr[newNumPages];
 		newTable = new TranslationEntry[newNumPages + numPages];
-		int i;
 		
-		for(i = 0 ;i < numPages+newNumPages ; i++)
+		for(unsigned int i = 0 ;i < numPages+newNumPages ; i++)
 		{
 				if(i<numPages){
 						newTable[i].physicalPage = pageTable[i].physicalPage ;
@@ -408,8 +407,8 @@ int AddrSpace::newStack()
 						newTable[i].dirty        = FALSE;
 						newTable[i].readOnly     = FALSE;
 
-						mainMemAddr = newTable[i].physicalPage * PageSize;
-						bzero(machine->mainMemory[mainMemAddr], PageSize);
+						int mainMemAddr = newTable[i].physicalPage * PageSize;
+						bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
 
 				}
 
