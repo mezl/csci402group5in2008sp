@@ -19,7 +19,9 @@ synchonization described above.
 
 
 void func1(){
-
+	char msg[256];
+	sprintf(msg,"func1 start\n");
+  Write(msg,strlen(msg),ConsoleOutput);
   Acquire(lock1);
   Write("func1 signals on cond1 with lock1\n",34,ConsoleOutput);
   Signal(lock1,cond1);
