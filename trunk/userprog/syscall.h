@@ -30,7 +30,7 @@
 #define SC_Fork		9
 #define SC_Yield	10
 
-// Project 2 Part 1 Addition
+/* Project 2 Part 1 Addition */
 #define SC_CreateLock 	11
 #define SC_DestroyLock 	12
 #define SC_Acquire 		13
@@ -140,21 +140,21 @@ void Fork(void (*func)());
 void Yield();		
 
 
-//---------------------- PROJECT 2 (part 1) ---------------------
+/*---------------------- PROJECT 2 (part 1) ---------------------*/
 
-// system calls for locks
+/* system calls for locks */
 int CreateLock();
 void DestroyLock(int);
 void Acquire(int);
 void Release(int);
 
 
-// system calls for conditions
+/* system calls for conditions */
 int CreateCondition();
 void DestroyCondition(int);
-void Signal(int);
-void Wait(int);
-void Broadcast(int);
+void Signal(int, int);
+void Wait(int, int);
+void Broadcast(int, int);
 
 
 
