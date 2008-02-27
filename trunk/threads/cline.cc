@@ -112,19 +112,20 @@ void cLine::addRegLine(int c)
 }
 void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID)
 {
-	if(IsPreferLineEmpty()){
-		printf("[Line]No customer in prefer %s%d\n",lineName,lineID);
-		//preferLineLock->Release();
+		if(IsPreferLineEmpty()){
+				printf("[Line]No customer in prefer %s%d\n",lineName,lineID);
+				//preferLineLock->Release();
+		}else{
+				//	lineLock->Acquire();
+				preferLineCount--;
+				//	lineLock->Release();
+				printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
+				callNext++;
+				preferLineCond->Signal(preferLineLock);
+				printf("[Line]%s %d call next customer in prefer %s%d\n",clerkName,clerkID,lineName,lineID);
+				return preferLineQueue->Remove();
+		}
 		return NULL;
-	}
-//	lineLock->Acquire();
-	preferLineCount--;
-//	lineLock->Release();
-	printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
-	callNext++;
-	preferLineCond->Signal(preferLineLock);
-	printf("[Line]%s %d call next customer in prefer %s%d\n",clerkName,clerkID,lineName,lineID);
-	return preferLineQueue->Remove();
 }
 void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
 {
