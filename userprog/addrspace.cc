@@ -371,11 +371,11 @@ void AddrSpace::RestoreState()
     machine->pageTableSize = numPages;
 }
 #ifdef PROJ2
-int AddrSpace::GetSpcaeID()
+int AddrSpace::getSpaceID()
 {
 	return itsSpaceID;
 }
-int AddrSpace::GetMaxForkAddr()
+int AddrSpace::getMaxForkAddr()
 {
 	return itsMaxForkAddr;
 }
