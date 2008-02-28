@@ -36,6 +36,8 @@ extern Machine* machine;	// user program memory and registers
 //-------------------- Project 2 (part 1) -------------------
 extern Table lockTable;
 extern Table conditionTable;
+
+//-------------------- Project 2 (part 2) -------------------
 extern Table processTable;
 extern Table memoryTable;
 

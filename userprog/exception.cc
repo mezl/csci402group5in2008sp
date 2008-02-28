@@ -399,7 +399,7 @@ SpaceId Exec_Syscall(char* name)
 	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
 	
 	int mySpaceId = myThread->space->getSpaceID();
-	processTable.Put(myThread);
+	int myThreadId = processTable.Put(myThread);
 	return mySpaceId;
 }
 
