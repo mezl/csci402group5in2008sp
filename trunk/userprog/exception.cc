@@ -426,8 +426,13 @@ void Yield_Syscall()
 
 void Exit_Syscall(int status)
 {
-
-
+	//doing check for number of child thread
+	while(true)
+	{
+		
+	}
+	currentThread->space->~AddrSpace();
+	currentThread->Finish();
 }
 #endif
 
