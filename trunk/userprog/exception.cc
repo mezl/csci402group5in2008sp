@@ -416,13 +416,13 @@ void kernel_thread(int virtualaddress)
 
 void Fork_Syscall(int virtualaddress)
 {
-	char* threadName = currentThread->getName();
-
-	Thread* myThread = new Thread(threadName);
-	processTable.Put(myThread);
+	Thread* myThread = new Thread(currentThread->getName());
+	int myThreadId = processTable.Put(myThread);
 	myThread->space = currentThread->space;
 	myThread->Fork((VoidFunctionPtr)kernel_thread, virtualaddress);
 }
+
+
 void Yield_Syscall()
 {	
 	currentThread -> Yield();
