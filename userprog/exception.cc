@@ -228,8 +228,11 @@ void Close_Syscall(int fd) {
 }
 
 
-
+// -------------------------------------------------------
 // -------------- PROJECT 2 (part 1) ---------------------
+// -------------------------------------------------------
+
+
 #ifdef USER_PROGRAM
 int CreateLock_Syscall()
 {
@@ -375,7 +378,10 @@ void Broadcast_Syscall(int conditionID, int lockID)
 
 #endif
 
+// ----------------------------------------------------
 // --------------- PROJECT 2 PART 2 -------------------
+// ----------------------------------------------------
+
 #ifdef USER_PROGRAM
 
 void exec_thread()
@@ -385,17 +391,15 @@ void exec_thread()
 	machine->Run();
 }
 SpaceId Exec_Syscall(char* name)
-{/*
+{
 	OpenFile* myFile = fileSystem->Open(name);
 	AddrSpace* mySpace = new AddrSpace(myFile);
 	Thread* myThread = new Thread(name);
 	myThread->space = mySpace;
 	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
 	
-	return processTable->Insert(myThread);*/
-	
-	//temporary shit to avoid warning
-	SpaceId mySpaceId;
+	int mySpaceId = myThread->space->getSpaceID();
+	processTable.Put(myThread);
 	return mySpaceId;
 }
 
@@ -436,7 +440,9 @@ void Exit_Syscall(int status)
 }
 #endif
 
+//-----------------------------------------------------
 //---------------- EXCEPTION HANDLER ------------------
+//-----------------------------------------------------
 
 void ExceptionHandler(ExceptionType which) {
     int type = machine->ReadRegister(2); // Which syscall?
@@ -476,6 +482,7 @@ void ExceptionHandler(ExceptionType which) {
 		break;
 
 		// Project 2 part 1 addition
+#ifdef USER_PROGRAM
 		case SC_CreateLock:
 		DEBUG('a', "CreateLock syscall.\n");
 		CreateLock_Syscall();
@@ -530,6 +537,7 @@ void ExceptionHandler(ExceptionType which) {
 		DEBUG('a', "Yield syscall.\n");
 		Yield_Syscall();
 		break;
+#endif
 	}
 
 	// Put in the return value and increment the PC

@@ -21,6 +21,7 @@
 #include "noff.h"
 #include "table.h"
 #include "synch.h"
+#include "processTable.h"
 
 #ifndef PROJ2
 #define PROJ2
@@ -80,6 +81,31 @@ void *Table::Remove(int i) {
     }
     return f;
 }
+
+//---------------------------------------------------------
+//-------------------PROJECT 2 PART2-----------------------
+//---------------PROCESS TABLE IMPLEMENTATION--------------
+//---------------------------------------------------------
+ProcessTable::ProcessTable()
+{
+	processTableLock = new Lock("Process Table Lock");
+}
+
+ProcessTable::~ProcessTable()
+{
+	delete processTableLock;
+}
+
+int ProcessTable::InsertThread(Thread* myThread)
+{
+	return 0;
+}
+int ProcessTable::RemoveThread(Thread* myThread)
+{
+	return 0;
+}
+
+
 
 //----------------------------------------------------------------------
 // SwapHeader
@@ -420,5 +446,6 @@ int AddrSpace::newStack()
 	return numPages*PageSize -16 ;
 
 }
-#endif}
+
+#endif
 
