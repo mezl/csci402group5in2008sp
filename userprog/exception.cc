@@ -393,6 +393,10 @@ SpaceId Exec_Syscall(char* name)
 	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
 	
 	return processTable->Insert(myThread);*/
+	
+	//temporary shit to avoid warning
+	SpaceId mySpaceId;
+	return mySpaceId;
 }
 
 void kernel_thread(int virtualaddress)
