@@ -392,8 +392,7 @@ SpaceId Exec_Syscall(char* name)
 	myThread->space = mySpace;
 	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
 	
-	return processTable->Put(myThread);
-	
+	return processTable->Insert(myThread);
 }
 
 void kernel_thread(int virtualaddress)
