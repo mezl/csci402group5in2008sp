@@ -385,14 +385,14 @@ void exec_thread()
 	machine->Run();
 }
 SpaceId Exec_Syscall(char* name)
-{
+{/*
 	OpenFile* myFile = fileSystem->Open(name);
 	AddrSpace* mySpace = new AddrSpace(myFile);
 	Thread* myThread = new Thread(name);
 	myThread->space = mySpace;
 	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
 	
-	return processTable->Insert(myThread);
+	return processTable->Insert(myThread);*/
 }
 
 void kernel_thread(int virtualaddress)
