@@ -28,7 +28,7 @@ AS = $(GCCDIR)as
 LD = $(GCCDIR)ld
 CPP = $(GCCDIR)cpp
 
-INCDIR =-I../userprog -I../threads
+INCDIR =-I../userprog -I../threads  
 CFLAGS = -G 0 -c $(INCDIR)
 
 all: halt matmult sort testfiles lockcond lockcondbreak combinetest
@@ -61,8 +61,8 @@ testfiles.o: testfiles.c
 testfiles: testfiles.o start.o
 	$(LD) $(LDFLAGS) start.o testfiles.o -o testfiles.coff
 	../bin/coff2noff testfiles.coff testfiles
-lockcond.o: lockcond.c
-	$(CC) $(CFLAGS) -c lockcond.c
+lockcond.o: lockcond.c 
+	$(CC) $(CFLAGS) -c lockcond.c 
 lockcond: lockcond.o start.o
 	$(LD) $(LDFLAGS) start.o lockcond.o -o lockcond.coff
 	../bin/coff2noff lockcond.coff lockcond

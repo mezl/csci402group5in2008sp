@@ -10,7 +10,7 @@ synchonization described above.
 
 
 #include "syscall.h"
-
+#include "string.h"
   int lock1; 
   int lock2; 
   int cond1;
@@ -19,51 +19,50 @@ synchonization described above.
 
 
 void func1(){
-	char msg[256];
-	sprintf(msg,"func1 start\n");
-  Write(msg,strlen(msg),ConsoleOutput);
+  print("func 1 start");
   Acquire(lock1);
-  Write("func1 signals on cond1 with lock1\n",34,ConsoleOutput);
+  println("func1 signals on cond1 with lock1\n");
   Signal(lock1,cond1);
 
   Acquire(lock2);
   Release(lock1);
  
-  Write("func1 waits on cond3 with lock2\n",32,ConsoleOutput);
+  println("func1 waits on cond3 with lock2\n");
   Wait(lock2,cond3);
   Release(lock2);
 
 
   Acquire(lock1);
-  Write("func1 signals on cond1 with lock1\n",34,ConsoleOutput);
+  println("func1 signals on cond1 with lock1\n");
   Signal(lock1,cond1);
   Release(lock1);
 
-  Write("func1 exits\n",12,ConsoleOutput);
+  println("func1 exits\n");
   Exit(0);
 }
 
 void func2(){
 
   Acquire(lock1);
-  Write("func2 signals on cond2 with lock1\n",34,ConsoleOutput);
+  println("func2 signals on cond2 with lock1\n");
   Signal(lock1,cond2);
 
   Acquire(lock2);
   Release(lock1);
 
-  Write("func2 waits on cond3 with lock2\n",32,ConsoleOutput);
+  println("func2 waits on cond3 with lock2\n");
   Wait(lock2,cond3);
   Release(lock2);
   
 
-  Write("func2 exits\n",12,ConsoleOutput);
+  println("func2 exits\n");
   Exit(0);
 }
 
 int main()
 {
 
+  print("Main!  start");
   Write("Start test\n",11,ConsoleOutput);
   lock1 = CreateLock();
   lock2 = CreateLock();
@@ -74,23 +73,23 @@ int main()
   Write("Create All Lock & Cond\n",23,ConsoleOutput);
   Acquire(lock1);
   Write("func1 forked by main\n",21,ConsoleOutput);
-  Fork(func1);
+  /*Fork(func1);*/
   Write("main waits on cond1 with lock1\n",31,ConsoleOutput);
-  Wait(lock1,cond1);
+  /*Wait(lock1,cond1);*/
   Release(lock1);
 
 
   Acquire(lock1);
   Write("func2 forked by main\n",21,ConsoleOutput);
-  Fork(func2);
+/*  Fork(func2);*/
   Write("main waits on cond2 with lock1\n",31,ConsoleOutput);
-  Wait(lock1,cond2);
+/*  Wait(lock1,cond2);*/
   Release(lock1);
 
 
   Acquire(lock2);
   Write("main broadcasts on cond3 with lock2\n",36,ConsoleOutput);
-  Broadcast(lock2,cond3);
+/*  Broadcast(lock2,cond3);*/
 
 
   Acquire(lock1);
@@ -98,7 +97,7 @@ int main()
 
 
   Write("main waits on cond1 with lock1\n",31,ConsoleOutput);
-  Wait(lock1,cond1);
+  /*Wait(lock1,cond1);*/
   Release(lock1);
 
 
