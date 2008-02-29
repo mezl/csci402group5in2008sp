@@ -1,21 +1,21 @@
 /*
 
-#ifndef _STRINGS_H
-#define _STRINGS_H
+#ifndef _STRING_H
+#define _STRING_H
 
 */
 
 
 #include "syscall.h"
 
-inline int strglen(char *s) {
+inline int strlen(char *s) {
     int len = 0;
 
     while(*s++ != '\0' ) len++;
     return len;
 }
 
-inline void strgcpy(char *to, char *from) {
+inline void strcpy(char *to, char *from) {
 
     while (*to++ = *from++)
 	;
@@ -48,19 +48,23 @@ inline char *itoa(int z, int base) {
     return b;
 }
 
-inline void printstr(char *s) {
-    Write(s,strglen(s),ConsoleOutput);
+inline void print(char *s) {
+    Write(s,strlen(s),ConsoleOutput);
 }
 
-inline void printint(int i) {
+inline void println(char *s) {
+    Write(s,strlen(s),ConsoleOutput);
+    Write("\n",1,ConsoleOutput);
+}
+inline void printi(int i) {
     char *s = itoa(i,10);
-    Write(s,strglen(s),ConsoleOutput);
+    Write(s,strlen(s),ConsoleOutput);
 }
-inline void printhex(int i) {
+inline void printx(int i) {
     char *s = itoa(i,16);
-    Write(s,strglen(s),ConsoleOutput);
+    Write(s,strlen(s),ConsoleOutput);
 }
-inline writeln() {
+inline printn() {
     Write("\n",1,ConsoleOutput);
 }
 
