@@ -104,7 +104,7 @@ ProcessTable::~ProcessTable()
 	hashmap.clear();
 }
 
-int ProcessTable::InsertThread(Thread* myThread)
+int ProcessTable::AddThread(Thread* myThread)
 {
 	if(myThread == NULL)
 	{
@@ -150,9 +150,9 @@ int ProcessTable::RemoveThread(Thread* myThread)
 
 	if(hashmap.empty() == TRUE)
 		return 1;
-	if(hashmap[spaceID].empty())
+	if(hashmap[mySpaceId].empty())
 	{
-		hashmap.erase(spaceID);
+		hashmap.erase(mySpaceId);
 		return 2;
 	}
 

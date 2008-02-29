@@ -14,7 +14,7 @@ class ProcessTable
 	public:
 		ProcessTable();
 		~ProcessTable();
-		int InsertThread(Thread*);
+		int AddThread(Thread*);
 		int RemoveThread(Thread*);
 
 	private:
