@@ -397,7 +397,7 @@ SpaceId Exec_Syscall(char* name)
 	Thread* myThread = new Thread(name);
 	myThread->space = mySpace;
 	int mySpaceId = myThread->space->getSpaceID();
-	int myThreadId = processTable.Put(myThread);
+	int myThreadId = processTable.AddThread(myThread);
 	
 	machine -> WriteRegister(2, mySpaceId);
 	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
@@ -418,7 +418,7 @@ void kernel_thread(int virtualaddress)
 void Fork_Syscall(int virtualaddress)
 {
 	Thread* myThread = new Thread(currentThread->getName());
-	int myThreadId = processTable.Put(myThread);
+	int myThreadId = processTable.AddThread(myThread);
 	myThread->space = currentThread->space;
 	myThread->Fork((VoidFunctionPtr)kernel_thread, virtualaddress);
 }
