@@ -15,7 +15,6 @@
 #include "interrupt.h"
 #include "stats.h"
 #include "timer.h"
-#include "../userprog/processTable.h"
 
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,
