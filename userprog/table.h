@@ -27,6 +27,8 @@ class Table {
 #ifndef PROCESSTABLE_H
 #define PROCESSTABLE_H
 
+class Thread;
+class AddrSpace;
 #include <map>
 #include <vector>
 
