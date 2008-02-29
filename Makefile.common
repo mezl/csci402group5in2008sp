@@ -85,10 +85,10 @@ THREAD_S = ../threads/switch.s
 
 THREAD_O =main.o list.o scheduler.o synch.o synchlist.o system.o thread.o \
 	utility.o threadtest.o test_code.o interrupt.o stats.o sysdep.o timer.o cline.o \
-	customer.o ctable.o clerk.o appclerk.o cashclerk.o passclerk.o cashclerk.o manager.o office.o
+	customer.o ctable.o clerk.o appclerk.o cashclerk.o passclerk.o manager.o office.o
 
 USERPROG_H = ../userprog/addrspace.h\
-	../userprog/bitmap.h\
+	     ../userprog/bitmap.h\
 	../filesys/filesys.h\
 	../filesys/openfile.h\
 	../machine/console.h\
@@ -97,7 +97,7 @@ USERPROG_H = ../userprog/addrspace.h\
 	../machine/translate.h
 
 USERPROG_C = ../userprog/addrspace.cc\
-	../userprog/bitmap.cc\
+	     ../userprog/bitmap.cc\
 	../userprog/exception.cc\
 	../userprog/progtest.cc\
 	../machine/console.cc\
