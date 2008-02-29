@@ -575,8 +575,8 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
   ../userprog/bitmap.h ../threads/scheduler.h ../threads/list.h \
   ../machine/interrupt.h ../machine/stats.h ../filesys/synchdisk.h \
   ../threads/synch.h
-addrspace.o: ../userprog/addrspace.cc ../threads/copyright.h \
-  ../threads/system.h ../threads/utility.h ../threads/bool.h \
+addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
+  ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdarg.h \
