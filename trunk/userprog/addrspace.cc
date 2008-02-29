@@ -162,6 +162,15 @@ int ProcessTable::RemoveThread(Thread* myThread)
 }
 
 
+int ProcessTable::CheckChildExist(int mySpaceId)
+{
+	if(hashmap[mySpaceId].empty())
+	{
+		return 1;
+	}
+	return 0;
+}
+
 
 //----------------------------------------------------------------------
 // SwapHeader
