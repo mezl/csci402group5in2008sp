@@ -94,14 +94,70 @@ ProcessTable::ProcessTable()
 ProcessTable::~ProcessTable()
 {
 	delete processTableLock;
+	std::map<int, std::vector<Thread*> >::iterator iter;
+	iter = hashmap.begin();
+	while(!(iter == hashmap.end()))
+	{
+		(iter->second).clear();
+		iter++;
+	}
+	hashmap.clear();
 }
 
 int ProcessTable::InsertThread(Thread* myThread)
 {
-	return 0;
+	if(myThread == NULL)
+	{
+		return -1;
+	}
+
+	processTableLock->Acquire();
+	hashmap[myThread->space->getSpaceID()].push_back(myThread);
+	processTableLock->Release();
+	return myThread->space->getSpaceID();
 }
 int ProcessTable::RemoveThread(Thread* myThread)
 {
+	if (myThread == NULL)
+	{
+		return -1;
+	}
+
+	processTableLock->Acquire();
+	
+	int mySpaceId = myThread->space->getSpaceID();
+	int targetThreadFound = 0;
+	unsigned int i = 0;
+	int found = 0;
+
+	std::vector<Thread*>::iterator iter;
+	iter = hashmap[mySpaceId].begin();
+	while(i <= hashmap[mySpaceId].size() )
+	{
+		if(myThread == (*iter))
+		{
+			found = 1;
+			hashmap[mySpaceId].erase(iter);
+		}
+		iter++;
+		i++;
+	}
+	
+	if(found == 0)
+	{
+		return -1;
+	}
+
+	if(hashmap.empty() == TRUE)
+		return 1;
+	if(hashmap[spaceID].empty())
+	{
+		hashmap.erase(spaceID);
+		return 2;
+	}
+
+
+	processTableLock->Release();
 	return 0;
 }
 

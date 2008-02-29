@@ -396,10 +396,11 @@ SpaceId Exec_Syscall(char* name)
 	AddrSpace* mySpace = new AddrSpace(myFile);
 	Thread* myThread = new Thread(name);
 	myThread->space = mySpace;
-	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
-	
 	int mySpaceId = myThread->space->getSpaceID();
 	int myThreadId = processTable.Put(myThread);
+	
+	machine -> WriteRegister(2, mySpaceId);
+	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
 	return mySpaceId;
 }
 
