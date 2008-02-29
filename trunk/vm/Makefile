@@ -50,8 +50,63 @@ main.o: ../threads/main.cc ../threads/copyright.h ../threads/utility.h \
   ../threads/system.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/scheduler.h ../threads/list.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h
 list.o: ../threads/list.cc ../threads/copyright.h ../threads/list.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -90,6 +145,61 @@ scheduler.o: ../threads/scheduler.cc ../threads/copyright.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/system.h ../machine/interrupt.h ../machine/stats.h \
   ../machine/timer.h
 synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
@@ -112,9 +222,64 @@ synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
   /usr/include/sys/machsig.h /usr/include/sys/procset.h \
   ../machine/machine.h ../machine/translate.h ../machine/disk.h \
   ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
-  ../userprog/table.h ../userprog/bitmap.h ../threads/list.h \
-  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h
+  ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/list.h ../threads/system.h ../threads/scheduler.h \
+  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
 synchlist.o: ../threads/synchlist.cc ../threads/copyright.h \
   ../threads/synchlist.h ../threads/list.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
@@ -136,7 +301,61 @@ synchlist.o: ../threads/synchlist.cc ../threads/copyright.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc
 system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -157,6 +376,61 @@ system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h
 thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
@@ -178,10 +452,65 @@ thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
   /usr/include/sys/machsig.h /usr/include/sys/procset.h \
   ../machine/machine.h ../machine/translate.h ../machine/disk.h \
   ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
-  ../userprog/table.h ../userprog/bitmap.h ../threads/switch.h \
-  ../threads/synch.h ../threads/list.h ../threads/system.h \
-  ../threads/scheduler.h ../machine/interrupt.h ../machine/stats.h \
-  ../machine/timer.h
+  ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/switch.h ../threads/synch.h ../threads/list.h \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h
 utility.o: ../threads/utility.cc ../threads/copyright.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -220,6 +549,61 @@ threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h
 test_code.o: ../threads/test_code.cc ../threads/copyright.h \
@@ -243,6 +627,61 @@ test_code.o: ../threads/test_code.cc ../threads/copyright.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h ../threads/synch.h \
   ../threads/manager.cc ../threads/customer.h ../threads/cline.h \
@@ -269,8 +708,63 @@ cline.o: ../threads/cline.cc ../threads/cline.h ../threads/list.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h
 customer.o: ../threads/customer.cc ../threads/customer.h \
   ../threads/bool.h ../threads/copyright.h ../threads/system.h \
   ../threads/utility.h ../machine/sysdep.h \
@@ -292,6 +786,61 @@ customer.o: ../threads/customer.cc ../threads/customer.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h ../threads/synch.h \
   ../threads/cline.h
@@ -316,8 +865,63 @@ ctable.o: ../threads/ctable.cc ../threads/ctable.h ../threads/list.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h
 clerk.o: ../threads/clerk.cc ../threads/clerk.h ../threads/cline.h \
   ../threads/list.h ../threads/copyright.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
@@ -339,9 +943,64 @@ clerk.o: ../threads/clerk.cc ../threads/clerk.h ../threads/cline.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
-  ../threads/ctable.h ../threads/customer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h ../threads/ctable.h \
+  ../threads/customer.h
 appclerk.o: ../threads/appclerk.cc ../threads/clerk.h ../threads/cline.h \
   ../threads/list.h ../threads/copyright.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
@@ -363,9 +1022,64 @@ appclerk.o: ../threads/appclerk.cc ../threads/clerk.h ../threads/cline.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
-  ../threads/ctable.h ../threads/customer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h ../threads/ctable.h \
+  ../threads/customer.h
 picclerk.o: ../threads/picclerk.cc ../threads/clerk.h ../threads/cline.h \
   ../threads/list.h ../threads/copyright.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
@@ -387,9 +1101,64 @@ picclerk.o: ../threads/picclerk.cc ../threads/clerk.h ../threads/cline.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
-  ../threads/ctable.h ../threads/customer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h ../threads/ctable.h \
+  ../threads/customer.h
 passclerk.o: ../threads/passclerk.cc ../threads/clerk.h \
   ../threads/cline.h ../threads/list.h ../threads/copyright.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -411,9 +1180,64 @@ passclerk.o: ../threads/passclerk.cc ../threads/clerk.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
-  ../threads/ctable.h ../threads/customer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h ../threads/ctable.h \
+  ../threads/customer.h
 cashclerk.o: ../threads/cashclerk.cc ../threads/clerk.h \
   ../threads/cline.h ../threads/list.h ../threads/copyright.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
@@ -435,9 +1259,64 @@ cashclerk.o: ../threads/cashclerk.cc ../threads/clerk.h \
   ../threads/synch.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/scheduler.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
-  ../threads/ctable.h ../threads/customer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/scheduler.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h ../threads/ctable.h \
+  ../threads/customer.h
 manager.o: ../threads/manager.cc
 office.o: ../threads/office.cc ../threads/office.h ../threads/manager.cc \
   ../threads/customer.h ../threads/bool.h ../threads/copyright.h \
@@ -460,6 +1339,61 @@ office.o: ../threads/office.cc ../threads/office.h ../threads/manager.cc \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h ../threads/synch.h \
   ../threads/cline.h ../threads/clerk.h ../threads/ctable.h
@@ -484,8 +1418,62 @@ interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
   ../threads/system.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/scheduler.h ../machine/stats.h \
-  ../machine/timer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/scheduler.h ../machine/stats.h ../machine/timer.h
 sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
   /usr/include/stdlib.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/stdlib_iso.h \
@@ -528,8 +1516,61 @@ sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
   ../machine/sysdep.h ../threads/system.h ../threads/thread.h \
   ../machine/machine.h ../machine/translate.h ../machine/disk.h \
   ../userprog/addrspace.h ../filesys/filesys.h ../filesys/openfile.h \
-  ../userprog/table.h ../userprog/bitmap.h ../threads/scheduler.h \
-  ../machine/stats.h ../machine/timer.h
+  ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/scheduler.h ../machine/stats.h ../machine/timer.h
 stats.o: ../machine/stats.cc ../threads/copyright.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -568,8 +1609,63 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
   ../threads/system.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/scheduler.h ../threads/list.h \
-  ../machine/interrupt.h ../machine/stats.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+  ../machine/stats.h
 addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
   ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -591,6 +1687,61 @@ addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h ../bin/noff.h ../threads/synch.h
 bitmap.o: ../userprog/bitmap.cc ../threads/copyright.h \
@@ -633,13 +1784,22 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
-  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../userprog/syscall.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iostream \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ostream \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ios \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
@@ -651,34 +1811,16 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
-  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
-  /usr/include/sched.h /usr/include/unistd.h /usr/include/sys/unistd.h \
+  /usr/include/sched.h /usr/include/unistd.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
   /usr/include/wchar_impl.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/char_traits.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/localefwd.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/ios_base.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/locale_classes.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/string \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/memory \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
-  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
-  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
-  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
@@ -687,10 +1829,28 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_raw_storage_iter.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h ../userprog/syscall.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iostream \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ostream \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ios \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/char_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/localefwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/ios_base.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/locale_classes.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/string \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/memory \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_raw_storage_iter.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/basic_string.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/algorithm \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algo.h \
@@ -746,6 +1906,61 @@ progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
   ../threads/thread.h ../machine/machine.h ../machine/translate.h \
   ../machine/disk.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h ../machine/console.h \
   ../threads/synch.h
@@ -770,8 +1985,63 @@ console.o: ../machine/console.cc ../threads/copyright.h \
   ../threads/system.h ../threads/thread.h ../machine/machine.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/scheduler.h ../threads/list.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h
 machine.o: ../machine/machine.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -793,6 +2063,61 @@ machine.o: ../machine/machine.cc ../threads/copyright.h \
   ../machine/translate.h ../machine/disk.h ../threads/system.h \
   ../threads/thread.h ../userprog/addrspace.h ../filesys/filesys.h \
   ../filesys/openfile.h ../userprog/table.h ../userprog/bitmap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
   ../machine/stats.h ../machine/timer.h
 mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
@@ -816,8 +2141,63 @@ mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
   ../machine/translate.h ../machine/disk.h ../machine/mipssim.h \
   ../threads/system.h ../threads/thread.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/scheduler.h ../threads/list.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
+  ../machine/stats.h ../machine/timer.h
 translate.o: ../machine/translate.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -838,9 +2218,64 @@ translate.o: ../machine/translate.cc ../threads/copyright.h \
   /usr/include/sys/machsig.h /usr/include/sys/procset.h \
   ../machine/translate.h ../machine/disk.h ../userprog/addrspace.h \
   ../filesys/filesys.h ../filesys/openfile.h ../userprog/table.h \
-  ../userprog/bitmap.h ../threads/system.h ../threads/thread.h \
-  ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h
+  ../userprog/bitmap.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/map \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_tree.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_algobase.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++config.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/os_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstring \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstddef \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stddef.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/climits \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/limits.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/syslimits.h \
+  /usr/include/iso/limits_iso.h /usr/include/sys/int_limits.h \
+  /usr/include/sys/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdlib \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/new \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iosfwd \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++locale.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/clocale /usr/include/locale.h \
+  /usr/include/iso/locale_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/libintl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cctype /usr/include/ctype.h \
+  /usr/include/iso/ctype_iso.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stringfwd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/fpos.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/c++io.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cstdio \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/gthr-default.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/pthread.h \
+  /usr/include/sched.h /usr/include/unistd.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/cwchar \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ctime /usr/include/wchar.h \
+  /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/wchar_iso.h \
+  /usr/include/wchar_impl.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/functexcept.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/exception_defines.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_pair.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/type_traits.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_types.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator_base_funcs.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/concept_check.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_iterator.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_alloc.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_threads.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/sparc-sun-solaris2.8/bits/atomicity.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_construct.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_function.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_map.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_multimap.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/vector \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_uninitialized.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_vector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
+  ../threads/system.h ../threads/thread.h ../threads/scheduler.h \
+  ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
+  ../machine/timer.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above
