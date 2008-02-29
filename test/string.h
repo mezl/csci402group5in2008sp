@@ -31,7 +31,7 @@ inline char *itoa(int z, int base) {
     unsigned int x = (unsigned int) z;
 
     if ( x == 0 ) {
-	strgcpy(b,"0");
+	strcpy(b,"0");
 	return b;
     }
     while (x && l < 9) {
