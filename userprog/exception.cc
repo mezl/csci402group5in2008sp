@@ -431,13 +431,22 @@ void Yield_Syscall()
 
 void Exit_Syscall(int status)
 {
-	//doing check for number of child thread
-	while(true)
+	/*
+	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1)
 	{
-		
-	}
-	currentThread->space->~AddrSpace();
-	currentThread->Finish();
+		currentThread -> Sleep();
+	}*/
+	int check = processTable.RemoveThread(currentThread);
+	
+	if(check == 2)
+		currentThread->space->~AddrSpace();
+
+	if(check == 1)
+		interrupt->Halt();
+
+	if(check == 0 && status == 0)
+		currentThread->Finish();
+	
 }
 #endif
 

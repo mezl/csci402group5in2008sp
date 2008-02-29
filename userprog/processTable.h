@@ -16,6 +16,7 @@ class ProcessTable
 		~ProcessTable();
 		int AddThread(Thread*);
 		int RemoveThread(Thread*);
+		int CheckChildExist(int mySpaceId);
 
 	private:
 		std::map <int, std::vector<Thread*> > hashmap;
