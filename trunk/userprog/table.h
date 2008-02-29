@@ -24,3 +24,26 @@ class Table {
 
 
 #endif // TABLE_H
+#ifndef PROCESSTABLE_H
+#define PROCESSTABLE_H
+
+#include <map>
+#include <vector>
+
+class ProcessTable
+{
+	public:
+		ProcessTable();
+		~ProcessTable();
+		int AddThread(Thread*);
+		int RemoveThread(Thread*);
+		int CheckChildExist(int mySpaceId);
+
+	private:
+		std::map <int, std::vector<Thread*> > hashmap;
+		Lock* processTableLock;
+};
+
+
+
+#endif

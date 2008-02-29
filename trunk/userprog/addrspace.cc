@@ -21,7 +21,6 @@
 #include "noff.h"
 #include "table.h"
 #include "synch.h"
-#include "processTable.h"
 
 #ifndef PROJ2
 #define PROJ2
