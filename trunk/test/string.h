@@ -8,14 +8,14 @@
 
 #include "syscall.h"
 
-inline int strlen(char *s) {
+inline int itsStrlen(char *s) {
     int len = 0;
 
     while(*s++ != '\0' ) len++;
     return len;
 }
 
-inline void strcpy(char *to, char *from) {
+inline void itsStrcpy(char *to, char *from) {
 
     while (*to++ = *from++)
 	;
@@ -31,7 +31,7 @@ inline char *itoa(int z, int base) {
     unsigned int x = (unsigned int) z;
 
     if ( x == 0 ) {
-	strcpy(b,"0");
+	itsStrcpy(b,"0");
 	return b;
     }
     while (x && l < 9) {
@@ -49,20 +49,20 @@ inline char *itoa(int z, int base) {
 }
 
 inline void print(char *s) {
-    Write(s,strlen(s),ConsoleOutput);
+    Write(s,itsStrlen(s),ConsoleOutput);
 }
 
 inline void println(char *s) {
-    Write(s,strlen(s),ConsoleOutput);
+    Write(s,itsStrlen(s),ConsoleOutput);
     Write("\n",1,ConsoleOutput);
 }
 inline void printi(int i) {
     char *s = itoa(i,10);
-    Write(s,strlen(s),ConsoleOutput);
+    Write(s,itsStrlen(s),ConsoleOutput);
 }
 inline void printx(int i) {
     char *s = itoa(i,16);
-    Write(s,strlen(s),ConsoleOutput);
+    Write(s,itsStrlen(s),ConsoleOutput);
 }
 inline printn() {
     Write("\n",1,ConsoleOutput);
