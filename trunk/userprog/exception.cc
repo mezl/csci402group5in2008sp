@@ -364,12 +364,12 @@ void Broadcast_Syscall(int lockID, int conditionID)
 
 	if(myCondition == NULL)
 	{
-		printf("Failure waiting a condition (condition %d dont exist)", conditionID);
+		printf("Failure broadcasting a condition (condition %d dont exist)", conditionID);
 		return;
 	}	
 	if(myLock == NULL)
 	{
-		printf("Failure waiting a condition (lock %d dont exist)", lockID);	
+		printf("Failure broadcasting a condition (lock %d dont exist)", lockID);	
 		return;
 	}
 	
