@@ -319,7 +319,7 @@ void DestroyCondition_Syscall(int id)
 		delete myCondition;}
 }
 
-void Signal_Syscall(int conditionID, int lockID)
+void Signal_Syscall(int lockID, int conditionID)
 {
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
@@ -338,7 +338,7 @@ void Signal_Syscall(int conditionID, int lockID)
 	myCondition -> Signal(myLock);
 }
 
-void Wait_Syscall(int conditionID, int lockID)
+void Wait_Syscall(int lockID, int conditionID)
 {
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
@@ -357,7 +357,7 @@ void Wait_Syscall(int conditionID, int lockID)
 	myCondition -> Wait(myLock);
 }
 
-void Broadcast_Syscall(int conditionID, int lockID)
+void Broadcast_Syscall(int lockID, int conditionID)
 {
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
@@ -541,7 +541,7 @@ void ExceptionHandler(ExceptionType which) {
 		break;
 		case SC_Exec:
 		DEBUG('a', "Exec syscall.\n");
-		// Exec_Syscall(machine->ReadRegister(4)); ---------------------------!!!!!!!!!!!!!!!!!!!!!!!!
+		// Exec_Syscall(machine->ReadRegister(4));
 		break;
 		case SC_Exit:
 		DEBUG('a', "Exit syscall.\n");
