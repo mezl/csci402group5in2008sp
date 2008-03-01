@@ -424,7 +424,7 @@ void Fork_Syscall(int virtualaddress)
 
 	stackAddress = currentThread->space->newStack();
 	myThread->space = currentThread->space;
-	int myThreadId = processTable.AddThread(myThread);
+	int mySpaceId = processTable.AddThread(myThread);
 
 	if (stackAddress < 0)
 	{
@@ -450,14 +450,20 @@ void Exit_Syscall(int status)
 	}*/
 	int check = processTable.RemoveThread(currentThread);
 	
-	if(check == 2)
+	if(check == -1)
+	{
+		printf("Can't finish current thread\n");
+	}
+	if(check == 1 || check == 2)
 		currentThread->space->~AddrSpace();
 
-	if(check == 1)
+	if(check == 2)
 		interrupt->Halt();
 
-	if(check == 0 && status == 0)
+	if(status == 0)
 		currentThread->Finish();
+	else
+		printf("Cannot exit current thread\n");
 	
 }
 #endif

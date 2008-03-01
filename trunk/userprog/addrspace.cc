@@ -117,9 +117,12 @@ int ProcessTable::AddThread(Thread* myThread)
 }
 int ProcessTable::RemoveThread(Thread* myThread)
 {
+	int removeSuccessful = -1;	
+
 	if (myThread == NULL)
 	{
-		return -1;
+		printf("Failure removing non existance thread\n");
+		removeSuccessful =  -1;
 	}
 
 	processTableLock->Acquire();
@@ -140,24 +143,28 @@ int ProcessTable::RemoveThread(Thread* myThread)
 		}
 		iter++;
 		i++;
+		if(i > hashmap[mySpaceId].size())
+			break;
 	}
 	
 	if(found == 0)
 	{
-		return -1;
+		printf("RemoveThread Failure: Thread doesn't exist in process table\n");
+		removeSuccessful = -1;
 	}
 
-	if(hashmap.empty() == TRUE)
-		return 1;
+
 	if(hashmap[mySpaceId].empty())
 	{
 		hashmap.erase(mySpaceId);
-		return 2;
+		return 1;
 	}
 
+	if(hashmap.empty() == TRUE)
+		removeSuccessful = 2;
 
 	processTableLock->Release();
-	return 0;
+	return removeSuccessful;
 }
 
 
