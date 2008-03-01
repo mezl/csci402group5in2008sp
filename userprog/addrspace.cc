@@ -131,7 +131,7 @@ int ProcessTable::RemoveThread(Thread* myThread)
 
 	std::vector<Thread*>::iterator iter;
 	iter = hashmap[mySpaceId].begin();
-	while(i <= hashmap[mySpaceId].size() )
+	while(i < hashmap[mySpaceId].size() )
 	{
 		if(myThread == (*iter))
 		{
