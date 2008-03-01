@@ -31,10 +31,10 @@ SynchDisk   *synchDisk;
 Machine *machine;	// user program memory and registers
 
 //--------------- Project 2 (part 1) ------------------
-Table lockTable(300);
-Table conditionTable(300);
-ProcessTable processTable;
-Table memoryTable(300);
+//Table lockTable(300);
+//Table conditionTable(300);
+//ProcessTable processTable;
+//Table memoryTable(300);
 
 #endif
 
