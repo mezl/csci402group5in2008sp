@@ -383,7 +383,6 @@ void Broadcast_Syscall(int lockID, int conditionID)
 // ----------------------------------------------------
 
 #ifdef USER_PROGRAM
-unsigned int stackAddress;
 
 void exec_thread()
 {
@@ -405,8 +404,12 @@ SpaceId Exec_Syscall(char* name)
 	return mySpaceId;
 }
 
-void kernel_thread(int virtualaddress)
+void kernel_thread(int twoValues)
 {
+	int* twoValues_temp = (int*) twoValues;
+	int virtualaddress = twoValues_temp[0];
+	int stackAddress = twoValues_temp[1];
+
 	int myIncrementPC = virtualaddress + 4;
 
 	machine -> WriteRegister(PCReg, virtualaddress);	
@@ -419,10 +422,12 @@ void kernel_thread(int virtualaddress)
 void Fork_Syscall(int virtualaddress)
 {
 	Thread* myThread = new Thread(currentThread->getName());
+	int* twoValues = new int[2];
+	twoValues[0] = virtualaddress;
    
    //myThread->spaceID = currentThread->spaceID;
 
-	stackAddress = currentThread->space->newStack();
+	int stackAddress = currentThread->space->newStack();
 	myThread->space = currentThread->space;
 	int mySpaceId = processTable.AddThread(myThread);
 
@@ -431,8 +436,9 @@ void Fork_Syscall(int virtualaddress)
 		printf("Failure when allocating a new stack for fork");
 		return;
 	}
+	twoValues[1] = stackAddress;
 	
-	myThread->Fork((VoidFunctionPtr)kernel_thread, virtualaddress);
+	myThread->Fork((VoidFunctionPtr)kernel_thread, (int)twoValues);
 }
 
 
