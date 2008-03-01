@@ -422,9 +422,9 @@ void Fork_Syscall(int virtualaddress)
    
    //myThread->spaceID = currentThread->spaceID;
 
-	int myThreadId = processTable.AddThread(myThread);
 	stackAddress = currentThread->space->newStack();
 	myThread->space = currentThread->space;
+	int myThreadId = processTable.AddThread(myThread);
 
 	if (stackAddress < 0)
 	{
