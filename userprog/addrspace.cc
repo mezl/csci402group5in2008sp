@@ -140,6 +140,7 @@ int ProcessTable::RemoveThread(Thread* myThread)
 		{
 			found = 1;
 			hashmap[mySpaceId].erase(iter);
+			removeSuccessful = 0;
 		}
 		iter++;
 		i++;
@@ -157,7 +158,7 @@ int ProcessTable::RemoveThread(Thread* myThread)
 	if(hashmap[mySpaceId].empty())
 	{
 		hashmap.erase(mySpaceId);
-		return 1;
+		removeSuccessful = 1;
 	}
 
 	if(hashmap.empty() == TRUE)
