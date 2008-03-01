@@ -383,6 +383,7 @@ void Broadcast_Syscall(int conditionID, int lockID)
 // ----------------------------------------------------
 
 #ifdef USER_PROGRAM
+unsigned int stackAddress;
 
 void exec_thread()
 {
@@ -411,7 +412,7 @@ void kernel_thread(int virtualaddress)
 	machine -> WriteRegister(PCReg, virtualaddress);	
 	machine -> WriteRegister(NextPCReg, myIncrementPC);
 	currentThread -> space -> RestoreState();
-	machine -> WriteRegister(StackReg, currentThread->space->newStack());
+	machine -> WriteRegister(StackReg, stackAddress);
 	machine -> Run();
 }
 
@@ -421,6 +422,8 @@ void Fork_Syscall(int virtualaddress)
    myThread->space = currentThread->space;
    //myThread->spaceID = currentThread->spaceID;
 	int myThreadId = processTable.AddThread(myThread);
+	stackAddress = currentThread->space->newStack();
+	
 	myThread->Fork((VoidFunctionPtr)kernel_thread, virtualaddress);
 }
 
