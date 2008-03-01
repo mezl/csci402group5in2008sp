@@ -213,9 +213,7 @@ SwapHeader (NoffHeader *noffH)
 AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     NoffHeader noffH;
     unsigned int i, size;
-#ifdef PROJ2
 	spaceLock = new Lock("AddrSpace lock");
-#endif
     // Don't allocate the input or output to disk files
     fileTable.Put(0);
     fileTable.Put(0);
@@ -472,8 +470,20 @@ int AddrSpace::newStack()
 		spaceLock->Acquire();
 		unsigned int newNumPages =  divRoundUp(UserStackSize,PageSize);
 		TranslationEntry *newTable;
-		//int stackAddr[newNumPages];
-		newTable = new TranslationEntry[newNumPages + numPages];
+
+      int stackAddr[newNumPages];
+      if(!stackAddr){
+         printf("Not Enough Memory!\n");
+         return -1;
+      }
+      for(unsigned int i;i < newNumPages;i++){
+         stackAddr[i] = memoryTable.Put(0);
+         if(stackAddr[i] == -1)
+            printf("Error when creat stack\n");
+         return -1;
+      }
+
+newTable = new TranslationEntry[newNumPages + numPages];
 		
 		for(unsigned int i = 0 ;i < numPages+newNumPages ; i++)
 		{
@@ -484,7 +494,8 @@ int AddrSpace::newStack()
 						newTable[i].dirty        = pageTable[i].dirty ;
 						newTable[i].readOnly     = pageTable[i].readOnly ; 
 				}else{
-						newTable[i].physicalPage = memoryTable.Put(0);
+						newTable[i].physicalPage = stackAddr[i - numPages];
+                  //memoryTable.Put(0);
 						if(newTable[i].physicalPage == -1){
 								printf("Not Enough Memory Space!\n");
 								return 0;
