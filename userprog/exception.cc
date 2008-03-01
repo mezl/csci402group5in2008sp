@@ -418,8 +418,9 @@ void kernel_thread(int virtualaddress)
 void Fork_Syscall(int virtualaddress)
 {
 	Thread* myThread = new Thread(currentThread->getName());
+   myThread->space = currentThread->space;
+   //myThread->spaceID = currentThread->spaceID;
 	int myThreadId = processTable.AddThread(myThread);
-	myThread->space = currentThread->space;
 	myThread->Fork((VoidFunctionPtr)kernel_thread, virtualaddress);
 }
 
