@@ -111,7 +111,7 @@ Lock::Lock(char* debugName) {
 Lock::~Lock() {
 	//Add by Kai 
 	delete lockWaitQueue;
-	lockOwner = NULL;
+	//lockOwner = NULL;
 }
 void Lock::Acquire() {
 	//Add by Kai	
@@ -138,11 +138,12 @@ void Lock::Acquire() {
 
 }
 void Lock::Release() {
+	//Disable interrupts
+	IntStatus oldLevel = interrupt->SetLevel(IntOff);
+   
 	//Add by Kai
 	Thread *thread;
 
-	//Disable interrupts
-	IntStatus oldLevel = interrupt->SetLevel(IntOff);
 
 	//Check lock ownership
 	if(isHeldByCurrentThread())

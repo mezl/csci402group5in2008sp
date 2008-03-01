@@ -73,23 +73,23 @@ int main()
   Write("Create All Lock & Cond\n",23,ConsoleOutput);
   Acquire(lock1);
   Write("func1 forked by main\n",21,ConsoleOutput);
-  /*Fork(func1);*/
+  Fork(func1);
   Write("main waits on cond1 with lock1\n",31,ConsoleOutput);
-  /*Wait(lock1,cond1);*/
+  Wait(lock1,cond1);
   Release(lock1);
 
 
   Acquire(lock1);
   Write("func2 forked by main\n",21,ConsoleOutput);
-/*  Fork(func2);*/
+  Fork(func2);
   Write("main waits on cond2 with lock1\n",31,ConsoleOutput);
-/*  Wait(lock1,cond2);*/
+  Wait(lock1,cond2);
   Release(lock1);
 
 
   Acquire(lock2);
   Write("main broadcasts on cond3 with lock2\n",36,ConsoleOutput);
-/*  Broadcast(lock2,cond3);*/
+  Broadcast(lock2,cond3);
 
 
   Acquire(lock1);
@@ -97,7 +97,7 @@ int main()
 
 
   Write("main waits on cond1 with lock1\n",31,ConsoleOutput);
-  /*Wait(lock1,cond1);*/
+  Wait(lock1,cond1);
   Release(lock1);
 
 

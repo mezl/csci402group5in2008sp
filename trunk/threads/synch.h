@@ -76,10 +76,10 @@ class Lock {
 					// holds this lock.  Useful for
 					// checking in Release, and in
 					// Condition variable ops below.
-    void clearLockOwner(){lockOwner = NULL;}//Add this to clear owner
   private:
     char* name;				// for debugging
     //Add by Kai
+    void clearLockOwner(){lockOwner = NULL;}//Add this to clear owner
     List *lockWaitQueue;       // threads waiting in lock
     Thread *lockOwner; //lock owner for thread
 
