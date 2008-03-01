@@ -476,7 +476,7 @@ int AddrSpace::newStack()
          printf("Not Enough Memory!\n");
          return -1;
       }
-      for(unsigned int i;i < newNumPages;i++){
+      for(unsigned int i = 0;i < newNumPages;i++){
          stackAddr[i] = memoryTable.Put(0);
          if(stackAddr[i] == -1)
             printf("Error when creat stack\n");
