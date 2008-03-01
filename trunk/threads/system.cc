@@ -34,7 +34,7 @@ Machine *machine;	// user program memory and registers
 Table lockTable(150);
 Table conditionTable(150);
 ProcessTable processTable;
-Table memoryTable(150);
+Table memoryTable(NumPhysPages);
 
 #endif
 
