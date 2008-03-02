@@ -220,7 +220,7 @@ void Initialize()
 	applicationLine.regLineLock = CreateLock();
 	applicationLine.preferLineLock = CreateLock();
 	applicationLine.regLineCond = CreateCondition();
-	applicatoinLine.preferLineCond = CreateCondition();
+	applicationLine.preferLineCond = CreateCondition();
 	
 	pictureLine.regLineLock = CreateLock();
 	pictureLine.preferLineLock = CreateLock();
