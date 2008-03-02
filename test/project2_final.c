@@ -9,11 +9,6 @@ typedef int Condition;
 #define NUM_OF_CLERK 4
 #define NUM_OF_CUSTOMER 10
 
-int applicationLineLock;
-int pictureLineLock;
-int passportLineLock;
-int cashierLineLock;
-
 int applicationTableLock;
 int pictureTableLock;
 int passportTableLock;
@@ -77,6 +72,10 @@ typedef struct
 	int money;
 	Spot preferLine[NUM_OF_CUSTOMER];
 	Spot regLine[NUM_OF_CUSTOMER];
+	int preferLineLock;
+	int regLineLock;
+	int preferLineCond;
+	int regLineCond;
 }cLine;
 
 
@@ -100,11 +99,71 @@ Clerk cashierClerkArray[NUM_OF_CLERK];
 void customerRun()
 {
 	int myOwnID = -1;
+	int i;
+	
+	/*get the customer ID*/
 	Acquire(customerIDLock);
 	myOwnID = customerIDCount;
 	customerIDCount++;
 	Release(customerIDLock);
+	printf("[CUST] Customer %d start running \n", myOwnID);
 	
+	
+	/* goto application line first*/
+	printf("[CUST] Customer %d go queue up at applicaiton line \n", myOwnID);
+
+	if(applicationLine.preferLineCount <= applicationLine.regLineCount)
+	{
+		/* add itself to prefer line*/
+		Acquire(applicationLine.preferLineLock);
+		customerArray[myOwnID].money -= 500;
+		applicationLine.money += 500;
+		applicationLine.preferLineCount += 1;
+		printf("[CUST] Customer %d have joined the app prefer Line \n", myOwnID);
+		Wait(applicationLine.preferLineLock, applicationLine.preferLineCond);
+		Release(applicationLine.preferLineLock);
+	}
+	else
+	{
+		/*add itself to regular line*/
+		Acquire(applicationLine.regLineLock);
+		applicationLine.regLineCount += 1;
+		printf("[CUST] Customer %d have joined the app regular Line \n", myOwnID);
+		Wait(applicationLine.regLineLock, applicationLine.regLineCond);
+		Release(applicationLine.regLineLock);
+	}
+	
+	/*application complete*/
+	customerArray[myOwnID].applicationDone = 1;
+	printf("[CUST] Customer %d have completed application", myOwnID);
+
+	/*customer now goes to picture line*/
+	printf("[CUST] Customer %d go queue up at picture line \n", myOwnID);
+
+	if(pictureLine.preferLineCount <= pictureLine.regLineCount)
+	{
+		/* add itself to prefer line*/
+		Acquire(pictureLine.preferLineLock);
+		customerArray[myOwnID].money -= 500;
+		pictureLine.money += 500;
+		pictureLine.preferLineCount += 1;
+		printf("[CUST] Customer %d have joined the pic prefer Line \n", myOwnID);
+		Wait(pictureLine.preferLineLock, pictureLine.preferLineCond);
+		Release(pictureLine.preferLineLock);
+	}
+	else
+	{
+		/*add itself to regular line*/
+		Acquire(pictureLine.regLineLock);
+		pictureLine.regLineCount += 1;
+		printf("[CUST] Customer %d have joined the pic regular Line \n", myOwnID);
+		Wait(pictureLine.regLineLock, pictureLine.regLineCond);
+		Release(pictureLine.regLineLock);
+	}
+	
+	/*application complete*/
+	customerArray[myOwnID].pictureDone = 1;
+	printf("[CUST] Customer %d have completed picture", myOwnID);
 	
 	
 	Exit(0);
@@ -140,10 +199,6 @@ void Initialize()
 	int i;
 	
 	/*  Create all required lock and condition for table, and line for passport office*/
-	applicationLineLock = CreateLock();
-	pictureLineLock = CreateLock();
-	passportLineLock = CreateLock();
-	cashierLineLock = CreateLock();
 	
 	applicationTableLock = CreateLock();
 	pictureTableLock = CreateLock();
@@ -160,6 +215,26 @@ void Initialize()
 	pictureTableCond = CreateCondition();
 	passportTableCond = CreateCondition();
 	cashierTableCond = CreateCondition();
+	
+	applicationLine.regLineLock = CreateLock();
+	applicationLine.preferLineLock = CreateLock();
+	applicationLine.regLineCond = CreateCondition();
+	applicatoinLine.preferLineCond = CreateCondition();
+	
+	pictureLine.regLineLock = CreateLock();
+	pictureLine.preferLineLock = CreateLock();
+	pictureLine.regLineCond = CreateCondition();
+	pictureLine.preferLineCond = CreateCondition();
+	
+	passportLine.regLineLock = CreateLock();
+	passportLine.preferLineLock = CreateLock();
+	passportLine.regLineCond = CreateCondition();
+	passportLine.preferLineCond = CreateCondition();
+	
+	cashierLine.regLineLock = CreateLock();
+	cashierLine.preferLineLock = CreateLock();
+	cashierLine.regLineCond = CreateCondition();
+	cashierLine.preferLineCond = CreateCondition();
 	
 	/*Initialize values for the four lines, clean them up*/
 	for(i=0; i<NUM_OF_CUSTOMER; i++)
