@@ -217,7 +217,6 @@ SwapHeader (NoffHeader *noffH)
 //      Incompletely consretucted address spaces have the member
 //      constructed set to false.
 //----------------------------------------------------------------------
-
 AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     NoffHeader noffH;
     unsigned int i, size;
@@ -271,7 +270,6 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 int mainMemAddr = pageTable[i].physicalPage * PageSize;
 bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
     }
-    
 //---------------------------------------------------------------------------//
 #ifdef PROJ2
 //Doing the memory load from the user code and data seg.
@@ -396,6 +394,7 @@ itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
 #endif
 }
 
+
 //----------------------------------------------------------------------
 // AddrSpace::~AddrSpace
 //
@@ -486,12 +485,13 @@ int AddrSpace::newStack()
       }
       for(unsigned int i = 0;i < newNumPages;i++){
          stackAddr[i] = memoryTable.Put(0);
-         if(stackAddr[i] == -1)
+         if(stackAddr[i] == -1){
             printf("Error when creat stack\n");
-         return -1;
+            return -1;
+         }
       }
 
-newTable = new TranslationEntry[newNumPages + numPages];
+      newTable = new TranslationEntry[newNumPages + numPages];
 		
 		for(unsigned int i = 0 ;i < numPages+newNumPages ; i++)
 		{
@@ -515,7 +515,7 @@ newTable = new TranslationEntry[newNumPages + numPages];
 						newTable[i].readOnly     = FALSE;
 
 						int mainMemAddr = newTable[i].physicalPage * PageSize;
-						bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
+						//bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
 
 				}
 
@@ -527,7 +527,6 @@ newTable = new TranslationEntry[newNumPages + numPages];
 	numPages+=newNumPages;
 	spaceLock->Release();
 	return numPages*PageSize -16 ;
-
 }
 
 #endif
