@@ -170,10 +170,6 @@ void customerRun()
 	Exit(0);
 }
 
-void applicationClerkRun()
-{
-	Exit(0);
-}
 
 void pictureClerkRun()
 {
@@ -363,7 +359,7 @@ int getCustomerID(int l,int PreOrReg){
   }//end for 
   return customerID;
 }   
-void appClerkRun()
+void applicationClerkRun()
 {
 
    int clerkID = -1;
@@ -414,7 +410,7 @@ void appClerkRun()
       } 
 	}//while(1);
 
-
+	Exit(0);
 }
 void main()
 {
