@@ -8,9 +8,12 @@ the write syscalls to the console print out MSG that describe the desired
 synchonization described above. 
 */
 
-//#define CUSTOMER
-//#define APPLICATION 
-//#define PICTURE
+//Set how many customer and clerk want to run
+#define CUSTOMER_NUM 4
+#define CLERK_NUM 5
+#define CUSTOMER
+#define APPLICATION 
+#define PICTURE
 //#define PASSPORT
 //#define CASHIER 
 //#define MANAGER
@@ -25,58 +28,211 @@ synchonization described above.
   int cond1;
   int cond2;
   int cond3;
+typedef enum{ true,false }bool;
+typedef int Lock; 
+typedef int Condition; 
+typedef struct  {
+//		cTable(int ID_in, int initialClerkCount);
+//		int clerkCount();
+//		void addClerk(char *name,int id,bool display = false);
+//		void leaveTable(char *name,int id,bool display = false);
+//		void acquireLock(char *name,int id,bool display = false);
+//		void releaseLock(char *name,int id,bool display = false);
+//		void addMoney(int amount);
+//		int reportMoney();
 
+		int tableID;
+		int tableMoney;
+		int cCount;
+		int leaveCount;
+		int tableLock;
+		Lock tableMoneyLock;
+		Condition tableCondition;
+		int needClerk;
+}cTable;
+typedef struct {
+//		cLine(char *name,int ID);
+//		void addPreferLine(int c,int mount);
+//		void addRegLine(int c);
+//		void * getNextPreferLineCustomer(char *clerkName,int clerkID);
+//		void * getNextRegLineCustomer(char *clerkName,int clerkID);
+//		int preferCustomerCount(){return preferLineCount;}
+//		int regCustomerCount(){return regLineCount;}
+//		void preferAcquire(char *name = "NoName",int id = 0,bool display=false);
+//		void preferRelease(char *name = "NoName",int id = 0,bool display=false);
+//		void regAcquire(char *name,int id = 0,bool display=false);
+//		void regRelease(char *name,int id =0 ,bool display=false);
+//		void Acquire(char *name,int id = 0,bool display=false);
+//		void Release(char *name,int id =0 ,bool display=false);
+//		bool IsRegLineEmpty();
+//		bool IsPreferLineEmpty();
+//		int getID(){return lineID;}
+//		char *getName(){return lineName;}
+//		int reportMoney();
+//		bool nobody();
 
-void func1(){
-  println("[func1] start");
-  Acquire(lock1);
-  println("[func1] signals on cond1 with lock1");
-  Signal(lock1,cond1);
-
-  Acquire(lock2);
-  Release(lock1);
- 
-  println("func1 waits on cond3 with lock2");
-  Wait(lock2,cond3);
-  Release(lock2);
-
-
-//  Acquire(lock1);
-//  println("func1 signals on cond1 with lock1");
-//  Signal(lock1,cond1);
-//  Release(lock1);
-
-
-  println("[func1]func1 exits");
-  
-  Exit(0);
-}
-
-void func2(){
-
-  println("[func2] start");
-  Acquire(lock1);
-  println("[func2] signals on cond2 with lock1");
-  Signal(lock1,cond2);
-
-  Acquire(lock2);
-  Release(lock1);
-
-  println("func2 waits on cond3 with lock2\n");
-  Wait(lock2,cond3);
-  Release(lock2);
-  
-
-  println("[func2] exits");
-  Exit(0);
-}
-
+		bool preferNeedClerk;//bool
+		bool regNeedClerk;//bool
+		int preferLineCount;		
+		int regLineCount;		
+		int lineID;
+		char *lineName;
+		int amount;
+		Condition preferLineCond;
+		Lock preferLineLock; 
+		Condition regLineCond;
+		Lock regLineLock;//Lock
+		Condition lineLock;//for lock both line
+//		List* preferLineQueue;	
+//		List* regLineQueue;	
+		int callNext;
+		int regCallNext;
+}cLine;
+typedef struct 
+{
+//	Clerk(cLine *l,cTable *t,int id,char *name);
+//	virtual ~Clerk(){}
+//	void run();
+//	virtual void handleCustomer(Customer *c){
+	cLine cline;
+	cTable table;
+	int getID;
+	char *clerkName;
+	Lock clerkLock;
+	Condition clerkCondition;
+}Clerk;
+typedef struct 
+{
+//	void customerRun();
+//	void gotoApplicationLine();
+//	void gotoPictureLine();
+//	void gotoPassportLine();
+//	void gotoCashierLine();
+//	void completeApplication();
+//	void completePicture();
+//	void completePassport();
+//	void completeCashier();
+//	bool checkApplication();
+//	bool checkPicture();
+//	bool checkPassport();
+//	bool checkCashier();
+//	void chargeMoney(int mount);
+//	void punished();
+//	int getID(){return customerID;}
+//	char *getName(){return customerName;}
+//	void setClerk(Lock *l,Condition *c){
+//		setClerkLock->Acquire();
+//		clerkSet = true;
+//		clerkLock = l;
+//		clerkCondition = c;
+//		setClerkLock->Release();
+//	}
+//	bool getClerk(){
+//		setClerkLock->Acquire();
+//		if(!clerkSet)
+//			printf("[CUST]%s%d say:no clerk can help me\n",customerName,customerID);
+//		setClerkLock->Release();
+//		return clerkSet;
+//	
+//	}
+//	void wait(){
+//		customerLock->Acquire();
+//		customerCondition->Wait(customerLock);
+//		customerLock->Release();	
+//	}
+//	void wakeup(){
+//		customerLock->Acquire();
+//		customerCondition->Signal(customerLock);
+//		customerLock->Release();	
+//	}
+	int getID;
+	char *customerName;
+	int money;
+	int applicationLine;
+	int pictureLine;
+	int passportLine;
+	int cashierLine;
+	bool applicationDone;
+	bool pictureDone;
+	bool passportDone;
+	bool cashierDone;
+	bool clerkSet;
+	Lock setClerkLock;//given by free clerk
+	Lock clerkLock;//given by free clerk
+	Lock customerLock;//given by free clerk
+	Condition clerkCondition;//given by free clerk
+	Condition customerCondition;
+}Customer;
 // --------------------------------------------------
 //Main program
 // --------------------------------------------------
+#ifdef CUSTOMER
+	Customer customer[CUSTOMER_NUM];
+#endif
+#ifdef APPLICATION	
+	Clerk appClerk[CLERK_NUM];
+#endif
+#ifdef PICTURE	
+	Clerk picClerk[CLERK_NUM];
+#endif
+#ifdef PASSPORT
+	Clerk passClerk[CLERK_NUM];
+#endif
+#ifdef CASHIER	
+	Clerk cashClerk[CLERK_NUM];
+#endif
+
+Condition newCondition(char * name){
+   return 0;
+}         
+Lock newLock(char * name){
+   return 0;
+}         
+void newCustomer(int cus,char *name, int ID_in, int money_in 
+//			int applicationLine_in, 
+//			int pictureLine_in, 
+//			int passportLine_in, 
+//			int cashierLine_in
+         )
+{
+   Customer *c = (Customer*)cus;
+	printf("[CUST]Build Customer %d\n",ID_in);
+	c->getID = ID_in;
+	//c.customerName = name;
+	c->money = money_in;
+//	c.applicationLine = applicationLine_in;
+//	c.pictureLine = pictureLine_in;
+//	c.passportLine = passportLine_in;
+//	c.cashierLine = cashierLine_in;
+
+	c->applicationDone = false;
+	c->pictureDone = false;
+	c->passportDone = false;
+	c->cashierDone = false;
+	c->clerkSet = false;
+	c->customerCondition = newCondition("customer");
+	c->setClerkLock = newLock("SetClerkLock");//given by free clerk
+	c->customerLock = newLock("Customer Lock");//given by free clerk
+	//random function initilization
+	//srand(time(NULL));
+
+}         
+void newClerk(int ck,int id,char *name)
+{
+
+   Clerk *c = (Clerk*)ck;
+//	cline = l;
+//	table = t;
+//share with manager
+	c->getID= id;
+	c->clerkName = name;
+	c->clerkLock = newLock(name);
+	c->clerkCondition = newCondition(name);
+}
 void office()
 {
-//	printf("[Office]Start Office Sim\n");
+   int i;
+	printf("[Office]Start Office Sim\n");
 #ifdef MANAGER
 	// create the manager
 	printf("[Office]Create Manager\n");
@@ -85,48 +241,42 @@ void office()
 
 #ifdef CUSTOMER
 	printf("[Office]Create Customer \n");
-	Customer *customer[CUSTOMER_NUM];
-	Thread *customer_thread[CUSTOMER_NUM];
-	for(int i = 0; i < CUSTOMER_NUM; i++){
-		customer[i] = new Customer("customer",i, 600, applicationLine, pictureLine, passportLine, cashierLine);
-		printf("[Office]Create Customer %d Thread\n",customer[i]->getID());
-		char msg[12];
-		sprintf(msg,"Customer %d",i);
-		customer_thread[i] = new Thread(msg);
-		printf("[Office]Fork Customer %d Thread\n",customer[i]->getID());
-		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
+	//Thread *customer_thread[CUSTOMER_NUM];
+	for(i = 0; i < CUSTOMER_NUM; i++){
+		newCustomer((int)&customer[i], "customer",i, 600); 
+      //applicationLine, pictureLine, passportLine, cashierLine);
+		printf("[Office]Create Customer %d Thread\n",customer[i].getID);
+		//customer_thread[i] = new Thread(msg);
+		printf("[Office]Fork Customer %d Thread\n",customer[i].getID);
+		//customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
 	}
 #endif
 #ifdef APPLICATION	
 	// create app clerks ( clerk for each table/job)
-	Clerk *appClerk[CLERK_NUM];
-	Thread *appClerk_thread[CLERK_NUM];
-	for(int i = 0; i < CLERK_NUM; i++){
-		appClerk[i] = new AppClerk(applicationLine,applicationTable,i,"AppClerk");
-		printf("[Office]Create AppClerk %d Thread\n",appClerk[i]->getID());
+	//Thread *appClerk_thread[CLERK_NUM];
+	for(i = 0; i < CLERK_NUM; i++){
+		newClerk((int)&appClerk[i],i,"AppClerk");
+		printf("[Office]Create AppClerk %d Thread\n",appClerk[i].getID);
 		
-		appClerk_thread[i] = new Thread("AppClerk");
-		printf("[Office]Fork AppClerk %d Thread\n",appClerk[i]->getID());
-		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
-	
+		//appClerk_thread[i] = new Thread("AppClerk");
+		printf("[Office]Fork AppClerk %d Thread\n",appClerk[i].getID);
+		//appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
 	}
 #endif
 #ifdef PICTURE	
 	// create pic clerks ( clerk for each table/job)
-	Clerk *picClerk[CLERK_NUM];
-	Thread *picClerk_thread[CLERK_NUM];
-	for(int i = 0; i < CLERK_NUM; i++){
-		picClerk[i] = new PicClerk(pictureLine,pictureTable,i,"PicClerk");
-		printf("[Office]Create PicClerk %d Thread\n",picClerk[i]->getID());
+	//Thread *picClerk_thread[CLERK_NUM];
+	for(i = 0; i < CLERK_NUM; i++){
+		newClerk((int)&picClerk[i],i,"PicClerk");
+		printf("[Office]Create PicClerk %d Thread\n",picClerk[i].getID);
 		
-		picClerk_thread[i] = new Thread("PicClerk");
-		printf("[Office]Fork PicClerk %d Thread\n",picClerk[i]->getID());
-		picClerk_thread[i] -> Fork(myClerkForkFunc, (int)picClerk[i]);
+		//picClerk_thread[i] = new Thread("PicClerk");
+		printf("[Office]Fork PicClerk %d Thread\n",picClerk[i].getID);
+		//picClerk_thread[i] -> Fork(myClerkForkFunc, (int)picClerk[i]);
 	}
 #endif 	
 #ifdef PASSPORT
 	// create passport clerks ( clerk for each table/job)
-	Clerk *passClerk[CLERK_NUM];
 	Thread *passClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
 		passClerk[i] = new PassClerk(passportLine,passportTable,i,"PassClerk");
@@ -139,7 +289,6 @@ void office()
 #endif
 #ifdef CASHIER	
 	// create cashier clerks ( clerk for each table/job)
-	Clerk *cashClerk[CLERK_NUM];
 	Thread *cashClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
 		cashClerk[i] = new CashClerk(cashierLine,cashierTable,i,"CashClerk");
@@ -155,69 +304,12 @@ void office()
 
 int main()
 {
+   int num = 31;
    office();
-  println("[main]Main! start");
-  println("[main]Start test");
-  lock1 = CreateLock();
-  print("[main]lock1 id is ");
-  printi(lock1);
-  printn();
-  lock2 = CreateLock();
-  print("[main]lock2 id is ");
-  printi(lock2);
-  printn();
-  println("[main]Start test");
-  cond1 = CreateCondition();
-  cond2 = CreateCondition();
-  cond3 = CreateCondition();
-
-  println("[main]Create All Lock & Cond");
-  Acquire(lock1);
-  println("[main]func1 forked by main");
-  Fork(func1);
-  println("[main]main waits on cond1 with lock1");
-  Wait(lock1,cond1);
-  println("[main]Main releaseing lock1");
-/*  Release(lock1);*/
-
-  println("[main]Main acquiring lock1");
-/*  Acquire(lock1);*/
-  println("[main]func2 will fork by main");
-  Fork(func2);
-  println("[main]func2 forked by main,now wait from func2");
-  Wait(lock1,cond2);
-  println("[main]main wake up on cond2 with lock1");
-  println("[main]Main releaseing lock1");
-
-  Acquire(lock2);
-  Release(lock1);
-  println("[main]Main released lock1");
-
-
-  println("main broadcasts on cond3 with lock2\n");
-  Broadcast(lock2,cond3);
-
-
-  /*Acquire(lock1);*/
-  Release(lock2);
-
-/*
-  println("[main]main waits on cond1 with lock1\n");
-  
-  Wait(lock1,cond1);
-  Release(lock1);
-
-*/
+  printf("[main]printf test !!!![%d] start %d [%s]sdfsd\n",num,180,"abcdr");
 
 
   println("[main]main exits\n");
-
-
-  DestroyLock(lock1);
-  DestroyLock(lock2);
-  DestroyCondition(cond1);
-  DestroyCondition(cond2);
-  DestroyCondition(cond3);
 
   Exit(0);
 }
@@ -253,9 +345,6 @@ int main()
 #include "passclerk.cc"
 #include "cashclerk.cc"
 
-//Set how many customer and clerk want to run
-#define CUSTOMER_NUM 49
-#define CLERK_NUM 59
 ////////////////////////////////////////////////
 #define CUSTOMER
 #define APPLICATION 
