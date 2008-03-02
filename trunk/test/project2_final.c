@@ -111,6 +111,8 @@ void managerRun()
 
 void Initialize()
 {
+	int i;
+	
 	/*  Create all required lock and condition for table, and line for passport office*/
 	applicationLineLock = CreateLock();
 	pictureLineLock = CreateLock();
@@ -145,7 +147,6 @@ void Initialize()
 	cashierLine;*/
 	
 	/* Create Manager, Customer and Clerk threads */
-	int i;
 	
 	/* Creating Clerks for application table*/
 	for(i=0; i<NUM_OF_CLERK; i++)
@@ -180,7 +181,7 @@ void Initialize()
 	}
 	
 	/*Creating Customers*/
-	for(i=0; i<NUM_OF_CUSTOMERS; i++)
+	for(i=0; i<NUM_OF_CUSTOMER; i++)
 	{
 		
 	}
