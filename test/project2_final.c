@@ -2,6 +2,7 @@
 #include "syscall.h"
 
 typedef enum{ true,false }bool;
+typedef enum{ app,pic,pass,cash}clerkType;
 typedef int Lock; 
 typedef int Condition; 
 
@@ -307,7 +308,114 @@ void Initialize()
 	
 	
 }
+void handleCustomer(int c,int type){
+   // Type 0 : Application Clerk
+   // Type 1 : Picture Clerk
+   // Type 2 : Clerk
+   // Type 3 : Application Clerk
+   switch(type)
+   {
+   case 0:
+      customerArray[c].applicationDone = 1;
+      break;
+   case 1:
+      customerArray[c].pictureDone= 1;
+      break;
+   case 2:
+      customerArray[c].passportDone= 1;
+      break;
+   case 3:
+      customerArray[c].cashierDone= 1;
+      break;
+      
+   }
 
+}
+int getCustomerID(int l,int PreOrReg){
+   // PreOrReg 0 : prefer line 
+   // PreOrReg 1 : regular line
+   cLine *line = (cLine*)l;
+   int i;
+   int customerID = -1;
+  for(i = 0 ; i < NUM_OF_CUSTOMER ; i++){
+   if(PreOrReg == 0)
+   {
+      //check prefer line
+     if(line->preferLine[i].status == 1){
+      //get id than set spot to empty
+      customerID = line->preferLine[i].ID;
+      line->preferLine[i].status = 0;
+      line->preferLineCount --;
+      break;
+     } 
+      
+   }else{
+      //check regular line
+     if(line->regLine[i].status == 1){
+      //get id than set spot to empty
+      customerID = line->regLine[i].ID;
+      line->regLine[i].status = 0;
+      line->regLineCount --;
+      break;
+     } 
+   }//end PreOrReg
+  
+  }//end for 
+  return customerID;
+}   
+void appClerkRun()
+{
+
+   int clerkID = -1;
+   int c = 0;//customer
+   int type = 0;//App type = 0;
+   //Get Application Clerk ID
+   Acquire(applicationClerkLock);
+   clerkID = applicationClerkIDCount ++;
+   Release(applicationClerkLock);
+   
+	printf("[Clerk]AppClerk %d Start Running \n",clerkID);
+   while(1)
+   {
+      //Do Lock
+
+      Acquire(applicationLine.preferLineLock);
+      printf("[Clerk]AppClerk %d Get app line lock\n",clerkID);
+      if(applicationLine.preferLineCount != 0) //if there is customer in prefer line
+      {
+         printf("[Clerk]AppClerk %d check prefer line\n",clerkID);
+         //c = getCustomerID((int)&applicationLine,0);
+         //handleCustomer(c,type);
+         applicationLine.preferLineCount --;
+         Signal(applicationLine.preferLineLock,applicationLine.preferLineCond); 
+         Release(applicationLine.preferLineLock);
+      }else{
+         Release(applicationLine.preferLineLock);
+         Acquire(applicationLine.regLineLock);
+
+         if(applicationLine.regLineCount != 0)
+         {
+            printf("[Clerk]AppClerk %d check reg line \n",clerkID);
+            //get customer ID c
+            //c = getCustomerID((int)&applicationLine,1);
+            applicationLine.regLineCount --;
+            Signal(applicationLine.regLineLock,applicationLine.regLineCond); 
+            Release(applicationLine.regLineLock);
+            //handleCustomer(c,type);
+         } else {
+            Release(applicationLine.regLineLock);
+            //Go Sleep
+            printf("[Clerk]AppClerk %d have no customer in line ,leave table\n",clerkID);
+            //table->acquireLock(clerkName,clerkID);
+            //table->leaveTable(clerkName,clerkID);
+            //table->releaseLock(clerkName,clerkID);
+            printf("[Clerk]AppClerk %d now come back to table \n",clerkID);
+         }
+      } 
+	}//while(1);
+
+
+}
 void main()
 {
 	Initialize();
