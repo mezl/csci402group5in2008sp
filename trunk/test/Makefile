@@ -34,13 +34,20 @@ INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 CCFLAGS =  -G 0 -c $(INCDIR)
 
-all: office test halt matmult sort testfiles test_fork lockcond lockcondbreak combinetest
+all: project2_final office test halt matmult sort testfiles test_fork lockcond lockcondbreak combinetest
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
 	$(AS) $(ASFLAGS) -o start.o strt.s
 	rm strt.s
 
+project2_final.o: project2_final.c
+	$(CC2C) project2_final.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o project2_final.o
+	rm -f tmp.c
+project2_final: project2_final.o start.o
+	$(LD) $(LDFLAGS) start.o project2_final.o -o project2_final.coff
+	../bin/coff2noff project2_final.coff project2_final
 test_fork.o: test_fork.c
 	$(CC2C) test_fork.c > tmp.c
 	$(CC) $(CFLAGS) -c tmp.c -o test_fork.o
