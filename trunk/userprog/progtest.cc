@@ -37,6 +37,12 @@ StartProcess(char *filename)
 
     currentThread->space = space;
 
+	/* Project 2 Part 2 addition
+		ensure main is added to process table */
+	int mySpaceID = processTable.AddThread(currentThread);
+	if(mySpaceID == -1)
+		printf("Failure adding main to process table\n");
+
     delete executable;			// close file
 
     space->InitRegisters();		// set the initial register values
