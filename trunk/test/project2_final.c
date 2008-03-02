@@ -268,6 +268,17 @@ void Initialize()
 		cashierLine.preferLine[i].status = 0;
 	}
 	
+	/*Creating Customers*/
+	for(i=0; i<NUM_OF_CUSTOMER; i++)
+	{
+		customerArray[i].money = 1600;
+		customerArray[i].applicationDone = 0;
+		customerArray[i].pictureDone = 0;
+		customerArray[i].passportDone = 0;
+		customerArray[i].cashierDone = 0;
+		Fork(customerRun);
+	}
+	
 	/* Creating Clerks for application table*/
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
@@ -294,17 +305,6 @@ void Initialize()
 	{
 		cashierClerkArray[i].responsibleTable = 3;
 		Fork(pictureClerkRun);
-	}
-	
-	/*Creating Customers*/
-	for(i=0; i<NUM_OF_CUSTOMER; i++)
-	{
-		customerArray[i].money = 1600;
-		customerArray[i].applicationDone = 0;
-		customerArray[i].pictureDone = 0;
-		customerArray[i].passportDone = 0;
-		customerArray[i].cashierDone = 0;
-		Fork(customerRun);
 	}
 	
 	/*Create Manager*/
