@@ -135,16 +135,16 @@ void Initialize()
 	passportTableCond = CreateCondition();
 	cashierTableCond = CreateCondition();
 	
-	/*
-	applicationTable;
-	pictureTable;
-	passportTable;
-	cashierTable;
+	
+	applicationTable = {0, 0, 0, 0, 0};
+	pictureTable = {1, 0, 0, 0, 0};
+	passportTable = {2, 0, 0, 0, 0};
+	cashierTable = {3, 0, 0, 0, 0};
 
-	applicationLine;
-	pictureLine;
-	passportLine;
-	cashierLine;*/
+	applicationLine = {0, 0, 0, 0, 0, 0};
+	pictureLine = {1, 0, 0, 0, 0, 0};
+	passportLine = {2, 0, 0, 0, 0, 0};
+	cashierLine = {3, 0, 0, 0, 0, 0};
 	
 	/* Create Manager, Customer and Clerk threads */
 	
@@ -184,7 +184,7 @@ void Initialize()
 	for(i=0; i<NUM_OF_CUSTOMER; i++)
 	{
 		
-	}
+	}	
 	
 	/*Create Manager*/
 	
