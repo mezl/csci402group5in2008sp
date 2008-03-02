@@ -277,26 +277,26 @@ void office()
 #endif 	
 #ifdef PASSPORT
 	// create passport clerks ( clerk for each table/job)
-	Thread *passClerk_thread[CLERK_NUM];
+	//Thread *passClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
-		passClerk[i] = new PassClerk(passportLine,passportTable,i,"PassClerk");
+		newClerk((int)&passClerk[i],i,"PassClerk");
 		printf("[Office]Create PassClerk %d Thread\n",passClerk[i]->getID());
 		
-		passClerk_thread[i] = new Thread("PassClerk");
+		//passClerk_thread[i] = new Thread("PassClerk");
 		printf("[Office]Fork PassClerk %d Thread\n",passClerk[i]->getID());
-		passClerk_thread[i] -> Fork(myClerkForkFunc, (int)passClerk[i]);
+		//passClerk_thread[i] -> Fork(myClerkForkFunc, (int)passClerk[i]);
 	}
 #endif
 #ifdef CASHIER	
 	// create cashier clerks ( clerk for each table/job)
-	Thread *cashClerk_thread[CLERK_NUM];
+	//Thread *cashClerk_thread[CLERK_NUM];
 	for(int i = 0; i < CLERK_NUM; i++){
-		cashClerk[i] = new CashClerk(cashierLine,cashierTable,i,"CashClerk");
+		newClerk((int)&cashClerk[i],i,"CashClerk");
 		printf("[Office]Create CashClerk %d Thread\n",cashClerk[i]->getID());
 		
-		cashClerk_thread[i] = new Thread("CashClerk");
+		//cashClerk_thread[i] = new Thread("CashClerk");
 		printf("[Office]Fork CashClerk %d Thread\n",cashClerk[i]->getID());
-		cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
+		//cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
 	}
 #endif
 
