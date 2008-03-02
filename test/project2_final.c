@@ -33,6 +33,12 @@ int passportTableCond;
 int cashierTableCond;
 
 
+void customerRun();
+void pictureClerkRun();
+void passportClerkRun();
+void cashierClerkRun();
+void managerRun();
+void Initialize();
 void applicationClerkRun();
 typedef struct
 {
