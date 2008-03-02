@@ -273,10 +273,10 @@ void office()
 	//Thread *passClerk_thread[CLERK_NUM];
 	for(i = 0; i < CLERK_NUM; i++){
 		newClerk((int)&passClerk[i],i,"PassClerk");
-		printf("[Office]Create PassClerk %d Thread\n",passClerk[i].getID());
+		printf("[Office]Create PassClerk %d Thread\n",passClerk[i].getID);
 		
 		//passClerk_thread[i] = new Thread("PassClerk");
-		printf("[Office]Fork PassClerk %d Thread\n",passClerk[i].getID());
+		printf("[Office]Fork PassClerk %d Thread\n",passClerk[i].getID);
 		//passClerk_thread[i] -> Fork(myClerkForkFunc, (int)passClerk[i]);
 	}
 #endif
@@ -285,10 +285,10 @@ void office()
 	//Thread *cashClerk_thread[CLERK_NUM];
 	for(i = 0; i < CLERK_NUM; i++){
 		newClerk((int)&cashClerk[i],i,"CashClerk");
-		printf("[Office]Create CashClerk %d Thread\n",cashClerk[i].getID());
+		printf("[Office]Create CashClerk %d Thread\n",cashClerk[i].getID);
 		
 		//cashClerk_thread[i] = new Thread("CashClerk");
-		printf("[Office]Fork CashClerk %d Thread\n",cashClerk[i].getID());
+		printf("[Office]Fork CashClerk %d Thread\n",cashClerk[i].getID);
 		//cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
 	}
 #endif
