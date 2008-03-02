@@ -203,9 +203,9 @@ void main()
 	DestroyLock(cashierLineLock);
 	
 	DestroyLock(applicationTableLock);
-	DestroyLock(pictureTableLock;
+	DestroyLock(pictureTableLock);
 	DestroyLock(passportTableLock);
-	DestroyLock(cahierTableLock);
+	DestroyLock(cashierTableLock);
 	
 	DestroyCondition(applicationTableCond);
 	DestroyCondition(pictureTableCond);
