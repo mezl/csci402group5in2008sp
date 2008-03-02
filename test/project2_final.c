@@ -422,10 +422,14 @@ void main()
 	
 	
 	/* Destroy all created lock and condition */
-	DestroyLock(applicationLineLock);
-	DestroyLock(pictureLineLock);
-	DestroyLock(passportLineLock);
-	DestroyLock(cashierLineLock);
+	DestroyLock(applicationLine.preferLineLock);
+	DestroyLock(applicationLine.regLineLock);
+	DestroyLock(pictureLine.preferLineLock);
+	DestroyLock(pictureLine.regLineLock);
+	DestroyLock(passportLine.preferLineLock);
+	DestroyLock(passportLine.regLineLock);
+	DestroyLock(cashierLine.preferLineLock);
+	DestroyLock(cashierLine.regLineLock);
 	
 	DestroyLock(applicationTableLock);
 	DestroyLock(pictureTableLock);
