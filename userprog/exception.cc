@@ -250,7 +250,7 @@ int CreateLock_Syscall()
 		printf("Failure creating a lock of index %d \n", id);
 	}
 
-	printf("[exception] returning lock %d \n", id);
+	// printf("[exception] returning lock %d \n", id);
 	// return lock index
 	return id;
 }
@@ -520,7 +520,7 @@ void ExceptionHandler(ExceptionType which) {
 #ifdef USER_PROGRAM
 		case SC_CreateLock:
 		DEBUG('a', "CreateLock syscall.\n");
-		CreateLock_Syscall();
+		rv = CreateLock_Syscall();
 		break;
 		case SC_DestroyLock:
 		DEBUG('a', "DestroyLock syscall.\n");
@@ -536,7 +536,7 @@ void ExceptionHandler(ExceptionType which) {
 		break;
 		case SC_CreateCondition:
 		DEBUG('a', "CreateCondition syscall.\n");
-		CreateCondition_Syscall();
+		rv = CreateCondition_Syscall();
 		break;
 		case SC_DestroyCondition:
 		DEBUG('a', "DestroyCondition syscall.\n");
