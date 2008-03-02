@@ -271,7 +271,7 @@ void office()
 #ifdef PASSPORT
 	// create passport clerks ( clerk for each table/job)
 	//Thread *passClerk_thread[CLERK_NUM];
-	for(int i = 0; i < CLERK_NUM; i++){
+	for(i = 0; i < CLERK_NUM; i++){
 		newClerk((int)&passClerk[i],i,"PassClerk");
 		printf("[Office]Create PassClerk %d Thread\n",passClerk[i]->getID());
 		
@@ -283,7 +283,7 @@ void office()
 #ifdef CASHIER	
 	// create cashier clerks ( clerk for each table/job)
 	//Thread *cashClerk_thread[CLERK_NUM];
-	for(int i = 0; i < CLERK_NUM; i++){
+	for(i = 0; i < CLERK_NUM; i++){
 		newClerk((int)&cashClerk[i],i,"CashClerk");
 		printf("[Office]Create CashClerk %d Thread\n",cashClerk[i]->getID());
 		
