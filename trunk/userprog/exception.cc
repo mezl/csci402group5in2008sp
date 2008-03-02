@@ -250,7 +250,7 @@ int CreateLock_Syscall()
 		printf("Failure creating a lock of index %d \n", id);
 	}
 
-	printf("[exception] returning lock %d \n");
+	printf("[exception] returning lock %d \n", id);
 	// return lock index
 	return id;
 }
