@@ -1,11 +1,6 @@
 /* 
-test for lock and condition system calls 
-main shall first fork func1 and waits to be signaled by it. 
-main then forks func2 and waits to be signaled by it.
-func1 and func2 both wait to be broadcasted by main before they exist
-
-the write syscalls to the console print out MSG that describe the desired 
-synchonization described above. 
+Re-written project one to user program.
+Simulate a passport office 
 */
 
 //Set how many customer and clerk want to run
@@ -14,8 +9,8 @@ synchonization described above.
 #define CUSTOMER
 #define APPLICATION 
 #define PICTURE
-//#define PASSPORT
-//#define CASHIER 
+#define PASSPORT
+#define CASHIER 
 //#define MANAGER
 //#define CHECK_LINE_3
 //#define LINE_CHECK	
@@ -23,11 +18,10 @@ synchonization described above.
 
 #include "syscall.h"
 #include "string.h"
-  int lock1; 
-  int lock2; 
-  int cond1;
-  int cond2;
-  int cond3;
+
+
+
+
 typedef enum{ true,false }bool;
 typedef int Lock; 
 typedef int Condition; 
@@ -188,12 +182,11 @@ Condition newCondition(char * name){
 Lock newLock(char * name){
    return 0;
 }         
-void newCustomer(int cus,char *name, int ID_in, int money_in 
+void newCustomer(int cus,char *name, int ID_in, int money_in )
 //			int applicationLine_in, 
 //			int pictureLine_in, 
 //			int passportLine_in, 
 //			int cashierLine_in
-         )
 {
    Customer *c = (Customer*)cus;
 	printf("[CUST]Build Customer %d\n",ID_in);
