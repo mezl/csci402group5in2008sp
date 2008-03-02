@@ -257,7 +257,7 @@ int CreateLock_Syscall()
 
 void DestroyLock_Syscall(int id)
 {
-	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 0)
+	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1)
 	{
 		Lock* myLock = (Lock*)lockTable.Remove(id);
 		if(myLock == NULL)
@@ -313,7 +313,7 @@ int CreateCondition_Syscall()
 
 void DestroyCondition_Syscall(int id)
 {	
-	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 0)
+	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1)
 	{
 		Condition* myCondition = (Condition*)conditionTable.Remove(id);
 		if(myCondition == NULL)
