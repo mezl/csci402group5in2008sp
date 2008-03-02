@@ -8,6 +8,15 @@ the write syscalls to the console print out MSG that describe the desired
 synchonization described above. 
 */
 
+//#define CUSTOMER
+//#define APPLICATION 
+//#define PICTURE
+//#define PASSPORT
+//#define CASHIER 
+//#define MANAGER
+//#define CHECK_LINE_3
+//#define LINE_CHECK	
+//#define SHOW_MONEY	
 
 #include "syscall.h"
 #include "string.h"
@@ -62,9 +71,91 @@ void func2(){
   Exit(0);
 }
 
+// --------------------------------------------------
+//Main program
+// --------------------------------------------------
+void office()
+{
+//	printf("[Office]Start Office Sim\n");
+#ifdef MANAGER
+	// create the manager
+	printf("[Office]Create Manager\n");
+	Timer *t = new Timer(managerHandler, 0, false);
+#endif
+
+#ifdef CUSTOMER
+	printf("[Office]Create Customer \n");
+	Customer *customer[CUSTOMER_NUM];
+	Thread *customer_thread[CUSTOMER_NUM];
+	for(int i = 0; i < CUSTOMER_NUM; i++){
+		customer[i] = new Customer("customer",i, 600, applicationLine, pictureLine, passportLine, cashierLine);
+		printf("[Office]Create Customer %d Thread\n",customer[i]->getID());
+		char msg[12];
+		sprintf(msg,"Customer %d",i);
+		customer_thread[i] = new Thread(msg);
+		printf("[Office]Fork Customer %d Thread\n",customer[i]->getID());
+		customer_thread[i] -> Fork(myCustomerForkFunc, (int)customer[i]);
+	}
+#endif
+#ifdef APPLICATION	
+	// create app clerks ( clerk for each table/job)
+	Clerk *appClerk[CLERK_NUM];
+	Thread *appClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		appClerk[i] = new AppClerk(applicationLine,applicationTable,i,"AppClerk");
+		printf("[Office]Create AppClerk %d Thread\n",appClerk[i]->getID());
+		
+		appClerk_thread[i] = new Thread("AppClerk");
+		printf("[Office]Fork AppClerk %d Thread\n",appClerk[i]->getID());
+		appClerk_thread[i] -> Fork(myClerkForkFunc, (int)appClerk[i]);
+	
+	}
+#endif
+#ifdef PICTURE	
+	// create pic clerks ( clerk for each table/job)
+	Clerk *picClerk[CLERK_NUM];
+	Thread *picClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		picClerk[i] = new PicClerk(pictureLine,pictureTable,i,"PicClerk");
+		printf("[Office]Create PicClerk %d Thread\n",picClerk[i]->getID());
+		
+		picClerk_thread[i] = new Thread("PicClerk");
+		printf("[Office]Fork PicClerk %d Thread\n",picClerk[i]->getID());
+		picClerk_thread[i] -> Fork(myClerkForkFunc, (int)picClerk[i]);
+	}
+#endif 	
+#ifdef PASSPORT
+	// create passport clerks ( clerk for each table/job)
+	Clerk *passClerk[CLERK_NUM];
+	Thread *passClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		passClerk[i] = new PassClerk(passportLine,passportTable,i,"PassClerk");
+		printf("[Office]Create PassClerk %d Thread\n",passClerk[i]->getID());
+		
+		passClerk_thread[i] = new Thread("PassClerk");
+		printf("[Office]Fork PassClerk %d Thread\n",passClerk[i]->getID());
+		passClerk_thread[i] -> Fork(myClerkForkFunc, (int)passClerk[i]);
+	}
+#endif
+#ifdef CASHIER	
+	// create cashier clerks ( clerk for each table/job)
+	Clerk *cashClerk[CLERK_NUM];
+	Thread *cashClerk_thread[CLERK_NUM];
+	for(int i = 0; i < CLERK_NUM; i++){
+		cashClerk[i] = new CashClerk(cashierLine,cashierTable,i,"CashClerk");
+		printf("[Office]Create CashClerk %d Thread\n",cashClerk[i]->getID());
+		
+		cashClerk_thread[i] = new Thread("CashClerk");
+		printf("[Office]Fork CashClerk %d Thread\n",cashClerk[i]->getID());
+		cashClerk_thread[i] -> Fork(myClerkForkFunc, (int)cashClerk[i]);
+	}
+#endif
+
+}
+
 int main()
 {
-
+   office();
   println("[main]Main! start");
   println("[main]Start test");
   lock1 = CreateLock();
