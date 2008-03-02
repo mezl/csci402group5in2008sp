@@ -48,6 +48,19 @@ inline char *itoa(int z, int base) {
     return b;
 }
 
+inline int strlenF(char *s) {
+    int len = 0;
+
+    while(*s++ != '%' ) len++;
+    return len;
+}
+inline void print1i(char *s,int i) {
+    int f = strlenF(s);
+    Write(s,f,ConsoleOutput);
+    if(*s+f+1 == 'd')
+      printi(i);
+    Write(s+f+1,itsStrlen(s)-f,ConsoleOutput);  
+}
 inline void print(char *s) {
     Write(s,itsStrlen(s),ConsoleOutput);
 }
