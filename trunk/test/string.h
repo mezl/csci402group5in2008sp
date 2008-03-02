@@ -64,7 +64,7 @@ inline void printx(int i) {
     char *s = itoa(i,16);
     Write(s,itsStrlen(s),ConsoleOutput);
 }
-inline printn() {
+inline void printn() {
     Write("\n",1,ConsoleOutput);
 }
 
