@@ -75,15 +75,15 @@ typedef struct
 }cLine;
 
 
-cTable applicationTable;
-cTable pictureTable;
-cTable passportTable;
-cTable cashierTable;
+cTable applicationTable = {0, 0, 0, 0, 0};
+cTable pictureTable = {1, 0, 0, 0, 0};
+cTable passportTable = {2, 0, 0, 0, 0};
+cTable cashierTable = {3, 0, 0, 0, 0};
 
-cLine applicationLine;
-cLine pictureLine;
-cLine passportLine;
-cLine cashierLine;
+cLine applicationLine = {0, 0, 0, 0, 0, 0};
+cLine pictureLine = {1, 0, 0, 0, 0, 0};
+cLine passportLine = {2, 0, 0, 0, 0, 0};
+cLine cashierLine = {3, 0, 0, 0, 0, 0};
 
 Customer customerArray[NUM_OF_CUSTOMER];
 Clerk applicationClerkArray[NUM_OF_CLERK];
@@ -134,17 +134,7 @@ void Initialize()
 	pictureTableCond = CreateCondition();
 	passportTableCond = CreateCondition();
 	cashierTableCond = CreateCondition();
-	
-	
-	applicationTable = {0, 0, 0, 0, 0};
-	pictureTable = {1, 0, 0, 0, 0};
-	passportTable = {2, 0, 0, 0, 0};
-	cashierTable = {3, 0, 0, 0, 0};
 
-	applicationLine = {0, 0, 0, 0, 0, 0};
-	pictureLine = {1, 0, 0, 0, 0, 0};
-	passportLine = {2, 0, 0, 0, 0, 0};
-	cashierLine = {3, 0, 0, 0, 0, 0};
 	
 	/* Create Manager, Customer and Clerk threads */
 	
