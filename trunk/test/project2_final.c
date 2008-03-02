@@ -193,28 +193,28 @@ void Initialize()
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		applicationClerkArray[i].responsibleTable = 0;
-		fork(applicationClerkRun);
+		Fork(applicationClerkRun);
 	}
 	
 	/* Creating Clerks for picture table*/
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		pictureClerkArray[i].responsibleTable = 1;
-		fork(pictureClerkRun);
+		Fork(pictureClerkRun);
 	}
 	
 	/* Creating Clerks for passport table*/
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		passportClerkArray[i].responsibleTable = 2;
-		fork(passportClerkRun);
+		Fork(passportClerkRun);
 	}
 	
 	/* Creating Clerks for cashier table*/
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		cashierClerkArray[i].responsibleTable = 3;
-		fork(pictureClerkRun);
+		Fork(pictureClerkRun);
 	}
 	
 	/*Creating Customers*/
@@ -225,7 +225,7 @@ void Initialize()
 		customerArray[i].pictureDone = 0;
 		customerArray[i].passportDone = 0;
 		customerArray[i].cashierDone = 0;
-		fork(customerRun);
+		Fork(customerRun);
 	}
 	
 	/*Create Manager*/
