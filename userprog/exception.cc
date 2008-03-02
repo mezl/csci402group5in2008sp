@@ -265,7 +265,11 @@ void DestroyLock_Syscall(int id)
 		return;
 	}
 	else{
-		delete myLock;}
+		if(!processTable.CheckChildExist(currentThread->space->getSpaceID()))
+			delete myLock;
+		else
+			printf("Unable to destroy Lock because not last child thread \n");
+	}
 }
 
 void Acquire_Syscall(int id)
@@ -317,7 +321,11 @@ void DestroyCondition_Syscall(int id)
 		return;
 	}	
 	else{
-		delete myCondition;}
+		if(!processTable.CheckChildExist(currentThread->space->getSpaceID()))
+			delete myCondition;
+		else
+			printf("Unable to destroy Condition because not last child thread \n");
+	}
 }
 
 void Signal_Syscall(int lockID, int conditionID)
