@@ -1,4 +1,4 @@
-#include "strings.h"
+#include "string.h"
 #include "syscall.h"
 
 typedef enum{ true,false }bool;
