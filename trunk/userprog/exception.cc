@@ -257,19 +257,19 @@ int CreateLock_Syscall()
 
 void DestroyLock_Syscall(int id)
 {
-	Lock* myLock = (Lock*)lockTable.Remove(id);
-
-	if(myLock == NULL)
+	if(!processTable.CheckChildExist(currentThread->space->getSpaceID()))
 	{
-		printf("Failure deleting a lock of index %d \n", id);
-		return;
+		Lock* myLock = (Lock*)lockTable.Remove(id);
+		if(myLock == NULL)
+		{
+			printf("Failure deleting a lock of index %d \n", id);
+			return;
+		}
+		delete myLock;
 	}
-	else{
-		if(!processTable.CheckChildExist(currentThread->space->getSpaceID()))
-			delete myLock;
-		else
-			printf("Unable to destroy Lock because not last child thread \n");
-	}
+	else
+		printf("Unable to destroy Lock because not last child thread \n");
+	
 }
 
 void Acquire_Syscall(int id)
@@ -312,20 +312,20 @@ int CreateCondition_Syscall()
 }
 
 void DestroyCondition_Syscall(int id)
-{
-	Condition* myCondition = (Condition*)conditionTable.Remove(id);
-	
-	if(myCondition == NULL)
-	{	
-		printf("Failure destroying a condition of index %d \n", id);
-		return;
-	}	
-	else{
-		if(!processTable.CheckChildExist(currentThread->space->getSpaceID()))
-			delete myCondition;
-		else
-			printf("Unable to destroy Condition because not last child thread \n");
+{	
+	if(!processTable.CheckChildExist(currentThread->space->getSpaceID()))
+	{
+		Condition* myCondition = (Condition*)conditionTable.Remove(id);
+		if(myCondition == NULL)
+		{	
+			printf("Failure destroying a condition of index %d \n", id);
+			return;
+		}	
+		delete myCondition;
 	}
+	else
+		printf("Unable to destroy Condition because not last child thread \n");
+	
 }
 
 void Signal_Syscall(int lockID, int conditionID)
