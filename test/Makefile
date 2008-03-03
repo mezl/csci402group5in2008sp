@@ -34,7 +34,7 @@ INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 CCFLAGS =  -G 0 -c $(INCDIR)
 
-all: project2_final office test halt matmult sort testfiles test_fork lockcond lockcondbreak combinetest
+all: project2_final office halt matmult sort testfiles test_exec test_fork lockcond 
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -48,6 +48,13 @@ project2_final.o: project2_final.c
 project2_final: project2_final.o start.o
 	$(LD) $(LDFLAGS) start.o project2_final.o -o project2_final.coff
 	../bin/coff2noff project2_final.coff project2_final
+test_exec.o: test_exec.c
+	$(CC2C) test_exec.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o test_exec.o
+	rm -f tmp.c
+test_exec: test_exec.o start.o
+	$(LD) $(LDFLAGS) start.o test_exec.o -o test_exec.coff
+	../bin/coff2noff test_exec.coff test_exec
 test_fork.o: test_fork.c
 	$(CC2C) test_fork.c > tmp.c
 	$(CC) $(CFLAGS) -c tmp.c -o test_fork.o
@@ -62,13 +69,6 @@ lockcond.o: lockcond.c
 lockcond: lockcond.o start.o
 	$(LD) $(LDFLAGS) start.o lockcond.o -o lockcond.coff
 	../bin/coff2noff lockcond.coff lockcond
-lockcondbreak.o: lockcondbreak.c
-	$(CC2C) lockcondbreak.c > tmp.c
-	$(CC) $(CFLAGS) -c tmp.c -o lockcondbreak.o
-	rm -f tmp.c
-lockcondbreak: lockcondbreak.o start.o
-	$(LD) $(LDFLAGS) start.o lockcondbreak.o -o lockcondbreak.coff
-	../bin/coff2noff lockcondbreak.coff lockcondbreak
 office.o: office.c
 	$(CC2C) office.c > tmp.c
 	$(CC) $(CFLAGS) -c tmp.c -o office.o
@@ -76,14 +76,6 @@ office.o: office.c
 office: office.o start.o
 	$(LD) $(LDFLAGS) start.o office.o -o office.coff
 	../bin/coff2noff office.coff office
-
-test.o: test.c
-	$(CC2C) test.c > tmp.c
-	$(CC) $(CFLAGS) -c tmp.c -o test.o
-	rm -f tmp.c
-test: test.o start.o
-	$(LD) $(LDFLAGS) start.o test.o -o test.coff
-	../bin/coff2noff test.coff test
    
 halt.o: halt.c
 	$(CC) $(CFLAGS) -c halt.c
@@ -108,11 +100,6 @@ testfiles.o: testfiles.c
 testfiles: testfiles.o start.o
 	$(LD) $(LDFLAGS) start.o testfiles.o -o testfiles.coff
 	../bin/coff2noff testfiles.coff testfiles
-combinetest.o: combinetest.c
-	$(CC) $(CFLAGS) -c combinetest.c
-combinetest: combinetest.o start.o
-	$(LD) $(LDFLAGS) start.o combinetest.o -o combinetest.coff
-	../bin/coff2noff combinetest.coff combinetest
 
 clean:
 	rm -f *.o *.coff
