@@ -229,11 +229,13 @@ void customerRun()
 	
 	/*cashier complete*/
 	customerArray[myOwnID].cashierDone = 1;
-	printf("[CUST] Customer %d have completed cashier", myOwnID);
+	printf("[CUST] Customer %d have completed cashier\n", myOwnID);
    Acquire(totalFinishCustomerLock);
    totalFinishCustomer++;
    Release(totalFinishCustomerLock);
 	
+	printf("[CUST] Customer %d have completed Everything!!!\n", myOwnID);
+	printf("[CUST] !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" );
 	Exit(0);
 }
 
@@ -330,6 +332,7 @@ void pictureClerkRun()
             //Go Sleep
             printf("[Clerk]PicClerk %d leave table now \n",clerkID);
             Acquire(pictureTable.tableLock);
+            printf("[Clerk]PicTableClerk %d !!!!!!!!!\n",pictureTable.clerkCount);
             pictureTable.clerkCount--;
             Wait(pictureTable.tableLock,pictureTable.tableCond);
             Release(pictureTable.tableLock);
@@ -449,23 +452,58 @@ void managerRun()
       //Check total finish customer
       //Acquire(totalFinishCustomerLock);
       while(totalFinishCustomer != NUM_OF_CUSTOMER){
-//         Acquire(applicationLine.preferLineLock);
-  //       Acquire(applicationLine.regLineLock);
+      printf("[Manager] total finish customer %d \n ",totalFinishCustomer);
          Acquire(applicationTable.tableLock);
-         if((applicationLine.preferLineCount > 0 || 
-         applicationLine.regLineCount >
-                  0)&&applicationTable.clerkCount == 0){
+//         if((applicationLine.preferLineCount > 0 || 
+//         applicationLine.regLineCount >
+//                  0)&&
+//                  
+            printf("[Manager] app table clerk count %d \n",applicationTable.clerkCount);
+                  if(applicationTable.clerkCount == 0){
             applicationTable.clerkCount++;
+            printf("[Manager] wake one app clerk up \n ");
             Signal(applicationTable.tableLock,applicationTable.tableCond);
          } 
-    //     Release(applicationLine.preferLineLock);
-    //     Release(applicationLine.regLineLock);
          Release(applicationTable.tableLock);
 
+         Acquire(pictureTable.tableLock);
+//         if((pictureLine.preferLineCount > 0 || 
+//         pictureLine.regLineCount >
+//                  0)&&
+            printf("[Manager] pic table clerk count %d \n",pictureTable.clerkCount);
+         if(pictureTable.clerkCount == 0){
+            pictureTable.clerkCount++;
+            printf("[Manager] wake one pic clerk up \n ");
+            Signal(pictureTable.tableLock,pictureTable.tableCond);
+         } 
+         Release(pictureTable.tableLock);
+         Acquire(passportTable.tableLock);
+//         if((passportLine.preferLineCount > 0 || 
+//         passportLine.regLineCount >
+//                  0)&&
+            printf("[Manager] passport table clerk count %d \n",passportTable.clerkCount);
+                  if(passportTable.clerkCount == 0){
+            passportTable.clerkCount++;
+            printf("[Manager] wake one passport clerk up \n ");
+            Signal(passportTable.tableLock,passportTable.tableCond);
+         } 
+         Release(passportTable.tableLock);
+         Acquire(cashierTable.tableLock);
+//         if((cashierLine.preferLineCount > 0 || 
+//         cashierLine.regLineCount >
+//                  0)&&n
+            printf("[Manager] cashier table clerk count %d \n",cashierTable.clerkCount);
+                  if(cashierTable.clerkCount == 0){
+            cashierTable.clerkCount++;
+            printf("[Manager] wake one cashier clerk up \n ");
+            Signal(cashierTable.tableLock,cashierTable.tableCond);
+         } 
+         Release(cashierTable.tableLock);
       Yield();
-      }
+  //    }
       //Release(totalFinishCustomerLock);
-  // }
+   }
+  Exit(0);
 }
 
 void Initialize()
@@ -511,7 +549,12 @@ void Initialize()
 	cashierLine.preferLineLock = CreateLock();
 	cashierLine.regLineCond = CreateCondition();
 	cashierLine.preferLineCond = CreateCondition();
-	
+   
+   applicationTable.clerkCount = 0;
+   pictureTable.clerkCount = 0;
+   passportTable.clerkCount = 0;
+   cashierTable.clerkCount = 0;
+   
 	/*Initialize values for the four lines, clean them up*/
 	for(i=0; i<NUM_OF_CUSTOMER; i++)
 	{
@@ -555,6 +598,7 @@ void Initialize()
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		applicationClerkArray[i].responsibleTable = 0;
+      applicationTable.clerkCount++;
 		Fork(applicationClerkRun);
 	}
 	
@@ -562,6 +606,7 @@ void Initialize()
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		pictureClerkArray[i].responsibleTable = 1;
+      pictureTable.clerkCount ++;
 		Fork(pictureClerkRun);
 	}
 	
@@ -569,6 +614,7 @@ void Initialize()
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		passportClerkArray[i].responsibleTable = 2;
+      passportTable.clerkCount ++;
 		Fork(passportClerkRun);
 	}
 	
@@ -576,11 +622,12 @@ void Initialize()
 	for(i=0; i<NUM_OF_CLERK; i++)
 	{
 		cashierClerkArray[i].responsibleTable = 3;
-		Fork(pictureClerkRun);
+      cashierTable.clerkCount ++;
+		Fork(cashierClerkRun);
 	}
 	
 	/*Create Manager*/
-		//Fork(managerRun);
+		Fork(managerRun);
 	
 	
 }
