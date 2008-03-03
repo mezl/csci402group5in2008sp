@@ -163,10 +163,71 @@ void customerRun()
 		Release(pictureLine.regLineLock);
 	}
 	
-	/*application complete*/
+	/*picture complete*/
 	customerArray[myOwnID].pictureDone = 1;
 	printf("[CUST] Customer %d have completed picture", myOwnID);
 	
+	while(customerArray[myOwnID].passportDone == 0)
+	{
+		/*customer now goes to passport line*/
+		printf("[CUST] Customer %d go queue up at passport line \n", myOwnID);
+
+		if(passportLine.preferLineCount <= passportLine.regLineCount)
+		{
+			/* add itself to prefer line*/
+			Acquire(passportLine.preferLineLock);
+			customerArray[myOwnID].money -= 500;
+			passportLine.money += 500;
+			passportLine.preferLineCount += 1;
+			printf("[CUST] Customer %d have joined the pass prefer Line \n", myOwnID);
+			Wait(passportLine.preferLineLock, passportLine.preferLineCond);
+			Release(passportLine.preferLineLock);
+		}
+		else
+		{
+			/*add itself to regular line*/
+			Acquire(passportLine.regLineLock);
+			passportLine.regLineCount += 1;
+			printf("[CUST] Customer %d have joined the pass regular Line \n", myOwnID);
+			Wait(passportLine.regLineLock, passportLine.regLineCond);
+			Release(passportLine.regLineLock);
+		}
+		
+		/*picture complete*/
+		if(customerArray[myOwnID.applicationDone == 1 && customerArray[myOwnID].pictureDone == 1)
+		{
+			customerArray[myOwnID].passportDone = 1;
+			printf("[CUST] Customer %d have completed passport", myOwnID);
+		}
+	}
+	
+	/*customer now goes to cashier line*/
+	printf("[CUST] Customer %d go queue up at cashier line \n", myOwnID);
+
+	if(cashierLine.preferLineCount <= cashierLine.regLineCount)
+	{
+		/* add itself to prefer line*/
+		Acquire(cashierLine.preferLineLock);
+		customerArray[myOwnID].money -= 500;
+		cashierLine.money += 500;
+		cashierLine.preferLineCount += 1;
+		printf("[CUST] Customer %d have joined the cash prefer Line \n", myOwnID);
+		Wait(cashierLine.preferLineLock, cashierLine.preferLineCond);
+		Release(cashierLine.preferLineLock);
+	}
+	else
+	{
+		/*add itself to regular line*/
+		Acquire(cashierLine.regLineLock);
+		cashierLine.regLineCount += 1;
+		printf("[CUST] Customer %d have joined the cash regular Line \n", myOwnID);
+		Wait(cashierLine.regLineLock, cashierLine.regLineCond);
+		Release(cashierLine.regLineLock);
+	}
+	
+	/*cashier complete*/
+	customerArray[myOwnID].cashierDone = 1;
+	printf("[CUST] Customer %d have completed cashier", myOwnID);
 	
 	Exit(0);
 }
