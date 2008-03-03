@@ -10,10 +10,6 @@ typedef int Condition;
 #define NUM_OF_CLERK 4
 #define NUM_OF_CUSTOMER 10
 
-int applicationTableLock;
-int pictureTableLock;
-int passportTableLock;
-int cashierTableLock;
 
 int customerIDCount = 0;
 int applicationClerkIDCount=0;
@@ -21,16 +17,12 @@ int pictureClerkIDCount=0;
 int passportClerkIDCount=0;
 int cashierClerkIDCount=0;
 
+
 int customerIDLock;
 int applicationClerkLock;
 int pictureClerkLock;
 int passportClerkLock;
 int cashierClerkLock;
-
-int applicationTableCond;
-int pictureTableCond;
-int passportTableCond;
-int cashierTableCond;
 
 
 void customerRun();
@@ -64,6 +56,8 @@ typedef struct
 	int clerkCount;
 	int leaveCount;
 	int needClerk;
+	int tableLock;
+	int tableCond;
 }cTable;
 
 typedef struct
@@ -204,10 +198,10 @@ void Initialize()
 	
 	/*  Create all required lock and condition for table, and line for passport office*/
 	
-	applicationTableLock = CreateLock();
-	pictureTableLock = CreateLock();
-	passportTableLock = CreateLock();
-	cashierTableLock = CreateLock();
+	applicationTable.tableLock = CreateLock();
+	pictureTable.tableLock = CreateLock();
+	passport.tableTableLock = CreateLock();
+	cashier.tableTableLock = CreateLock();
 
 	customerIDLock = CreateLock();
 	applicationClerkLock = CreateLock();
@@ -215,10 +209,10 @@ void Initialize()
 	passportClerkLock = CreateLock();
 	cashierClerkLock = CreateLock();
 	
-	applicationTableCond = CreateCondition();
-	pictureTableCond = CreateCondition();
-	passportTableCond = CreateCondition();
-	cashierTableCond = CreateCondition();
+	applicationTable.tableCond = CreateCondition();
+	pictureTable.tableCond = CreateCondition();
+	passportTable.tableCond = CreateCondition();
+	cashierTable.tableCond = CreateCondition();
 	
 	applicationLine.regLineLock = CreateLock();
 	applicationLine.preferLineLock = CreateLock();
@@ -434,15 +428,15 @@ void main()
 	DestroyLock(cashierLine.preferLineLock);
 	DestroyLock(cashierLine.regLineLock);
 	
-	DestroyLock(applicationTableLock);
-	DestroyLock(pictureTableLock);
-	DestroyLock(passportTableLock);
-	DestroyLock(cashierTableLock);
+	DestroyLock(applicationTable.tableLock);
+	DestroyLock(pictureTable.tableLock);
+	DestroyLock(passportTable.tableLock);
+	DestroyLock(cashierTable.tableLock);
 	
-	DestroyCondition(applicationTableCond);
-	DestroyCondition(pictureTableCond);
-	DestroyCondition(passportTableCond);
-	DestroyCondition(cashierTableCond);
+	DestroyCondition(applicationTable.tableCond);
+	DestroyCondition(pictureTable.tableCond);
+	DestroyCondition(passportTable.tableCond);
+	DestroyCondition(cashierTable.tableCond);
 	
 	Exit(0);
 }
