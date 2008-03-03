@@ -96,8 +96,8 @@ inline int vsprintf(char *buf, const char *fmt, va_list args)
             p += itsStrlen(q);
             break;
         case 's':
-        r = va_arg(p_arg, char *);
-         len = itsStrlen(r);        
+        /*r = va_arg(p_arg, char *);
+         len = itsStrlen(r);        */
        /*  while(*r != '\0'){*/
             /*p++ = *r++;*/
          /*}*/
@@ -136,7 +136,7 @@ inline int vsprintf(char *buf, const char *fmt, va_list args)
 int printf(const char *fmt,...) 
 {           
     int i;
-    char buf[64];
+    char buf[256];
     va_list arg = (va_list)((char*)(&fmt)+ 4);
     i = vsprintf(buf, fmt, arg);
     Write(buf,itsStrlen(buf),ConsoleOutput);
