@@ -7,8 +7,8 @@ typedef int Lock;
 typedef int Condition; 
 
 
-#define NUM_OF_CLERK 4
-#define NUM_OF_CUSTOMER 10
+#define NUM_OF_CLERK 2
+#define NUM_OF_CUSTOMER 4 
 
 int totalFinishCustomer = 0;
 int totalFinishCustomerLock;
