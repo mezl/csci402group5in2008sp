@@ -498,6 +498,8 @@ void ExceptionHandler(ExceptionType which) {
 	bool reading;
 	int tempo;
 	int vaddress;
+	char name[20];
+	int i;
 
     if ( which == SyscallException ) {
 	switch (type) {
@@ -579,14 +581,16 @@ void ExceptionHandler(ExceptionType which) {
 
 		case SC_Exec:
 		DEBUG('a', "Exec syscall.\n");
+		
+		i=0;
 		reading = machine->ReadMem(machine->ReadRegister(4), 1, &tempo);
 		vaddress = machine->ReadRegister(4);
-		char* name;
 		while(reading && !(tempo==0))
 		{
-			*name++ = tempo;
+			name[i] = tempo;
 			vaddress++;
 			reading = machine->ReadMem(vaddress, 1, &tempo);
+			i++;
 		}
 		if(!reading)
 			rv=-1;
