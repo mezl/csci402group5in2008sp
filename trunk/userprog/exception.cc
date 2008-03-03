@@ -568,14 +568,30 @@ void ExceptionHandler(ExceptionType which) {
 		DEBUG('a', "Fork syscall.\n");
 		Fork_Syscall(machine->ReadRegister(4));
 		break;
+
 		case SC_Exec:
 		DEBUG('a', "Exec syscall.\n");
-		// Exec_Syscall(machine->ReadRegister(4));
+		/*int* tempo = new int;
+		bool reading = machine->ReadMem(machine->ReadRegister(4), 1, tempo);
+		int virtualaddress = machine->ReadRegister(4);
+		std::string name;
+		while(reading && !(*tempo==0))
+		{
+			name = name+*tempo;
+			virtualaddress++;
+			reading = machine->ReadMem(virtualaddress, 1, tempo);
+		}
+		if(!reading)
+			rv=-1;
+		else
+			rv =  Exec_Syscall((char*)name.c_str());*/
+		rv = Exec_Syscall((char*)machine->ReadRegister(4));
 		break;
 		case SC_Exit:
 		DEBUG('a', "Exit syscall.\n");
 		Exit_Syscall(machine->ReadRegister(4));
 		break;
+
 		case SC_Yield:
 		DEBUG('a', "Yield syscall.\n");
 		Yield_Syscall();
