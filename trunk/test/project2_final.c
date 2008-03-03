@@ -8,7 +8,7 @@ typedef int Condition;
 
 
 #define NUM_OF_CLERK 2
-#define NUM_OF_CUSTOMER 4 
+#define NUM_OF_CUSTOMER 2 
 
 int totalFinishCustomer = 0;
 int totalFinishCustomerLock;
@@ -229,13 +229,14 @@ void customerRun()
 	
 	/*cashier complete*/
 	customerArray[myOwnID].cashierDone = 1;
-	printf("[CUST] Customer %d have completed cashier\n", myOwnID);
+   Yield(); 
+	//printf("[CUST] Customer %d done cashier\n", myOwnID);
    Acquire(totalFinishCustomerLock);
    totalFinishCustomer++;
    Release(totalFinishCustomerLock);
 	
-	printf("[CUST] Customer %d have completed Everything!!!\n", myOwnID);
-	printf("[CUST] !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n" );
+	printf("[CUST] Customer %d completed !\n", myOwnID);
+	printf("[CUST] !!!!!!!!!!!!!!!!!!!!!!!\n" );
 	Exit(0);
 }
 
@@ -255,13 +256,13 @@ void applicationClerkRun()
    {
       //Do Lock
       Acquire(applicationLine.preferLineLock);
-      printf("[Clerk]AppClerk %d Get app line lock\n",clerkID);
+      printf("[Clerk]AppClerk %d Get app line lock \n",clerkID);
       if(applicationLine.preferLineCount != 0) //if there is customer in prefer line
       {
-         printf("[Clerk]AppClerk %d check prefer line\n",clerkID);
+         printf("[Clerk]AppClerk %d check prefer line \n",clerkID);
          applicationLine.preferLineCount --;
          Signal(applicationLine.preferLineLock,applicationLine.preferLineCond); 
-         printf("[Clerk]AppClerk %d Release app line lock\n",clerkID);
+         printf("[Clerk]AppClerk %d Release app line lock \n",clerkID);
          Release(applicationLine.preferLineLock);
          Yield();
       }else{
@@ -278,7 +279,7 @@ void applicationClerkRun()
          } else {
             Release(applicationLine.regLineLock);
             //Go Sleep
-            printf("[Clerk]AppClerk %d leave table now\n",clerkID);
+            printf("[Clerk]AppClerk %d leave table now",clerkID);
             Acquire(applicationTable.tableLock);
             applicationTable.clerkCount--;
             Wait(applicationTable.tableLock,applicationTable.tableCond);
@@ -307,13 +308,13 @@ void pictureClerkRun()
    {
       //Do Lock
       Acquire(pictureLine.preferLineLock);
-      printf("[Clerk]PicClerk %d Get Pic line lock\n",clerkID);
+      printf("[Clerk]PicClerk %d Get Pic line lock \n",clerkID);
       if(pictureLine.preferLineCount != 0) //if there is customer in prefer line
       {
-         printf("[Clerk]PicClerk %d check prefer line\n",clerkID);
+         printf("[Clerk]PicClerk %d check prefer line \n",clerkID);
          pictureLine.preferLineCount --;
          Signal(pictureLine.preferLineLock,pictureLine.preferLineCond); 
-         printf("[Clerk]PicClerk %d Release Pic line lock\n",clerkID);
+         printf("[Clerk]PicClerk %d Rel Pic line lock \n",clerkID);
          Release(pictureLine.preferLineLock);
          Yield();
       }else{
@@ -330,13 +331,13 @@ void pictureClerkRun()
          } else {
             Release(pictureLine.regLineLock);
             //Go Sleep
-            printf("[Clerk]PicClerk %d leave table now \n",clerkID);
+            printf("[Clerk]PicClerk %d leave table now\n",clerkID);//Must have
             Acquire(pictureTable.tableLock);
-            printf("[Clerk]PicTableClerk %d !!!!!!!!!\n",pictureTable.clerkCount);
+            //printf("[Clerk]PicTableClerk [%d]",pictureTable.clerkCount);
             pictureTable.clerkCount--;
             Wait(pictureTable.tableLock,pictureTable.tableCond);
             Release(pictureTable.tableLock);
-            printf("[Clerk]PicClerk %d now come back to table \n",clerkID);
+            //printf("[Clerk]PicClerk %d now come back\n",clerkID);
          }
       } 
 	}//while(1);
@@ -354,18 +355,18 @@ void passportClerkRun()
    clerkID = passportClerkIDCount ++;
    Release(passportClerkLock);
    
-	printf("[Clerk]PassportClerk %d Start Running \n",clerkID);
+	printf("[Clerk]PaClerk %d Start Running \n",clerkID);
    while(1)
    {
       //Do Lock
       Acquire(passportLine.preferLineLock);
-      printf("[Clerk]PassportClerk %d Get Passport line lock\n",clerkID);
+      printf("[Clerk]PaClerk %d Get line lock \n",clerkID);
       if(passportLine.preferLineCount != 0) //if there is customer in prefer line
       {
-         printf("[Clerk]PassportClerk %d check prefer line\n",clerkID);
+         printf("[Clerk]PaClerk %d check prefer line \n",clerkID);
          passportLine.preferLineCount --;
          Signal(passportLine.preferLineLock,passportLine.preferLineCond); 
-         printf("[Clerk]PassportClerk %d Release Passport line lock\n",clerkID);
+         printf("[Clerk]PastClerk %d Release line lock \n",clerkID);
          Release(passportLine.preferLineLock);
          Yield();
       }else{
@@ -382,12 +383,12 @@ void passportClerkRun()
          } else {
             Release(passportLine.regLineLock);
             //Go Sleep
-            printf("[Clerk]PassportClerk %d leave table now\n",clerkID);
+            printf("[Clerk]PatClerk %d leave now \n",clerkID);
             Acquire(passportTable.tableLock);
             passportTable.clerkCount--;
             Wait(passportTable.tableLock,passportTable.tableCond);
             Release(passportTable.tableLock);
-            printf("[Clerk]PassportClerk %d now come back to table \n",clerkID);
+            printf("[Clerk]PaClerk %d now come back \n",clerkID);
          }
       } 
 	}//while(1);
@@ -410,13 +411,13 @@ void cashierClerkRun()
    {
       //Do Lock
       Acquire(cashierLine.preferLineLock);
-      printf("[Clerk]cashierClerk %d Get cashier line lock\n",clerkID);
+      printf("[Clerk]cClerk %d Get cashier line lock\n",clerkID);
       if(cashierLine.preferLineCount != 0) //if there is customer in prefer line
       {
-         printf("[Clerk]cashierClerk %d check prefer line\n",clerkID);
+         printf("[Clerk]cClerk %d check prefer line\n",clerkID);
          cashierLine.preferLineCount --;
          Signal(cashierLine.preferLineLock,cashierLine.preferLineCond); 
-         printf("[Clerk]cashierClerk %d Release cashier line lock\n",clerkID);
+         printf("[Clerk]cClerk %d Release cashier line lock\n",clerkID);
          Release(cashierLine.preferLineLock);
          Yield();
       }else{
@@ -433,12 +434,12 @@ void cashierClerkRun()
          } else {
             Release(cashierLine.regLineLock);
             //Go Sleep
-            printf("[Clerk]cashierClerk %d leave table now\n",clerkID);
+            printf("[Clerk]caClerk %d leave now\n",clerkID);
             Acquire(cashierTable.tableLock);
             cashierTable.clerkCount--;
             Wait(cashierTable.tableLock,cashierTable.tableCond);
             Release(cashierTable.tableLock);
-            printf("[Clerk]cashierClerk %d now come back to table \n",clerkID);
+            printf("[Clerk]caClerk %d now come \n",clerkID);
          }
       } 
 	}//while(1);
@@ -448,65 +449,47 @@ void cashierClerkRun()
 
 void managerRun()
 {
-//   while(1){
-      //Check total finish customer
-      //Acquire(totalFinishCustomerLock);
       while(totalFinishCustomer != NUM_OF_CUSTOMER){
-      printf("[Manager] total finish customer %d \n ",totalFinishCustomer);
+      printf("[Manager] %d total finish customer \n",totalFinishCustomer);
          Acquire(applicationTable.tableLock);
-//         if((applicationLine.preferLineCount > 0 || 
-//         applicationLine.regLineCount >
-//                  0)&&
-//                  
+            //Keep this print
             printf("[Manager] app table clerk count %d \n",applicationTable.clerkCount);
                   if(applicationTable.clerkCount == 0){
             applicationTable.clerkCount++;
-            printf("[Manager] wake one app clerk up \n ");
+            //printf("[Manager] wake one app clerk up \n");
             Signal(applicationTable.tableLock,applicationTable.tableCond);
          } 
          Release(applicationTable.tableLock);
 
          Acquire(pictureTable.tableLock);
-//         if((pictureLine.preferLineCount > 0 || 
-//         pictureLine.regLineCount >
-//                  0)&&
-            printf("[Manager] pic table clerk count %d \n",pictureTable.clerkCount);
          if(pictureTable.clerkCount == 0){
             pictureTable.clerkCount++;
-            printf("[Manager] wake one pic clerk up \n ");
+            //printf("[Manager] wake one pic clerk up \n ");
             Signal(pictureTable.tableLock,pictureTable.tableCond);
          } 
          Release(pictureTable.tableLock);
          Acquire(passportTable.tableLock);
-//         if((passportLine.preferLineCount > 0 || 
-//         passportLine.regLineCount >
-//                  0)&&
-            printf("[Manager] passport table clerk count %d \n",passportTable.clerkCount);
+            //printf("[Manager] passport table clerk count %d \n",passportTable.clerkCount);
                   if(passportTable.clerkCount == 0){
             passportTable.clerkCount++;
-            printf("[Manager] wake one passport clerk up \n ");
+            //printf("[Manager] wake one passport clerk up \n ");
             Signal(passportTable.tableLock,passportTable.tableCond);
          } 
          Release(passportTable.tableLock);
          Acquire(cashierTable.tableLock);
-//         if((cashierLine.preferLineCount > 0 || 
-//         cashierLine.regLineCount >
-//                  0)&&n
-            printf("[Manager] cashier table clerk count %d \n",cashierTable.clerkCount);
+            //printf("[Manager] cashier table clerk count %d \n",cashierTable.clerkCount);
                   if(cashierTable.clerkCount == 0){
             cashierTable.clerkCount++;
-            printf("[Manager] wake one cashier clerk up \n ");
+            //printf("[Manager] wake one cashier clerk up \n ");
             Signal(cashierTable.tableLock,cashierTable.tableCond);
          } 
          Release(cashierTable.tableLock);
       Yield();
-  //    }
-      //Release(totalFinishCustomerLock);
    }
   Exit(0);
 }
 
-void Initialize()
+void Office()
 {
 	int i;
 	
@@ -631,6 +614,29 @@ void Initialize()
 	
 	
 }
+void finalization(){
+
+	/* Destroy all created lock and condition */
+	DestroyLock(applicationLine.preferLineLock);
+	DestroyLock(applicationLine.regLineLock);
+	DestroyLock(pictureLine.preferLineLock);
+	DestroyLock(pictureLine.regLineLock);
+	DestroyLock(passportLine.preferLineLock);
+	DestroyLock(passportLine.regLineLock);
+	DestroyLock(cashierLine.preferLineLock);
+	DestroyLock(cashierLine.regLineLock);
+ 
+	DestroyLock(applicationTable.tableLock);
+	DestroyLock(pictureTable.tableLock);
+	DestroyLock(passportTable.tableLock);
+	DestroyLock(cashierTable.tableLock);
+	
+	DestroyCondition(applicationTable.tableCond);
+	DestroyCondition(pictureTable.tableCond);
+	DestroyCondition(passportTable.tableCond);
+	DestroyCondition(cashierTable.tableCond);
+
+}
 void handleCustomer(int c,int type){
    // Type 0 : Application Clerk
    // Type 1 : Picture Clerk
@@ -688,28 +694,6 @@ int getCustomerID(int l,int PreOrReg){
 }   
 void main()
 {
-	Initialize();
-	
-	
-	/* Destroy all created lock and condition */
-//	DestroyLock(applicationLine.preferLineLock);
-//	DestroyLock(applicationLine.regLineLock);
-//	DestroyLock(pictureLine.preferLineLock);
-//	DestroyLock(pictureLine.regLineLock);
-//	DestroyLock(passportLine.preferLineLock);
-//	DestroyLock(passportLine.regLineLock);
-//	DestroyLock(cashierLine.preferLineLock);
-//	DestroyLock(cashierLine.regLineLock);
-	
-//	DestroyLock(applicationTable.tableLock);
-//	DestroyLock(pictureTable.tableLock);
-//	DestroyLock(passportTable.tableLock);
-//	DestroyLock(cashierTable.tableLock);
-//	
-//	DestroyCondition(applicationTable.tableCond);
-//	DestroyCondition(pictureTable.tableCond);
-//	DestroyCondition(passportTable.tableCond);
-//	DestroyCondition(cashierTable.tableCond);
-	
+	Office();
 	Exit(0);
 }
