@@ -402,6 +402,11 @@ void exec_thread()
 SpaceId Exec_Syscall(char* name)
 {
 	OpenFile* myFile = fileSystem->Open(name);
+	if(myFile == NULL)
+	{
+		printf("Failure on Exec System Call: openFile doesn't exist \n");
+		return -1;
+	}
 	AddrSpace* mySpace = new AddrSpace(myFile);
 	Thread* myThread = new Thread(name);
 	myThread->space = mySpace;
@@ -490,6 +495,9 @@ void Exit_Syscall(int status)
 void ExceptionHandler(ExceptionType which) {
     int type = machine->ReadRegister(2); // Which syscall?
     int rv=0; 	// the return value from a syscall
+	bool reading;
+	int tempo;
+	int vaddress;
 
     if ( which == SyscallException ) {
 	switch (type) {
@@ -571,22 +579,22 @@ void ExceptionHandler(ExceptionType which) {
 
 		case SC_Exec:
 		DEBUG('a', "Exec syscall.\n");
-		/*int* tempo = new int;
-		bool reading = machine->ReadMem(machine->ReadRegister(4), 1, tempo);
-		int virtualaddress = machine->ReadRegister(4);
-		std::string name;
-		while(reading && !(*tempo==0))
+		reading = machine->ReadMem(machine->ReadRegister(4), 1, &tempo);
+		vaddress = machine->ReadRegister(4);
+		char* name;
+		while(reading && !(tempo==0))
 		{
-			name = name+*tempo;
-			virtualaddress++;
-			reading = machine->ReadMem(virtualaddress, 1, tempo);
+			*name++ = tempo;
+			vaddress++;
+			reading = machine->ReadMem(vaddress, 1, &tempo);
 		}
 		if(!reading)
 			rv=-1;
 		else
-			rv =  Exec_Syscall((char*)name.c_str());*/
-		rv = Exec_Syscall((char*)machine->ReadRegister(4));
+			rv =  Exec_Syscall(name);
+
 		break;
+
 		case SC_Exit:
 		DEBUG('a', "Exit syscall.\n");
 		Exit_Syscall(machine->ReadRegister(4));
