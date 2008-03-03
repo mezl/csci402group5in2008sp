@@ -69,11 +69,11 @@ int main()
   println("[main]Start test");
   lock1 = CreateLock();
   print("[main]lock1 id is ");
-  printf("%d",lock1);
+  //printf("%d",lock1);
   printn();
   lock2 = CreateLock();
   print("[main]lock2 id is ");
-  printf("%d",lock2);
+  //printf("%d",lock2);
   printn();
   println("[main]Start test");
   cond1 = CreateCondition();
