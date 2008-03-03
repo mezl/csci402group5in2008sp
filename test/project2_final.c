@@ -200,8 +200,8 @@ void Initialize()
 	
 	applicationTable.tableLock = CreateLock();
 	pictureTable.tableLock = CreateLock();
-	passport.tableTableLock = CreateLock();
-	cashier.tableTableLock = CreateLock();
+	passportTable.tableLock = CreateLock();
+	cashierTable.tableLock = CreateLock();
 
 	customerIDLock = CreateLock();
 	applicationClerkLock = CreateLock();
