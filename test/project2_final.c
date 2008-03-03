@@ -402,10 +402,10 @@ void applicationClerkRun()
          } else {
             Release(applicationLine.regLineLock);
             //Go Sleep
-            printf("[Clerk]AppClerk %d have no customer in line ,leave table\n",clerkID);
-            //table->acquireLock(clerkName,clerkID);
-            //table->leaveTable(clerkName,clerkID);
-            //table->releaseLock(clerkName,clerkID);
+            printf("[Clerk]AppClerk %d leave table now\n",clerkID);
+            Acquire(applicationTable.tableLock);
+            Wait(applicationTable.tableLock,applicationTable.tableCond);
+            Release(applicationTable.tableLock);
             printf("[Clerk]AppClerk %d now come back to table \n",clerkID);
          }
       } 
@@ -419,24 +419,24 @@ void main()
 	
 	
 	/* Destroy all created lock and condition */
-	DestroyLock(applicationLine.preferLineLock);
-	DestroyLock(applicationLine.regLineLock);
-	DestroyLock(pictureLine.preferLineLock);
-	DestroyLock(pictureLine.regLineLock);
-	DestroyLock(passportLine.preferLineLock);
-	DestroyLock(passportLine.regLineLock);
-	DestroyLock(cashierLine.preferLineLock);
-	DestroyLock(cashierLine.regLineLock);
+//	DestroyLock(applicationLine.preferLineLock);
+//	DestroyLock(applicationLine.regLineLock);
+//	DestroyLock(pictureLine.preferLineLock);
+//	DestroyLock(pictureLine.regLineLock);
+//	DestroyLock(passportLine.preferLineLock);
+//	DestroyLock(passportLine.regLineLock);
+//	DestroyLock(cashierLine.preferLineLock);
+//	DestroyLock(cashierLine.regLineLock);
 	
-	DestroyLock(applicationTable.tableLock);
-	DestroyLock(pictureTable.tableLock);
-	DestroyLock(passportTable.tableLock);
-	DestroyLock(cashierTable.tableLock);
-	
-	DestroyCondition(applicationTable.tableCond);
-	DestroyCondition(pictureTable.tableCond);
-	DestroyCondition(passportTable.tableCond);
-	DestroyCondition(cashierTable.tableCond);
+//	DestroyLock(applicationTable.tableLock);
+//	DestroyLock(pictureTable.tableLock);
+//	DestroyLock(passportTable.tableLock);
+//	DestroyLock(cashierTable.tableLock);
+//	
+//	DestroyCondition(applicationTable.tableCond);
+//	DestroyCondition(pictureTable.tableCond);
+//	DestroyCondition(passportTable.tableCond);
+//	DestroyCondition(cashierTable.tableCond);
 	
 	Exit(0);
 }
