@@ -10,6 +10,8 @@ typedef int Condition;
 #define NUM_OF_CLERK 4
 #define NUM_OF_CUSTOMER 10
 
+int totalFinishCustomer = 0;
+int totalFinishCustomerLock;
 
 int customerIDCount = 0;
 int applicationClerkIDCount=0;
@@ -394,6 +396,8 @@ void Initialize()
 	int i;
 	
 	/*  Create all required lock and condition for table, and line for passport office*/
+	
+	totalFinishCustomerLock = CreateLock();
 	
 	applicationTable.tableLock = CreateLock();
 	pictureTable.tableLock = CreateLock();
