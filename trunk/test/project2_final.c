@@ -274,7 +274,7 @@ void pictureClerkRun()
          } else {
             Release(pictureLine.regLineLock);
             //Go Sleep
-            printf("[Clerk]PicClerk %d leave table now\n",clerkID);
+            printf("[Clerk]PicClerk %d leave table now \n",clerkID);
             Acquire(pictureTable.tableLock);
             Wait(pictureTable.tableLock,pictureTable.tableCond);
             Release(pictureTable.tableLock);
@@ -390,8 +390,8 @@ void managerRun()
 {
 //   while(1){
       //Check total finish customer
-      Acquire(totalFinishCustomerLock);
-      if(totalFinishCustomer != NUM_OF_CUSTOMER){
+      //Acquire(totalFinishCustomerLock);
+      while(totalFinishCustomer != NUM_OF_CUSTOMER){
          Acquire(applicationLine.preferLineLock);
          Acquire(applicationLine.regLineLock);
          Acquire(applicationTable.tableLock);
@@ -405,10 +405,9 @@ void managerRun()
          Release(applicationLine.regLineLock);
          Release(applicationTable.tableLock);
 
-
-      }
-      Release(totalFinishCustomerLock);
       Yield();
+      }
+      //Release(totalFinishCustomerLock);
   // }
 }
 
