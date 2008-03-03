@@ -386,6 +386,7 @@ void applicationClerkRun()
          applicationLine.preferLineCount --;
          Signal(applicationLine.preferLineLock,applicationLine.preferLineCond); 
          Release(applicationLine.preferLineLock);
+         Yield();
       }else{
          Release(applicationLine.preferLineLock);
          Acquire(applicationLine.regLineLock);
@@ -398,6 +399,7 @@ void applicationClerkRun()
             applicationLine.regLineCount --;
             Signal(applicationLine.regLineLock,applicationLine.regLineCond); 
             Release(applicationLine.regLineLock);
+            Yield();
             //handleCustomer(c,type);
          } else {
             Release(applicationLine.regLineLock);
