@@ -388,7 +388,28 @@ void cashierClerkRun()
 
 void managerRun()
 {
-	
+//   while(1){
+      //Check total finish customer
+      Acquire(totalFinishCustomerLock);
+      if(totalFinishCustomer != NUM_OF_CUSTOMER){
+         Acquire(applicationLine.preferLineLock);
+         Acquire(applicationLine.regLineLock);
+         Acquire(applicationTable.tableLock);
+         if((applicationLine.preferLineCount > 0 || 
+         applicationLine.regLineCount >
+                  0)&&applicationTable.clerkCount == 0){
+            applicationTable.clerkCount++;
+            Signal(applicationTable.tableLock,applicationTable.tableCond);
+         } 
+         Release(applicationLine.preferLineLock);
+         Release(applicationLine.regLineLock);
+         Release(applicationTable.tableLock);
+
+
+      }
+      Release(totalFinishCustomerLock);
+      Yield();
+  // }
 }
 
 void Initialize()
@@ -503,6 +524,7 @@ void Initialize()
 	}
 	
 	/*Create Manager*/
+		Fork(managerRun);
 	
 	
 }
