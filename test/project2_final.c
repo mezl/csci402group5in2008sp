@@ -194,7 +194,7 @@ void customerRun()
 		}
 		
 		/*picture complete*/
-		if(customerArray[myOwnID.applicationDone == 1 && customerArray[myOwnID].pictureDone == 1)
+		if(customerArray[myOwnID].applicationDone == 1 && customerArray[myOwnID].pictureDone == 1)
 		{
 			customerArray[myOwnID].passportDone = 1;
 			printf("[CUST] Customer %d have completed passport", myOwnID);
