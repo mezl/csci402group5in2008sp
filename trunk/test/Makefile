@@ -34,7 +34,8 @@ INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 CCFLAGS =  -G 0 -c $(INCDIR)
 
-all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond 
+all: multi_office project2_final office halt matmult sort testfiles
+test_exec test_fork test_lockcond 
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -69,13 +70,13 @@ test_fork.o: test_fork.c
 test_fork: test_fork.o start.o
 	$(LD) $(LDFLAGS) start.o test_fork.o -o test_fork.coff
 	../bin/coff2noff test_fork.coff test_fork
-lockcond.o: lockcond.c
-	$(CC2C) lockcond.c > tmp.c
-	$(CC) $(CFLAGS) -c tmp.c -o lockcond.o
+test_lockcond.o: test_lockcond.c
+	$(CC2C) test_lockcond.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o test_lockcond.o
 	rm -f tmp.c
-lockcond: lockcond.o start.o
-	$(LD) $(LDFLAGS) start.o lockcond.o -o lockcond.coff
-	../bin/coff2noff lockcond.coff lockcond
+test_lockcond: test_lockcond.o start.o
+	$(LD) $(LDFLAGS) start.o test_lockcond.o -o test_lockcond.coff
+	../bin/coff2noff test_lockcond.coff test_lockcond
 office.o: office.c
 	$(CC2C) office.c > tmp.c
 	$(CC) $(CFLAGS) -c tmp.c -o office.o
