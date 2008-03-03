@@ -268,7 +268,7 @@ void DestroyLock_Syscall(int id)
 		delete myLock;
 	}
 	else
-		printf("Unable to destroy Lock because not last child thread \n");
+		;//printf("Unable to destroy Lock because not last child thread \n");
 	
 }
 
@@ -324,7 +324,7 @@ void DestroyCondition_Syscall(int id)
 		delete myCondition;
 	}
 	else
-		printf("Unable to destroy Condition because not last child thread \n");
+		;//printf("Unable to destroy Condition because not last child thread \n");
 	
 }
 
