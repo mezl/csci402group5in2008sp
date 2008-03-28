@@ -28,6 +28,9 @@
 #include <iostream>
 #include "../threads/synch.h"
 
+#ifndef PROJ3
+#define PROJ3
+#endif
 using namespace std;
 
 int copyin(unsigned int vaddr, int len, char *buf) {
@@ -437,6 +440,13 @@ void Fork_Syscall(int virtualaddress)
 {
 	Thread* myThread = new Thread(currentThread->getName());
 	int* twoValues = new int[2];
+#ifdef PROJ3
+	if(virtualaddress > currentThread->space->getCodeSize())
+	{
+		printf("Failure to access fork address %d\n",virtualaddress);
+		return;
+	}
+#endif
 	twoValues[0] = virtualaddress;
    
    //myThread->spaceID = currentThread->spaceID;
