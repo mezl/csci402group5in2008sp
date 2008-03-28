@@ -25,6 +25,9 @@
 #ifndef PROJ2
 #define PROJ2
 #endif
+#ifndef PROJ3
+#define PROJ3
+#endif
 extern "C" { int bzero(char *, int); };
 
 Table::Table(int s) : map(s), table(0), lock(0), size(s) {
@@ -217,10 +220,19 @@ SwapHeader (NoffHeader *noffH)
 //      Incompletely consretucted address spaces have the member
 //      constructed set to false.
 //----------------------------------------------------------------------
+
+#ifdef PROJ3
+#define STACK_NUM 30
+#endif
 AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     NoffHeader noffH;
     unsigned int i, size;
 	spaceLock = new Lock("AddrSpace lock");
+#ifdef PROJ3
+	int stackPageNum,execPageNum;
+	itsUserStack = new BitMap(STACK_NUM);	
+	itsUserStackLock = new Lock("User Stack Lock");	
+#endif
     // Don't allocate the input or output to disk files
     fileTable.Put(0);
     fileTable.Put(0);
@@ -231,8 +243,20 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     	SwapHeader(&noffH);
     ASSERT(noffH.noffMagic == NOFFMAGIC);
 
+#ifdef PROJ3
+	itsCodeSize = noffH.code.size;
+	stackPageNum = divRoundUp(UserStackSize*STACK_NUM,PageSize);
+	execPageNum = divRoundUp(size, PageSize); 	
+	itsStackStartPage = execPageNum+1; 
+#endif
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size ;
+
+#ifdef PROJ3
+	numPages = stackPageNum + execPageNum;
+	printf("[Sys_AddressSpace]%s Thread: num of page :%d\n,num of stack page:%d\n,num of exec page:%d",numPages,stackPageNum,execPageNum);
+#else
     numPages = divRoundUp(size, PageSize) + divRoundUp(UserStackSize,PageSize);
+#endif
                                                 // we need to increase the size
 						// to leave room for the stack
     size = numPages * PageSize;
@@ -245,32 +269,51 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
 					numPages, size);
 // first, set up the translation 
-    pageTable = new TranslationEntry[numPages];
-    for (i = 0; i < numPages; i++) {
-	pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-#ifdef PROJ2
-	int newpage = memoryTable.Put(0);//Find the new space in memory table
-	//Just booking the space, but not put anything in to it yet
-	if(newpage == -1){
-		printf("Can't not creat new addr space, no more memory");
-		return;
-	}	
-	pageTable[i].physicalPage = newpage;
+#ifdef PROJ3
+    pageTable = new VmTranslationEntry[numPages];
 #else
-/////////////////////////////////////////////////////////////////////////////
-	pageTable[i].physicalPage = i;
+    pageTable = new TranslationEntry[numPages];
 #endif
-/////////////////////////////////////////////////////////////////////////////
-	pageTable[i].valid = TRUE;
-	pageTable[i].use = FALSE;
-	pageTable[i].dirty = FALSE;
-	pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
-					// a separate page, we could set its 
-					// pages to be read-only
-int mainMemAddr = pageTable[i].physicalPage * PageSize;
-bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
-    }
+	for (i = 0; i < numPages; i++) {
+			pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
+
+#ifdef PROJ3
+			pageTable[i].physicalPage = -1;
+#else
+#ifdef PROJ2
+			int newpage = memoryTable.Put(0);//Find the new space in memory table
+			//Just booking the space, but not put anything in to it yet
+			if(newpage == -1){
+					printf("Can't not creat new addr space, no more memory");
+					return;
+			}	
+			pageTable[i].physicalPage = newpage;
+#else
+			/////////////////////////////////////////////////////////////////////////////
+			pageTable[i].physicalPage = i;
+#endif
+#endif
+			/////////////////////////////////////////////////////////////////////////////
+			pageTable[i].valid = TRUE;
+			pageTable[i].use = FALSE;
+			pageTable[i].dirty = FALSE;
+			pageTable[i].readOnly = FALSE;  // if the code segment was entirely on 
+			// a separate page, we could set its 
+			// pages to be read-only
+			
+#ifdef PROJ3
+			pageTable[i].type = MIXED;
+			pageTable[i].location = EXEC;
+			pageTable[i].processID = -1;
+			pageTable[i].timeStamp = -1;
+			pageTable[i].swapAddr = -1;
+#else
+			int mainMemAddr = pageTable[i].physicalPage * PageSize;
+			bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
+#endif
+	}
 //---------------------------------------------------------------------------//
+#ifndef PROJ3
 #ifdef PROJ2
 //Doing the memory load from the user code and data seg.
 //-----
@@ -286,7 +329,7 @@ int notReadBytes = 0;
 itsSpaceID = pageTable[0].physicalPage;
 itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
     if (noffH.code.size > 0) {
-        DEBUG('a', "Initializing code segment, at 0x%x, size %d\n", 
+        DEBUG('a', "Initializing node segment, at 0x%x, size %d\n", 
 			noffH.code.virtualAddr, noffH.code.size);
 
 		//Set start & end address range
@@ -391,7 +434,8 @@ itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
         executable->ReadAt(&(machine->mainMemory[noffH.initData.virtualAddr]),
 			noffH.initData.size, noffH.initData.inFileAddr);
     }
-#endif
+#endif //if define PROJ2
+#endif //if not define PROJ3
 }
 
 
@@ -405,6 +449,10 @@ itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
 AddrSpace::~AddrSpace()
 {
     delete pageTable;
+#ifdef PROJ3
+	delete itsUserStack;
+	delete itsUserStackLock;
+#endif
 }
 
 //----------------------------------------------------------------------
@@ -526,8 +574,27 @@ int AddrSpace::newStack()
 	pageTable = newTable;
 	numPages+=newNumPages;
 	spaceLock->Release();
-	return numPages*PageSize -16 ;
+	return numPages*PageSize -16 ;//address before
 }
 
 #endif
 
+#ifdef PROJ3
+
+int AddrSpace::getFreeUserStack()
+{
+	int freeUserStack = -1;
+	itsUserStackLock->Acquire();
+	freeUserStack = itsUserStack->Find();
+	itsUserStackLock->Release();
+	return freeUserStack;
+
+}
+void AddrSpace::removeUserStack(int stackID)
+{
+	itsUserStackLock->Acquire();
+	itsUserStack->Clear(stackID);
+	itsUserStackLock->Release();
+
+}
+#endif
