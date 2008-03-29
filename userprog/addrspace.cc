@@ -509,6 +509,12 @@ void AddrSpace::SaveState()
 void AddrSpace::RestoreState() 
 {
 #ifdef PROJ3
+	for(int i = 0; i < TLBSize; i++)
+	{
+			if(machine->tlb[i].valid == TRUE && machine->tlb[i].dirty == TRUE)
+					IPTable[machine->tlb[i].physicalPage].dirty = TRUE;
+			machine->tlb[i].valid = FALSE;
+	}
 #else
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
