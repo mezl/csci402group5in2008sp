@@ -58,7 +58,6 @@ class VmTranslationEntry {
 	int swapAddr;
 };
 
-
 #endif
 class AddrSpace {
   public:
