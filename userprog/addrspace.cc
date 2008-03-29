@@ -508,8 +508,11 @@ void AddrSpace::SaveState()
 
 void AddrSpace::RestoreState() 
 {
+#ifdef PROJ3
+#else
     machine->pageTable = pageTable;
     machine->pageTableSize = numPages;
+#endif    
 }
 #ifdef PROJ2
 int AddrSpace::getSpaceID()
@@ -524,8 +527,12 @@ int AddrSpace::newStack()
 {
 		spaceLock->Acquire();
 		unsigned int newNumPages =  divRoundUp(UserStackSize,PageSize);
+      
+#ifdef PROJ3	
+		VmTranslationEntry *newTable;
+#else
 		TranslationEntry *newTable;
-
+#endif
       int stackAddr[newNumPages];
       if(!stackAddr){
          printf("Not Enough Memory!\n");
@@ -538,9 +545,11 @@ int AddrSpace::newStack()
             return -1;
          }
       }
-
+#ifdef PROJ3
+      newTable = new VmTranslationEntry[newNumPages + numPages];
+#else
       newTable = new TranslationEntry[newNumPages + numPages];
-		
+#endif
 		for(unsigned int i = 0 ;i < numPages+newNumPages ; i++)
 		{
 				if(i<numPages){
@@ -569,8 +578,11 @@ int AddrSpace::newStack()
 
 		}
 	//Replace to the new Table
-	
+#ifdef PROJ3	
+	pageTable->~VmTranslationEntry();
+#else   
 	pageTable->~TranslationEntry();
+#endif   
 	pageTable = newTable;
 	numPages+=newNumPages;
 	spaceLock->Release();

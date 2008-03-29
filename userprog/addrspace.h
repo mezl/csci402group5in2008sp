@@ -51,7 +51,7 @@ class VmTranslationEntry {
 	PageLocation location;
     bool dirty;         // This bit is set by the hardware every time the
     bool use;           // This bit is set by the hardware every time the
-	int proccessID;
+	int processID;
 	int timeStamp;
     bool valid;         // If this bit is set, the translation is ignored.
     bool readOnly;	// If this bit is set, the user program is not allowed
@@ -73,18 +73,20 @@ class AddrSpace {
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch
     Table fileTable;			// Table of openfiles
-	int getNumPages(){return numPages};
+    unsigned int getNumPages(){return numPages;}
 #ifdef PROJ2
 	int getSpaceID();
 	int getMaxForkAddr();
 	int newStack();
 #endif
 #ifdef PROJ3
-	int getCodeSize(){return itsCodeSize};
-	int getPageTableSize(){return itsPageTableSize};
-	int getProccessID(){return itsProccessID};
-	int getStackStartPage(){return itsStackStartPage};
-    VmTranslationEntry getPageTable{return pageTable};	
+	int getCodeSize(){return itsCodeSize;}
+	int getPageTableSize(){return itsPageTableSize;}
+	int getProccessID(){return itsProccessID;}
+	int getStackStartPage(){return itsStackStartPage;}
+   VmTranslationEntry* getPageTable(){return pageTable;}
+   int getFreeUserStack();
+   void removeUserStack(int stackID);
 #endif
  private:
 
