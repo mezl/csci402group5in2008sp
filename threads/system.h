@@ -54,7 +54,7 @@ class IPTEntry {
 	bool valid;
 	bool readOnly;
 };
-extern IPTEntry* IPTable;
+extern IPTEntry *IPTable;
 #endif 
 
 #endif

@@ -37,6 +37,8 @@ ProcessTable processTable;
 Table memoryTable(NumPhysPages);
 
 #endif
+//--------------- Project 3 (part 1) ------------------
+IPTEntry *IPTable;
 
 #ifdef NETWORK
 PostOffice *postOffice;
@@ -154,8 +156,9 @@ Initialize(int argc, char **argv)
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
 #ifdef PROJ3
-	IPTable = new IPTEntry[NumPhysPage];
-	for(int i = 0 ; i < NumPhysPage ;i++)
+//NumPhysPages
+	IPTable = new IPTEntry[NumPhysPages];
+	for(int i = 0 ; i < NumPhysPages ;i++)
 {
 	IPTable[i].valid = FALSE;
 	IPTable[i].dirty = FALSE;
