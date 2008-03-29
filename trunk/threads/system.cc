@@ -7,7 +7,8 @@
 
 #include "copyright.h"
 #include "system.h"
-
+#include "machine.h"
+//
 // This defines *all* of the global data structures used by Nachos.
 // These are all initialized and de-allocated by this file.
 
@@ -19,6 +20,14 @@ Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
 
+//--------------- Project 3 (part 1) ------------------
+//-------------------- Project 3 (part 1) -------------------
+#ifndef PROJ3
+#define PROJ3
+#endif
+#ifdef PROJ3 
+IPTEntry *IPTable;
+#endif
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -37,8 +46,6 @@ ProcessTable processTable;
 Table memoryTable(NumPhysPages);
 
 #endif
-//--------------- Project 3 (part 1) ------------------
-IPTEntry *IPTable;
 
 #ifdef NETWORK
 PostOffice *postOffice;
