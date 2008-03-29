@@ -43,7 +43,9 @@ extern Table conditionTable;
 //-------------------- Project 2 (part 2) -------------------
 extern ProcessTable processTable;
 extern Table memoryTable;
-//-------------------- Project 3 (part 1) -------------------
+
+#endif
+
 #ifdef PROJ3
 class IPTEntry {
 	public:
@@ -54,11 +56,8 @@ class IPTEntry {
 	bool valid;
 	bool readOnly;
 };
-extern IPTEntry *IPTable;
+extern IPTEntry* IPTable;
 #endif 
-
-#endif
-
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
 #include "filesys.h"
 extern FileSystem  *fileSystem;

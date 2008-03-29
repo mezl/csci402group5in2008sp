@@ -132,7 +132,8 @@ system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
   /usr/include/sys/resource.h /usr/include/sys/siginfo.h \
   /usr/include/sys/machsig.h /usr/include/sys/procset.h \
   ../threads/thread.h ../threads/scheduler.h ../threads/list.h \
-  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h
+  ../machine/interrupt.h ../machine/stats.h ../machine/timer.h \
+  ../machine/machine.h ../machine/translate.h ../machine/disk.h
 thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
