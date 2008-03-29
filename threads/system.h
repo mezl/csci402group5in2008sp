@@ -16,6 +16,9 @@
 #include "stats.h"
 #include "timer.h"
 
+#ifndef PROJ3
+#define PROJ3
+#endif
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,
 						// called before anything else
@@ -40,7 +43,19 @@ extern Table conditionTable;
 //-------------------- Project 2 (part 2) -------------------
 extern ProcessTable processTable;
 extern Table memoryTable;
-
+//-------------------- Project 3 (part 1) -------------------
+#ifdef PROJ3
+class IPTEntry {
+	public:
+	int physicalAddr;
+	int virtualPage;
+	bool use;
+	bool dirty;
+	bool valid;
+	bool readOnly;
+};
+extern IPTEntry* IPTable;
+#endif 
 
 #endif
 

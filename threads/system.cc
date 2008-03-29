@@ -153,7 +153,14 @@ Initialize(int argc, char **argv)
 
     interrupt->Enable();
     CallOnUserAbort(Cleanup);			// if user hits ctl-C
-    
+#ifdef PROJ3
+	IPTable = new IPTEntry[NumPhysPage];
+	for(int i = 0 ; i < NumPhysPage ;i++)
+{
+	IPTable[i].valid = FALSE;
+	IPTable[i].dirty = FALSE;
+}
+#endif    
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
 #endif
