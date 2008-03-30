@@ -117,6 +117,8 @@ main(int argc, char **argv)
 			// Nachos will loop forever waiting 
 			// for console input
 		} else if (!strcmp(*argv, "-P")) {      // test the console
+         if(argc <=1)printf("Please Enter algorithm\n");
+			ASSERT(argc > 1);
 			if (!strcmp(*(argv + 1), "RAND")){
 				ipt_replace_algorithm = RAND;
 			}else if (!strcmp(*(argv + 1), "FIFO")){
