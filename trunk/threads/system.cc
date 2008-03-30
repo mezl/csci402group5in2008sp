@@ -27,6 +27,8 @@ Timer *timer;				// the hardware timer device,
 #endif
 #ifdef PROJ3 
 IPTEntry *IPTable;
+IPT_Replace_Algorithm ipt_replace_algorithm; 
+BitMap* swapFileMap;
 #endif
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
@@ -166,10 +168,12 @@ Initialize(int argc, char **argv)
 //NumPhysPages
 	IPTable = new IPTEntry[NumPhysPages];
 	for(int i = 0 ; i < NumPhysPages ;i++)
-{
-	IPTable[i].valid = FALSE;
-	IPTable[i].dirty = FALSE;
-}
+	{
+		IPTable[i].valid = FALSE;
+		IPTable[i].dirty = FALSE;
+		IPTable[i].space = NULL;
+	}
+	swapFileMap = new BitMap(NumPhysPages*200);
 #endif    
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
