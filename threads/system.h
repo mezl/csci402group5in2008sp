@@ -49,14 +49,18 @@ extern Table memoryTable;
 #ifdef PROJ3
 class IPTEntry {
 	public:
-	int physicalAddr;
-	int virtualPage;
+	int pid;//Proccess ID
+	int vpn;//Virtual page number
 	bool use;
 	bool dirty;
 	bool valid;
 	bool readOnly;
+	AddrSpace* space;
 };
 extern IPTEntry* IPTable;
+enum IPT_Replace_Algorithm{FIFO,RAND};
+extern IPT_Replace_Algorithm ipt_replace_algorithm; 
+extern BitMap* swapFileMap;
 #endif 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
 #include "filesys.h"
