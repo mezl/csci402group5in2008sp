@@ -181,7 +181,7 @@ int ProcessTable::CheckChildExist(int mySpaceId)
 	return 0;
 }
 
-int ProcessTable::getProccess(Thread* myThread)
+int ProcessTable::getProcess(Thread* myThread)
 {
 	int removeSuccessful = -1;	
 
@@ -634,14 +634,6 @@ int AddrSpace::newStack()
 						//bzero(&(machine->mainMemory[mainMemAddr]), PageSize);
 
 				}
-
-	int pid;//Proccess ID
-	int vpn;//Virtual page number
-	bool use;
-	bool dirty;
-	bool valid;
-	bool readOnly;
-	AddrSpace* space;
 		}
 	//Replace to the new Table
 #ifdef PROJ3	
@@ -685,7 +677,7 @@ int AddrSpace::toSwap(int vaddr)
 	);
 	return swapAddr; 
 }
-int AddrSpace::readExec(int v,int vpn)
+int AddrSpace::readExec(int vaddr,int vpn)
 {
 	exec->ReadAt(
 		&(machine->mainMemory[vaddr*PageSize]),
