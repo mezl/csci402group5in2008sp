@@ -274,7 +274,7 @@ SwapHeader (NoffHeader *noffH)
 //----------------------------------------------------------------------
 
 #ifdef PROJ3
-#define STACK_NUM 30
+#define STACK_NUM 20
 #endif
 AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     NoffHeader noffH;
@@ -306,15 +306,16 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 
 #ifdef PROJ3
 	numPages = stackPageNum + execPageNum;
-	printf("[Sys_AddressSpace]%s Thread: num of page :%d\n,num of stack page:%d\n,num of exec page:%d",numPages,stackPageNum,execPageNum);
+	printf("[Sys_AddressSpace] Thread: num of page :%d\n [Sys_AddressSpace]num of stack page:%d\n [Sys_AddressSpace]num of exec page:%d\n",numPages,stackPageNum,execPageNum);
 #else
     numPages = divRoundUp(size, PageSize) + divRoundUp(UserStackSize,PageSize);
 #endif
                                                 // we need to increase the size
+   printf("[Sys_AddressSpace]numPages %d NumPhysPages %d\n",numPages,NumPhysPages);
 						// to leave room for the stack
     size = numPages * PageSize;
 
-    ASSERT(numPages <= NumPhysPages);		// check we're not trying
+    //ASSERT(numPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
