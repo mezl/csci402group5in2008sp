@@ -181,6 +181,58 @@ int ProcessTable::CheckChildExist(int mySpaceId)
 	return 0;
 }
 
+int ProcessTable::getProccess(Thread* myThread)
+{
+	int removeSuccessful = -1;	
+
+	if (myThread == NULL)
+	{
+		printf("Failure removing non existance thread\n");
+		removeSuccessful =  -1;
+	}
+
+	processTableLock->Acquire();
+	
+	int mySpaceId = myThread->space->getSpaceID();
+	int targetThreadFound = 0;
+	unsigned int i = 0;
+	int found = 0;
+
+	std::vector<Thread*>::iterator iter;
+	iter = hashmap[mySpaceId].begin();
+	while(i < hashmap[mySpaceId].size() )
+	{
+		if(myThread == (*iter))
+		{
+			found = 1;
+			hashmap[mySpaceId].erase(iter);
+			removeSuccessful = 0;
+		}
+		iter++;
+		i++;
+		if(i > hashmap[mySpaceId].size())
+			break;
+	}
+	
+	if(found == 0)
+	{
+		printf("RemoveThread Failure: Thread doesn't exist in process table\n");
+		removeSuccessful = -1;
+	}
+
+
+	if(hashmap[mySpaceId].empty())
+	{
+		hashmap.erase(mySpaceId);
+		removeSuccessful = 1;
+	}
+
+	if(hashmap.empty() == TRUE)
+		removeSuccessful = 2;
+
+	processTableLock->Release();
+	return removeSuccessful;
+}
 
 //----------------------------------------------------------------------
 // SwapHeader
@@ -248,6 +300,7 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 	stackPageNum = divRoundUp(UserStackSize*STACK_NUM,PageSize);
 	execPageNum = divRoundUp(size, PageSize); 	
 	itsStackStartPage = execPageNum+1; 
+	exec = executable;
 #endif
     size = noffH.code.size + noffH.initData.size + noffH.uninitData.size ;
 
@@ -582,6 +635,13 @@ int AddrSpace::newStack()
 
 				}
 
+	int pid;//Proccess ID
+	int vpn;//Virtual page number
+	bool use;
+	bool dirty;
+	bool valid;
+	bool readOnly;
+	AddrSpace* space;
 		}
 	//Replace to the new Table
 #ifdef PROJ3	
@@ -614,5 +674,23 @@ void AddrSpace::removeUserStack(int stackID)
 	itsUserStack->Clear(stackID);
 	itsUserStackLock->Release();
 
+}
+int AddrSpace::toSwap(int vaddr)
+{
+	int swapAddr = swapFileMap->Find();
+	swapfile->WriteAt(
+		&(machine->mainMemory[PageSize * vaddr]),
+		PageSize,
+		swapAddr*PageSize
+	);
+	return swapAddr; 
+}
+int AddrSpace::readExec(int v,int vpn)
+{
+	exec->ReadAt(
+		&(machine->mainMemory[vaddr*PageSize]),
+		PageSize,
+		vpn*PageSize + sizeof(NoffHeader)	
+	);
 }
 #endif

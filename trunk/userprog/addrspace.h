@@ -81,11 +81,14 @@ class AddrSpace {
 #ifdef PROJ3
 	int getCodeSize(){return itsCodeSize;}
 	int getPageTableSize(){return itsPageTableSize;}
-	int getProccessID(){return itsProccessID;}
+	int getProcessID(){return itsProcessID;}
 	int getStackStartPage(){return itsStackStartPage;}
    VmTranslationEntry* getPageTable(){return pageTable;}
    int getFreeUserStack();
    void removeUserStack(int stackID);
+	int toSwap(int vaddr);
+	int fromSwap(int vaddr);
+	OpenFile* getExec(){return exec};
 #endif
  private:
 
@@ -107,10 +110,11 @@ class AddrSpace {
 #ifdef PROJ3
 	int itsCodeSize;
 	int itsPageTableSize;
-	int itsProccessID;
+	int itsProcessID;
 	int itsStackStartPage;
 	BitMap* itsUserStack;
 	Lock* itsUserStackLock;
+	OpenFile *exec;
 #endif
 };
 
