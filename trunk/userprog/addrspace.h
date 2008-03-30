@@ -84,12 +84,12 @@ class AddrSpace {
 	int getProcessID(){return itsProcessID;}
 	int getStackStartPage(){return itsStackStartPage;}
    VmTranslationEntry* getPageTable(){return pageTable;}
+	OpenFile* getExec(){return exec;}
    int getFreeUserStack();
    void removeUserStack(int stackID);
 	int toSwap(int vaddr);
 	int fromSwap(int vaddr);
-	OpenFile* getExec(){return exec;}
-   int readExec(int v,int vpn);
+   void readExec(int vaddr,int vpn);
 #endif
  private:
 
