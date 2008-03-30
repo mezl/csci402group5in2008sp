@@ -28,9 +28,6 @@
 #include <iostream>
 #include "../threads/synch.h"
 
-#ifndef PROJ3
-#define PROJ3
-#endif
 using namespace std;
 
 int copyin(unsigned int vaddr, int len, char *buf) {
@@ -498,138 +495,409 @@ void Exit_Syscall(int status)
 }
 #endif
 
+#ifdef PROJ3
+//-----------------------------------------------------
+//---------------- Page Fault HANDLER -----------------
+//-----------------------------------------------------
+void PageFault_Handler(unsigned int va)
+{
+	unsigned int vpn = va/PageSize;	
+	int cnpg = currentThread->space->getNumPages();
+	if(vpn >=cnpg){
+		printf("illeagle virtual address %d",vpn);
+		interrupt->Halt();
+	}
+	//Acquire the memory lock
+	int cpid = currentThread->space->getProcessID();
+	int IPTFound = IPTHit(cpid,vpn);
+	if(IPTFound == -1){
+		//Not in IPT
+		IPTFound = IPT_Update(vpn);
+	}
+	TLB_Update(IPT_Found);
+	interrupt->SetLevel(old);
+	//Release the memory lock
+
+}
+
+
+//-----------------------------------------------------
+//---------------- IPT Function------------------------
+//-----------------------------------------------------
+
+//---------------- IPT Hit-----------------------------
+//Check the address is in IPT or not
+//If IPThit is true,return physical address
+//otherwire return -1
+//Pre:
+//	pid : proccess ID
+//	vpn : virtual page number
+//Post: 
+//Return: IPT Hit True: physical page number 
+//		  IPT Hit False: -1
+int IPTHit(int pid,int vpn)
+{
+	for(int i = 0; i < NumPhysPages; i++)
+	{
+		if(IPTable[i].valid == TRUE)
+		{
+			if(IPTable[i].pid == pid && IPTable[i].vpn == vpn){
+				return i;
+			}
+		}
+	}
+	return -1;
+}
+
+//---------------- IPT Update-----------------------------
+//Insert Current Physical Address in to the IPT table
+//Pre:
+//	vpn: virtual page number
+//Post:
+//	[None]
+//Return:
+//	Physical Page Number		
+int IPT_Update(int vpn)
+{
+	//OpenFile *current_exec = currentThread->space->get
+	int ipt_slot = getIPT_Slot();
+	int tlb_slot; 
+	if(IPTable[ipt_slot].valid){
+		tlb_slot = getTLB_Slot(ipt_slot);
+		if(tlb_slot != -1){
+			IPTable[ipt_slot].dirty = machine->tlb[tlb_slot].dirty;
+			machine->tlb[tlb_slot]
+		}
+		if(IPTable[ipt_slot].dirty){
+			IPTSwapToFile(ipt_slot);
+		}
+		IPTSwapToMemory(ipt_slot,vpn)
+	}
+	updateIPTEntry(ipt_slot);			
+	return ipt_slot;
+}
+void updateIPTEntry(int ipt_slot)
+{
+	IPTable[ipt_slot].pid = currentThread->space->getProcessID();
+	IPTable[ipt_slot].space = currentThread->space;
+	IPTable[ipt_slot].use = TRUE;
+	IPTable[ipt_slot].valid = TRUE;
+	IPTable[ipt_slot].readOnly = FALSE;
+}
+int getIPT_Slot(void)
+{
+	int ipt_slot = getFreeIPTSlot();
+	if(ipt_slot = -1)//no free slot in IPT,need evict some thing
+	{
+		switch(ipt_replace_algorithm){
+			case FIFO:
+				ipt_slot = getNextEvictIPTSlot(); 
+				break;
+			case RAND:
+				ipt_slot = rand()%NumPhysPages;
+				break;
+			default:
+		}
+
+	}
+	return ipt_slot;
+}
+
+//---------------- IPT Free Spot-----------------------------
+//Check the any free spot in the IPT 
+//If some of IPT is invalid,we return this spot 
+//otherwire return -1
+//Pre:
+//Post: 
+//Return: IPT Have Free Spot: free spot number 
+//		  IPT No Free Spot: -1
+int getFreeIPTSlot(void)
+{
+	for(int i = 0; i< NumPhysPages; i++){
+		if(IPTable[i].valid == FALSE)
+			return i;
+	}
+	return -1;
+}
+//---------------- Evict IPT Slot -------------------------
+//Return: Next IPT spot count 
+//Note the int nextEvictIPTSlot is a global variable
+int nextEvictIPTSlot = -1;
+int getNextEvictIPTSlot(void)
+{
+	return (nextEvictIPTSlot++)%NumPhysPages;
+}
+
+//---------------- Write to Swap-------------------------
+//The Acutal Memory to Swap Handle is done by AddrSpace
+//Pre: ipt slot which wrtie to swap
+//Post: save swap address to the PageTable Entry 
+//		change the location to the PageTable Entry
+//Return: None
+void IPTSwapToFile(int ipt_slot)
+{
+	VmTranslationEntry* pt = (IPTable[ipt_slot]->space)->getPageTable();
+	int swapAddr = (IPTable[ipt_slot]->space)->ToSwap(ipt_slot);
+	pt[IPTable[ipt_slot].vpn].location = SWAP;
+	pt[IPTable[ipt_slot].vpn].swapAddr = swapAddr;
+}
+//---------------- Read Swap to Memory-----------------------
+//Check the page table to find the location of those data
+//if the it's in the executable file, we ask AddrSpace to bring
+//it to memory,othwise we read from swapfile to memory and clear the swapMap
+//Pre: ipt slot which want to read from swap
+//Post: ipt data read into memory 
+//Return: None
+void IPTSwapToMemory(int ipt_slot,int vpn)
+{
+	VmTranslationEntry* pt = currentThread->space->getPageTable();
+	switch(pt[vpn].location){
+		case EXEC:
+			currentThread->spcae->readExec(ipt_slot,vpn);
+			IPTable[ipt_slot].dirty = FALSE;
+			break;
+		case SWAP:
+			swapfile->ReadAt(
+			&(machine->mainMemory[ipt_slot*PageSize]),
+			PageSize,
+			pt[vpn].swapAddr*PageSize
+			);
+			swapFileMap->Clear(pt[vpn].swapAddr);
+			IPTable[ipt_slot].dirty = TRUE;
+		default:
+	
+	}
+}
+//-----------------------------------------------------
+//---------------- TLB Function------------------------
+//-----------------------------------------------------
+
+//---------------- get TLB slot------------------------
+//get TLB slot by given IPT slot
+//Pre:
+//	ipt_slot: ipt slot for search 
+//Post:
+//	[None]
+//Return:
+//	If found, then return the TLB slot which map to the IPT slot
+//  Else return -1 
+int getTLB_Slot(int ipt_slot){
+	IPTEntry c = IPTable[ipt_slot];
+	if(c.valid ==TRUE)
+		if(currentThread->space == c.space)
+			for(int i = 0;i < TLBSize ; i++)
+				if(machine->tlb[i].valid == TRUE)
+					if(machine->tlb[i].virtualPage == c.vpn)
+						return i;
+	return -1;
+}
+//---------------- TLB Update-----------------------------
+//When Calling the TLB Update
+//it will find the TLB slot to store the data
+//if the slot is dirty, it will propagate to IPT
+//the write the virtual and physical page data to it 
+//Pre:
+//	ppn: physical page number 
+//Post:
+//	tlb table updated	
+//Return:
+//	[None]
+void TLB_Update(int ppn)
+{
+	bool dirty;
+	int tlb_slot = getTLBSlot(&dirty);
+	if(dirty)
+		propagateToIPT(tlb_slot);
+	updateTLBEntry(tlb_slot,ppn);	
+}
+void updateTLBEntry(int tlb_slot,int ppn)
+{
+	machine->tlb[tlb_slot].virtualPage = IPTable[ppn].vpn;
+	machine->tlb[tlb_slot].physicalPage = ppn;
+	machine->tlb[tlb_slot].use = TRUE;
+	machine->tlb[tlb_slot].valid = TRUE;
+	machine->tlb[tlb_slot].dirty = IPTable[ppn].dirty;
+	machine->tlb[tlb_slot].readObly;
+}
+void propagateToIPT(int tlb_slot)
+{
+	int pp = machine->tlb[tlb_slot].physicalPage;
+	int vp = machine->tlb[tlb_slot].virtualPage;
+	int cpid = currentThread->space->getProcessID();
+	if(IPTable[pp].pid == cpid && IPTable[pp].vpn == vp)
+	{
+		IPTable[pp].dirty = machine->tlb[tlb_slot].dirty;
+	}else{
+		printf("IPT Error\n");
+		interrupt->Halt();
+	}
+}
+int nextEvictTLBSlot = -1;
+int getNextEvictTLBSlot(void)
+{
+	return (nextEvictTLBSlot++)%TLBSize;
+}
+int getTLBSlot(bool *dirty)
+{
+	int tlb_slot = getFreeTLBSlot();
+	if(tlb_slot == -1){
+		tlb_slot = getNextEvictTLBSlot();
+		*dirty = machine->tlb[tlb_slot].dirty;
+	}else{
+		*dirty = FALSE;
+	}
+	
+	return tlb_slot;//tlb can be dirty ,may need propagate to IPT
+}
+int getFreeTLBSlot(void)
+{
+	for(int i = 0; i < TLBSize ; i++){
+		if(machine->tlb[i].valid == FALSE){
+			return i;
+		}
+	}
+	return -1;
+}
+
+#endif
 //-----------------------------------------------------
 //---------------- EXCEPTION HANDLER ------------------
 //-----------------------------------------------------
 
 void ExceptionHandler(ExceptionType which) {
-    int type = machine->ReadRegister(2); // Which syscall?
-    int rv=0; 	// the return value from a syscall
+	int type = machine->ReadRegister(2); // Which syscall?
+	int rv=0; 	// the return value from a syscall
 	bool reading;
 	int tempo;
 	int vaddress;
 	char name[20];
 	int i;
 
-    if ( which == SyscallException ) {
-	switch (type) {
-	    default:
-		DEBUG('a', "Unknown syscall - shutting down.\n");
-	    case SC_Halt:
-		DEBUG('a', "Shutdown, initiated by user program.\n");
-		interrupt->Halt();
-		break;
-	    case SC_Create:
-		DEBUG('a', "Create syscall.\n");
-		Create_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
-		break;
-	    case SC_Open:
-		DEBUG('a', "Open syscall.\n");
-		rv = Open_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
-		break;
-	    case SC_Write:
-		DEBUG('a', "Write syscall.\n");
-		Write_Syscall(machine->ReadRegister(4),
-			      machine->ReadRegister(5),
-			      machine->ReadRegister(6));
-		break;
-	    case SC_Read:
-		DEBUG('a', "Read syscall.\n");
-		rv = Read_Syscall(machine->ReadRegister(4),
-			      machine->ReadRegister(5),
-			      machine->ReadRegister(6));
-		break;
-	    case SC_Close:
-		DEBUG('a', "Close syscall.\n");
-		Close_Syscall(machine->ReadRegister(4));
-		break;
+	if ( which == SyscallException ) 
+	{
+		switch (type) {
+			default:
+				DEBUG('a', "Unknown syscall - shutting down.\n");
+			case SC_Halt:
+				DEBUG('a', "Shutdown, initiated by user program.\n");
+				interrupt->Halt();
+				break;
+			case SC_Create:
+				DEBUG('a', "Create syscall.\n");
+				Create_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+				break;
+			case SC_Open:
+				DEBUG('a', "Open syscall.\n");
+				rv = Open_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+				break;
+			case SC_Write:
+				DEBUG('a', "Write syscall.\n");
+				Write_Syscall(machine->ReadRegister(4),
+						machine->ReadRegister(5),
+						machine->ReadRegister(6));
+				break;
+			case SC_Read:
+				DEBUG('a', "Read syscall.\n");
+				rv = Read_Syscall(machine->ReadRegister(4),
+						machine->ReadRegister(5),
+						machine->ReadRegister(6));
+				break;
+			case SC_Close:
+				DEBUG('a', "Close syscall.\n");
+				Close_Syscall(machine->ReadRegister(4));
+				break;
 
-		// Project 2 part 1 addition
+				// Project 2 part 1 addition
 #ifdef USER_PROGRAM
-		case SC_CreateLock:
-		DEBUG('a', "CreateLock syscall.\n");
-		rv = CreateLock_Syscall();
-		break;
-		case SC_DestroyLock:
-		DEBUG('a', "DestroyLock syscall.\n");
-		DestroyLock_Syscall(machine->ReadRegister(4));
-		break;
-		case SC_Acquire:
-		DEBUG('a', "Acquire syscall.\n");
-		Acquire_Syscall(machine->ReadRegister(4));
-		break;
-		case SC_Release:
-		DEBUG('a', "Release syscall.\n");
-		Release_Syscall(machine->ReadRegister(4));
-		break;
-		case SC_CreateCondition:
-		DEBUG('a', "CreateCondition syscall.\n");
-		rv = CreateCondition_Syscall();
-		break;
-		case SC_DestroyCondition:
-		DEBUG('a', "DestroyCondition syscall.\n");
-		DestroyCondition_Syscall(machine->ReadRegister(4));
-		break;
-		case SC_Signal:
-		DEBUG('a', "Signal syscall.\n");
-		Signal_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
-		break;
-		case SC_Wait:
-		DEBUG('a', "Wait syscall.\n");
-		Wait_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
-		break;
-		case SC_Broadcast:
-		DEBUG('a', "Broadcast syscall.\n");
-		Broadcast_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
-		break;
-		
-		// Project 2 part 2 addition
-		case SC_Fork:
-		DEBUG('a', "Fork syscall.\n");
-		Fork_Syscall(machine->ReadRegister(4));
-		break;
+			case SC_CreateLock:
+				DEBUG('a', "CreateLock syscall.\n");
+				rv = CreateLock_Syscall();
+				break;
+			case SC_DestroyLock:
+				DEBUG('a', "DestroyLock syscall.\n");
+				DestroyLock_Syscall(machine->ReadRegister(4));
+				break;
+			case SC_Acquire:
+				DEBUG('a', "Acquire syscall.\n");
+				Acquire_Syscall(machine->ReadRegister(4));
+				break;
+			case SC_Release:
+				DEBUG('a', "Release syscall.\n");
+				Release_Syscall(machine->ReadRegister(4));
+				break;
+			case SC_CreateCondition:
+				DEBUG('a', "CreateCondition syscall.\n");
+				rv = CreateCondition_Syscall();
+				break;
+			case SC_DestroyCondition:
+				DEBUG('a', "DestroyCondition syscall.\n");
+				DestroyCondition_Syscall(machine->ReadRegister(4));
+				break;
+			case SC_Signal:
+				DEBUG('a', "Signal syscall.\n");
+				Signal_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+				break;
+			case SC_Wait:
+				DEBUG('a', "Wait syscall.\n");
+				Wait_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+				break;
+			case SC_Broadcast:
+				DEBUG('a', "Broadcast syscall.\n");
+				Broadcast_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+				break;
 
-		case SC_Exec:
-		DEBUG('a', "Exec syscall.\n");
-		
-		i=0;
-		reading = machine->ReadMem(machine->ReadRegister(4), 1, &tempo);
-		vaddress = machine->ReadRegister(4);
-		while(reading && !(tempo==0))
-		{
-			name[i] = tempo;
-			vaddress++;
-			reading = machine->ReadMem(vaddress, 1, &tempo);
-			i++;
-		}
-		if(!reading)
-			rv=-1;
-		else
-			rv =  Exec_Syscall(name);
+				// Project 2 part 2 addition
+			case SC_Fork:
+				DEBUG('a', "Fork syscall.\n");
+				Fork_Syscall(machine->ReadRegister(4));
+				break;
 
-		break;
+			case SC_Exec:
+				DEBUG('a', "Exec syscall.\n");
 
-		case SC_Exit:
-		DEBUG('a', "Exit syscall.\n");
-		Exit_Syscall(machine->ReadRegister(4));
-		break;
+				i=0;
+				reading = machine->ReadMem(machine->ReadRegister(4), 1, &tempo);
+				vaddress = machine->ReadRegister(4);
+				while(reading && !(tempo==0))
+				{
+					name[i] = tempo;
+					vaddress++;
+					reading = machine->ReadMem(vaddress, 1, &tempo);
+					i++;
+				}
+				if(!reading)
+					rv=-1;
+				else
+					rv =  Exec_Syscall(name);
 
-		case SC_Yield:
-		DEBUG('a', "Yield syscall.\n");
-		Yield_Syscall();
-		break;
+				break;
+
+			case SC_Exit:
+				DEBUG('a', "Exit syscall.\n");
+				Exit_Syscall(machine->ReadRegister(4));
+				break;
+
+			case SC_Yield:
+				DEBUG('a', "Yield syscall.\n");
+				Yield_Syscall();
+				break;
 #endif
-	}
+		}
 
-	// Put in the return value and increment the PC
-	machine->WriteRegister(2,rv);
-	machine->WriteRegister(PrevPCReg,machine->ReadRegister(PCReg));
-	machine->WriteRegister(PCReg,machine->ReadRegister(NextPCReg));
-	machine->WriteRegister(NextPCReg,machine->ReadRegister(PCReg)+4);
-	return;
-    } else {
-      cout<<"Unexpected user mode exception - which:"<<which<<"  type:"<< type<<endl;
-      interrupt->Halt();
-    }
+		// Put in the return value and increment the PC
+		machine->WriteRegister(2,rv);
+		machine->WriteRegister(PrevPCReg,machine->ReadRegister(PCReg));
+		machine->WriteRegister(PCReg,machine->ReadRegister(NextPCReg));
+		machine->WriteRegister(NextPCReg,machine->ReadRegister(PCReg)+4);
+		return;
+#ifdef PROJ3
+	} else if(which == PageFaultException){
+		PageFault_Handler(machine->registers[BadVAddrReg]);
+		return;
+#endif	
+	} else {
+		cout<<"Unexpected user mode exception - which:"<<which<<"  type:"<< type<<endl;
+		interrupt->Halt();
+	}
 }
 
