@@ -15,8 +15,6 @@
 #include "interrupt.h"
 #include "stats.h"
 #include "timer.h"
-#include "../userprog/addrspace.h"
-#include "../machine/machine.h"
 
 #ifndef PROJ3
 #define PROJ3
@@ -49,6 +47,7 @@ extern Table memoryTable;
 
 #endif
 
+#ifdef USER_PROGRAM
 #ifdef PROJ3
 class IPTEntry {
 	public:
@@ -65,6 +64,7 @@ enum IPT_Replace_Algorithm{FIFO,RAND};
 extern IPT_Replace_Algorithm ipt_replace_algorithm; 
 extern BitMap* swapFileMap;
 extern OpenFile* swapfile;
+#endif 
 #endif 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
 #include "filesys.h"
