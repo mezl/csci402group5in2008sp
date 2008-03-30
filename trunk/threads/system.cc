@@ -29,6 +29,7 @@ Timer *timer;				// the hardware timer device,
 IPTEntry *IPTable;
 IPT_Replace_Algorithm ipt_replace_algorithm; 
 BitMap* swapFileMap;
+OpenFile* swapfile;
 #endif
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
@@ -174,6 +175,7 @@ Initialize(int argc, char **argv)
 		IPTable[i].space = NULL;
 	}
 	swapFileMap = new BitMap(NumPhysPages*200);
+	swapfile = fileSystem->Open("swapfile"); 
 #endif    
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
