@@ -15,6 +15,8 @@
 #include "interrupt.h"
 #include "stats.h"
 #include "timer.h"
+#include "../userprog/addrspace.h"
+#include "../machine/machine.h"
 
 #ifndef PROJ3
 #define PROJ3
@@ -33,6 +35,7 @@ extern Statistics *stats;			// performance metrics
 extern Timer *timer;				// the hardware alarm clock
 
 #ifdef USER_PROGRAM
+#include "bitmap.h"
 #include "machine.h"
 extern Machine* machine;	// user program memory and registers
 
@@ -61,6 +64,7 @@ extern IPTEntry* IPTable;
 enum IPT_Replace_Algorithm{FIFO,RAND};
 extern IPT_Replace_Algorithm ipt_replace_algorithm; 
 extern BitMap* swapFileMap;
+extern OpenFile* swapfile;
 #endif 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
 #include "filesys.h"
