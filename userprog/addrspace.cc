@@ -677,7 +677,7 @@ int AddrSpace::toSwap(int vaddr)
 	);
 	return swapAddr; 
 }
-int AddrSpace::readExec(int vaddr,int vpn)
+void AddrSpace::readExec(int vaddr,int vpn)
 {
 	exec->ReadAt(
 		&(machine->mainMemory[vaddr*PageSize]),
