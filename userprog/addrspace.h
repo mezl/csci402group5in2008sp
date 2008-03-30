@@ -88,7 +88,8 @@ class AddrSpace {
    void removeUserStack(int stackID);
 	int toSwap(int vaddr);
 	int fromSwap(int vaddr);
-	OpenFile* getExec(){return exec};
+	OpenFile* getExec(){return exec;}
+   int readExec(int v,int vpn);
 #endif
  private:
 

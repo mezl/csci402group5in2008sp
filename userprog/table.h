@@ -38,6 +38,8 @@ class ProcessTable
 		ProcessTable();
 		~ProcessTable();
 		int AddThread(Thread*);
+		int getProcessTable(Thread*);
+		int getProcess(Thread*);
 		int RemoveThread(Thread*);
 		int CheckChildExist(int mySpaceId);
 

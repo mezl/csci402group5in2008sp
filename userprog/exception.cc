@@ -496,25 +496,41 @@ void Exit_Syscall(int status)
 #endif
 
 #ifdef PROJ3
+int getFreeTLBSlot(void);
+int getTLBSlot(bool *dirty);
+int getNextEvictTLBSlot(void);
+void propagateToIPT(int tlb_slot);
+void TLB_Update(int ppn);
+int getTLB_Slot(int ipt_slot);
+void IPTSwapToMemory(int ipt_slot,int vpn);
+void IPTSwapToFile(int ipt_slot);
+int getNextEvictIPTSlot(void);
+int getFreeIPTSlot(void);
+int getIPT_Slot(void);
+void updateIPTEntry(int ipt_slot);
+int IPT_Update(int vpn);
+int IPTHit(int pid,int vpn);
+void updateTLBEntry(int tlb_slot,int ppn);
 //-----------------------------------------------------
 //---------------- Page Fault HANDLER -----------------
 //-----------------------------------------------------
 void PageFault_Handler(unsigned int va)
 {
 	unsigned int vpn = va/PageSize;	
-	int cnpg = currentThread->space->getNumPages();
+	unsigned int cnpg = currentThread->space->getNumPages();
 	if(vpn >=cnpg){
 		printf("illeagle virtual address %d",vpn);
 		interrupt->Halt();
 	}
 	//Acquire the memory lock
+	IntStatus old = interrupt->SetLevel(IntOff);
 	int cpid = currentThread->space->getProcessID();
 	int IPTFound = IPTHit(cpid,vpn);
 	if(IPTFound == -1){
 		//Not in IPT
 		IPTFound = IPT_Update(vpn);
 	}
-	TLB_Update(IPT_Found);
+	TLB_Update(IPTFound);
 	interrupt->SetLevel(old);
 	//Release the memory lock
 
@@ -566,12 +582,12 @@ int IPT_Update(int vpn)
 		tlb_slot = getTLB_Slot(ipt_slot);
 		if(tlb_slot != -1){
 			IPTable[ipt_slot].dirty = machine->tlb[tlb_slot].dirty;
-			machine->tlb[tlb_slot]
+			machine->tlb[tlb_slot].valid = FALSE;
 		}
 		if(IPTable[ipt_slot].dirty){
 			IPTSwapToFile(ipt_slot);
 		}
-		IPTSwapToMemory(ipt_slot,vpn)
+		IPTSwapToMemory(ipt_slot,vpn);
 	}
 	updateIPTEntry(ipt_slot);			
 	return ipt_slot;
@@ -587,9 +603,10 @@ void updateIPTEntry(int ipt_slot)
 int getIPT_Slot(void)
 {
 	int ipt_slot = getFreeIPTSlot();
-	if(ipt_slot = -1)//no free slot in IPT,need evict some thing
+	if(ipt_slot == -1)//no free slot in IPT,need evict some thing
 	{
-		switch(ipt_replace_algorithm){
+		switch(ipt_replace_algorithm)
+      {
 			case FIFO:
 				ipt_slot = getNextEvictIPTSlot(); 
 				break;
@@ -597,6 +614,7 @@ int getIPT_Slot(void)
 				ipt_slot = rand()%NumPhysPages;
 				break;
 			default:
+            break;
 		}
 
 	}
@@ -636,8 +654,8 @@ int getNextEvictIPTSlot(void)
 //Return: None
 void IPTSwapToFile(int ipt_slot)
 {
-	VmTranslationEntry* pt = (IPTable[ipt_slot]->space)->getPageTable();
-	int swapAddr = (IPTable[ipt_slot]->space)->ToSwap(ipt_slot);
+	VmTranslationEntry* pt = (IPTable[ipt_slot].space)->getPageTable();
+	int swapAddr = (IPTable[ipt_slot].space)->toSwap(ipt_slot);
 	pt[IPTable[ipt_slot].vpn].location = SWAP;
 	pt[IPTable[ipt_slot].vpn].swapAddr = swapAddr;
 }
@@ -653,7 +671,7 @@ void IPTSwapToMemory(int ipt_slot,int vpn)
 	VmTranslationEntry* pt = currentThread->space->getPageTable();
 	switch(pt[vpn].location){
 		case EXEC:
-			currentThread->spcae->readExec(ipt_slot,vpn);
+			currentThread->space->readExec(ipt_slot,vpn);
 			IPTable[ipt_slot].dirty = FALSE;
 			break;
 		case SWAP:
@@ -664,8 +682,9 @@ void IPTSwapToMemory(int ipt_slot,int vpn)
 			);
 			swapFileMap->Clear(pt[vpn].swapAddr);
 			IPTable[ipt_slot].dirty = TRUE;
+         break;
 		default:
-	
+         break;	
 	}
 }
 //-----------------------------------------------------
@@ -717,7 +736,7 @@ void updateTLBEntry(int tlb_slot,int ppn)
 	machine->tlb[tlb_slot].use = TRUE;
 	machine->tlb[tlb_slot].valid = TRUE;
 	machine->tlb[tlb_slot].dirty = IPTable[ppn].dirty;
-	machine->tlb[tlb_slot].readObly;
+	machine->tlb[tlb_slot].readOnly;
 }
 void propagateToIPT(int tlb_slot)
 {
