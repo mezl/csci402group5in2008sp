@@ -28,6 +28,7 @@
 #ifndef PROJ3
 #define PROJ3
 #endif
+#define PRE_LOAD
 extern "C" { int bzero(char *, int); };
 
 Table::Table(int s) : map(s), table(0), lock(0), size(s) {
@@ -170,6 +171,10 @@ int ProcessTable::RemoveThread(Thread* myThread)
 	processTableLock->Release();
 	return removeSuccessful;
 }
+// removeSuccessful = 0  : successful found thread and remove it 
+// removeSuccessful = -1 : no found thread
+// removeSuccessful = 1  : 
+// removeSuccessful = 2  : successfule found and table is empty
 
 
 int ProcessTable::CheckChildExist(int mySpaceId)
@@ -281,9 +286,12 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     unsigned int i, size;
 	spaceLock = new Lock("AddrSpace lock");
 #ifdef PROJ3
+   
 	int stackPageNum,execPageNum;
 	itsUserStack = new BitMap(STACK_NUM);	
 	itsUserStackLock = new Lock("User Stack Lock");	
+	itsSpaceLock = new Lock("Space Lock");	
+   itsProcessID = -1;
 #endif
     // Don't allocate the input or output to disk files
     fileTable.Put(0);
@@ -295,45 +303,54 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
     	SwapHeader(&noffH);
     ASSERT(noffH.noffMagic == NOFFMAGIC);
 
+    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size ;
 #ifdef PROJ3
 	itsCodeSize = noffH.code.size;
-	stackPageNum = divRoundUp(UserStackSize*STACK_NUM,PageSize);
+	//stackPageNum = divRoundUp(UserStackSize*STACK_NUM,PageSize);
+   
+	stackPageNum = divRoundUp(UserStackSize,PageSize);
 	execPageNum = divRoundUp(size, PageSize); 	
 	itsStackStartPage = execPageNum+1; 
 	exec = executable;
 #endif
-    size = noffH.code.size + noffH.initData.size + noffH.uninitData.size ;
 
 #ifdef PROJ3
-	numPages = stackPageNum + execPageNum;
-	printf("[Sys_AddressSpace] Thread: num of page :%d\n [Sys_AddressSpace]num of stack page:%d\n [Sys_AddressSpace]num of exec page:%d\n",numPages,stackPageNum,execPageNum);
+	itsNumPages = stackPageNum + execPageNum;
+	printf("[Sys_AddressSpace] Thread: num of page :%d\n[Sys_AddressSpace]num of stack page:%d\n[Sys_AddressSpace]num of exec page:%d\n",itsNumPages,stackPageNum,execPageNum);
 #else
-    numPages = divRoundUp(size, PageSize) + divRoundUp(UserStackSize,PageSize);
+    itsNumPages = divRoundUp(size, PageSize) + divRoundUp(UserStackSize,PageSize);
 #endif
                                                 // we need to increase the size
-   printf("[Sys_AddressSpace]numPages %d NumPhysPages %d\n",numPages,NumPhysPages);
+   printf("[Sys_AddressSpace]itsNumPages %d NumPhysPages %d\n",itsNumPages,NumPhysPages);
 						// to leave room for the stack
-    size = numPages * PageSize;
-
-    //ASSERT(numPages <= NumPhysPages);		// check we're not trying
+    size = itsNumPages * PageSize;
+#ifndef PROJ3
+    ASSERT(itsNumPages <= NumPhysPages);		// check we're not trying
 						// to run anything too big --
 						// at least until we have
 						// virtual memory
-
+#endif
     DEBUG('a', "Initializing address space, num pages %d, size %d\n", 
-					numPages, size);
+					itsNumPages, size);
 // first, set up the translation 
 #ifdef PROJ3
-    pageTable = new VmTranslationEntry[numPages];
+    printf("[Sys_AddressSpace]Create pagTable with number page %d\n",itsNumPages);
+    pageTable = new VmTranslationEntry[itsNumPages];
 #else
-    pageTable = new TranslationEntry[numPages];
+    pageTable = new TranslationEntry[itsNumPages];
 #endif
-	for (i = 0; i < numPages; i++) {
+	for (i = 0; i < itsNumPages; i++) {
 			pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-
 #ifdef PROJ3
-			pageTable[i].physicalPage = -1;
+#ifdef PRE_LOAD
 #else
+         //printf("[Sys_AddressSpace]Don't preload file to memory\n");
+			pageTable[i].physicalPage = -1;
+#endif//PRE_LOAD
+#endif//PROJ3
+
+#ifdef PRE_LOAD
+//if define pre load
 #ifdef PROJ2
 			int newpage = memoryTable.Put(0);//Find the new space in memory table
 			//Just booking the space, but not put anything in to it yet
@@ -341,12 +358,13 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 					printf("Can't not creat new addr space, no more memory");
 					return;
 			}	
+         //printf("Pre Loading Whole file to Memory [%d]\n",newpage);
 			pageTable[i].physicalPage = newpage;
 #else
 			/////////////////////////////////////////////////////////////////////////////
 			pageTable[i].physicalPage = i;
-#endif
-#endif
+#endif//PROJ2
+#endif//PRE_LOAD
 			/////////////////////////////////////////////////////////////////////////////
 			pageTable[i].valid = TRUE;
 			pageTable[i].use = FALSE;
@@ -367,8 +385,9 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 #endif
 	}
 //---------------------------------------------------------------------------//
-#ifndef PROJ3
+#ifdef PRE_LOAD 
 #ifdef PROJ2
+//printf("Pre Loading Whole file to Memory\n");
 //Doing the memory load from the user code and data seg.
 //-----
 //|   |
@@ -381,6 +400,7 @@ int fileMemAddr = 0;
 int currentBytes = 0;
 int notReadBytes = 0;
 itsSpaceID = pageTable[0].physicalPage;
+//printf("Pre Loading Whole file to Memory SpaceID %d\n",itsSpaceID);
 itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
     if (noffH.code.size > 0) {
         DEBUG('a', "Initializing node segment, at 0x%x, size %d\n", 
@@ -468,7 +488,7 @@ itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
 			// And notReadbytes will be zero;
 
 	}
- 
+   printf("Finish Load Whole data to memory\n"); 
 #else
 //---------------------------------------------------------------------------//
 
@@ -489,7 +509,7 @@ itsMaxForkAddr = noffH.code.size -1;//The last address fork can go
 			noffH.initData.size, noffH.initData.inFileAddr);
     }
 #endif //if define PROJ2
-#endif //if not define PROJ3
+#endif //if define PRE_LOAD 
 }
 
 
@@ -506,6 +526,7 @@ AddrSpace::~AddrSpace()
 #ifdef PROJ3
 	delete itsUserStack;
 	delete itsUserStackLock;
+	delete itsSpaceLock;
 #endif
 }
 
@@ -537,8 +558,8 @@ AddrSpace::InitRegisters()
    // Set the stack register to the end of the address space, where we
    // allocated the stack; but subtract off a bit, to make sure we don't
    // accidentally reference off the end!
-    machine->WriteRegister(StackReg, numPages * PageSize - 16);
-    DEBUG('a', "Initializing stack register to %x\n", numPages * PageSize - 16);
+    machine->WriteRegister(StackReg, itsNumPages * PageSize - 16);
+    DEBUG('a', "Initializing stack register to %x\n", itsNumPages * PageSize - 16);
 }
 
 //----------------------------------------------------------------------
@@ -550,7 +571,10 @@ AddrSpace::InitRegisters()
 //----------------------------------------------------------------------
 
 void AddrSpace::SaveState() 
-{}
+{
+
+
+}
 
 //----------------------------------------------------------------------
 // AddrSpace::RestoreState
@@ -563,15 +587,17 @@ void AddrSpace::SaveState()
 void AddrSpace::RestoreState() 
 {
 #ifdef PROJ3
+   IntStatus old = interrupt->SetLevel(IntOff);
 	for(int i = 0; i < TLBSize; i++)
 	{
 			if(machine->tlb[i].valid == TRUE && machine->tlb[i].dirty == TRUE)
 					IPTable[machine->tlb[i].physicalPage].dirty = TRUE;
 			machine->tlb[i].valid = FALSE;
 	}
+   interrupt->SetLevel(old);
 #else
     machine->pageTable = pageTable;
-    machine->pageTableSize = numPages;
+    machine->pageTableSize = itsNumPages;
 #endif    
 }
 #ifdef PROJ2
@@ -606,20 +632,20 @@ int AddrSpace::newStack()
          }
       }
 #ifdef PROJ3
-      newTable = new VmTranslationEntry[newNumPages + numPages];
+      newTable = new VmTranslationEntry[newNumPages + itsNumPages];
 #else
-      newTable = new TranslationEntry[newNumPages + numPages];
+      newTable = new TranslationEntry[newNumPages + itsNumPages];
 #endif
-		for(unsigned int i = 0 ;i < numPages+newNumPages ; i++)
+		for(unsigned int i = 0 ;i < itsNumPages+newNumPages ; i++)
 		{
-				if(i<numPages){
+				if(i<itsNumPages){
 						newTable[i].physicalPage = pageTable[i].physicalPage ;
 						newTable[i].valid        = pageTable[i].valid ;
 						newTable[i].use          = pageTable[i].use ;
 						newTable[i].dirty        = pageTable[i].dirty ;
 						newTable[i].readOnly     = pageTable[i].readOnly ; 
 				}else{
-						newTable[i].physicalPage = stackAddr[i - numPages];
+						newTable[i].physicalPage = stackAddr[i - itsNumPages];
                   //memoryTable.Put(0);
 						if(newTable[i].physicalPage == -1){
 								printf("Not Enough Memory Space!\n");
@@ -643,9 +669,9 @@ int AddrSpace::newStack()
 	pageTable->~TranslationEntry();
 #endif   
 	pageTable = newTable;
-	numPages+=newNumPages;
+	itsNumPages+=newNumPages;
 	spaceLock->Release();
-	return numPages*PageSize -16 ;//address before
+	return itsNumPages*PageSize -16 ;//address before
 }
 
 #endif
@@ -685,5 +711,12 @@ void AddrSpace::readExec(int vaddr,int vpn)
 		PageSize,
 		vpn*PageSize + sizeof(NoffHeader)	
 	);
+}
+unsigned int AddrSpace::getNumPages(){
+      unsigned int i = 0;
+    itsSpaceLock->Acquire(); 
+      i = itsNumPages;
+    itsSpaceLock->Release(); 
+      return i;
 }
 #endif

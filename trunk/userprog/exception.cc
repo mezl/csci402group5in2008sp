@@ -34,24 +34,54 @@ int copyin(unsigned int vaddr, int len, char *buf) {
     // Copy len bytes from the current thread's virtual address vaddr.
     // Return the number of bytes so read, or -1 if an error occors.
     // Errors can generally mean a bad virtual address was passed in.
-    bool result;
     int n=0;			// The number of bytes copied in
+    
+#ifdef PROJZ
+   unsigned int vpn = vaddr /PageSize;
+   unsigned int ppn;
+   unsigned int offset = vaddr % PageSize;
+#else   
+    bool result;
     int *paddr = new int;
-
+#endif   
     while ( n >= 0 && n < len) {
+#ifdef PROJZ
+      if(vpn< machine->pageTableSize && machine->pageTable[vpn].valid)
+      {
+         ppn = machine->pageTable[vpn].physicalPage;
+         if(ppn < NumPhysPages){
+            buf[n] = nachine->mainMemory[ppn *PageSize + offset];
+            if(buf[n++] == '\0')
+               break;
+         }else{
+            n = -1;
+         }
+      }else{
+         n = -1;
+      }
+      vaddr++;
+     }//end while
+     return n;
+#else      
       result = machine->ReadMem( vaddr, 1, paddr );
-      buf[n++] = *paddr;
-
+#ifdef PROJ3
+      //printf("[copyin]\n");
+      while(!result){
+         result = machine->ReadMem( vaddr, 1, paddr );
+      }
+#else
       if ( !result ) {
 	//translation failed
 	return -1;
       }
-
+#endif
+      buf[n++] = *paddr;
       vaddr++;
-    }
+    }//end while
 
     delete paddr;
     return len;
+#endif   
 }
 
 int copyout(unsigned int vaddr, int len, char *buf) {
@@ -61,16 +91,21 @@ int copyout(unsigned int vaddr, int len, char *buf) {
     // passed in.
     bool result;
     int n=0;			// The number of bytes copied in
-
     while ( n >= 0 && n < len) {
       // Note that we check every byte's address
       result = machine->WriteMem( vaddr, 1, (int)(buf[n++]) );
 
+#ifdef PROJ3
+      //printf("[copyout]\n");
+      while(!result)
+         result = machine->WriteMem( vaddr, 1, (int)(buf[n++]) );
+#else         
       if ( !result ) {
 	//translation failed
 	return -1;
       }
 
+#endif    
       vaddr++;
     }
 
@@ -151,7 +186,7 @@ void Write_Syscall(unsigned int vaddr, int len, int id) {
 	return;
     } else {
         if ( copyin(vaddr,len,buf) == -1 ) {
-	    printf("%s","Bad pointer passed to to write: data not written\n");
+	    printf("Bad pointer[%d]passed to to write: data not written\n",vaddr);
 	    delete[] buf;
 	    return;
 	}
@@ -475,6 +510,7 @@ void Exit_Syscall(int status)
 	{
 		currentThread -> Sleep();
 	}*/
+   
 	int check = processTable.RemoveThread(currentThread);
 	
 	if(check == -1)
@@ -484,59 +520,95 @@ void Exit_Syscall(int status)
 	if(check == 1 || check == 2)
 		currentThread->space->~AddrSpace();
 
-	if(check == 2)
+	if(check == 2)//if it's last thread and last process
 		interrupt->Halt();
 
 	if(status == 0)
 		currentThread->Finish();
 	else
 		printf("Cannot exit current thread\n");
-	
+
 }
 #endif
 
 #ifdef PROJ3
+#define HAVE_IPT
+//------Pure TLB FUNCTION----------
 int getFreeTLBSlot(void);
 int getTLBSlot(bool *dirty);
 int getNextEvictTLBSlot(void);
-void propagateToIPT(int tlb_slot);
+void TLB_Update(int ppn,int vpn);
+void updateTLBEntry(int tlb_slot,int ppn,int vpn);
+
+//------IPT & TLB FUNCTION----------
+#ifdef HAVE_IPT
 void TLB_Update(int ppn);
+void updateTLBEntry(int tlb_slot,int ppn);
+void propagateToIPT(int tlb_slot);
+#endif
+//------IPT FUNCTION----------
+#ifdef HAVE_IPT
 int getTLB_Slot(int ipt_slot);
 void IPTSwapToMemory(int ipt_slot,int vpn);
 void IPTSwapToFile(int ipt_slot);
 int getNextEvictIPTSlot(void);
 int getFreeIPTSlot(void);
 int getIPT_Slot(void);
-void updateIPTEntry(int ipt_slot);
+void updateIPTEntry(int ipt_slot,int vpn);
 int IPT_Update(int vpn);
 int IPTHit(int pid,int vpn);
-void updateTLBEntry(int tlb_slot,int ppn);
+#endif
+//------Util FUNCTION----------
+int getPhysAddr(int vpn);
 //-----------------------------------------------------
 //---------------- Page Fault HANDLER -----------------
 //-----------------------------------------------------
 void PageFault_Handler(unsigned int va)
 {
-	unsigned int vpn = va/PageSize;	
-	unsigned int cnpg = currentThread->space->getNumPages();
-	if(vpn >=cnpg){
-		printf("illeagle virtual address %d",vpn);
-		interrupt->Halt();
-	}
-	//Acquire the memory lock
 	IntStatus old = interrupt->SetLevel(IntOff);
-	int cpid = currentThread->space->getProcessID();
-	int IPTFound = IPTHit(cpid,vpn);
+   unsigned int vpn = va/PageSize;	
+   if(currentThread->space !=NULL){
+      unsigned int cnpg = currentThread->space->getNumPages();
+      //printf("CurrentThread numPages %d\n",cnpg);
+      if(vpn >=cnpg){
+         printf("illeagle virtual address %d",vpn);
+         interrupt->Halt();
+      }
+   }
+	//Acquire the memory lock
+   //Bug Here!
+	int ppn = getPhysAddr(vpn); 
+#ifdef HAVE_IPT   
+   //int pid = currentThread->space->getProcessID();
+	//int IPTFound = IPTHit(pid,vpn);
+   
+	int IPTFound = IPTHit(ppn,vpn);
 	if(IPTFound == -1){
 		//Not in IPT
 		IPTFound = IPT_Update(vpn);
 	}
 	TLB_Update(IPTFound);
+#else
+	TLB_Update(ppn,vpn);
+#endif
 	interrupt->SetLevel(old);
 	//Release the memory lock
 
 }
 
+int getPhysAddr(int vpn)
+{
+	//VmTranslationEntry* pt = (IPTable[ipt_slot].space)->getPageTable();
+	VmTranslationEntry* pt = currentThread->space->getPageTable();
+	//int ppn = currentThread->space->getSpaceID();
+	int ppn = pt[vpn].physicalPage;
+   //printf("[getPhysAddr]ppn = %d \n",ppn);
+   //pt->physicalPage; 
+   return ppn;
+      
+}
 
+#ifdef HAVE_IPT
 //-----------------------------------------------------
 //---------------- IPT Function------------------------
 //-----------------------------------------------------
@@ -589,16 +661,23 @@ int IPT_Update(int vpn)
 		}
 		IPTSwapToMemory(ipt_slot,vpn);
 	}
-	updateIPTEntry(ipt_slot);			
+	updateIPTEntry(ipt_slot,vpn);			
 	return ipt_slot;
 }
-void updateIPTEntry(int ipt_slot)
+void updateIPTEntry(int ipt_slot,int vpn)
 {
-	IPTable[ipt_slot].pid = currentThread->space->getProcessID();
+//	VmTranslationEntry* pt = currentThread->space->getPageTable();
+//	int ppn = pt[ipt_slot].physicalPage;
+	IPTable[ipt_slot].pid = getPhysAddr(vpn);
+   //currentThread->space->getProcessID();
+	IPTable[ipt_slot].vpn= vpn; 
 	IPTable[ipt_slot].space = currentThread->space;
 	IPTable[ipt_slot].use = TRUE;
 	IPTable[ipt_slot].valid = TRUE;
 	IPTable[ipt_slot].readOnly = FALSE;
+   printf("[updateIPTEntry] ipt_slot %d \n",ipt_slot);
+   printf("[updateIPTEntry] pid %d vpn %d \n",IPTable[ipt_slot].pid,
+         IPTable[ipt_slot].vpn);
 }
 int getIPT_Slot(void)
 {
@@ -614,10 +693,12 @@ int getIPT_Slot(void)
 				ipt_slot = rand()%NumPhysPages;
 				break;
 			default:
+            printf("Can't find IPT replace algorithm\n");
             break;
 		}
 
 	}
+   //printf("[getIPT_Slot] slot is %d \n",ipt_slot);
 	return ipt_slot;
 }
 
@@ -640,10 +721,12 @@ int getFreeIPTSlot(void)
 //---------------- Evict IPT Slot -------------------------
 //Return: Next IPT spot count 
 //Note the int nextEvictIPTSlot is a global variable
-int nextEvictIPTSlot = -1;
 int getNextEvictIPTSlot(void)
 {
-	return (nextEvictIPTSlot++)%NumPhysPages;
+   nextEvictIPTSlot++;
+   nextEvictIPTSlot%=NumPhysPages;
+   //printf("nextEvictIPTSlot = %d\n",nextEvictIPTSlot);
+	return (nextEvictIPTSlot);
 }
 
 //---------------- Write to Swap-------------------------
@@ -687,10 +770,12 @@ void IPTSwapToMemory(int ipt_slot,int vpn)
          break;	
 	}
 }
+#endif
 //-----------------------------------------------------
 //---------------- TLB Function------------------------
 //-----------------------------------------------------
 
+#ifdef HAVE_IPT
 //---------------- get TLB slot------------------------
 //get TLB slot by given IPT slot
 //Pre:
@@ -710,6 +795,8 @@ int getTLB_Slot(int ipt_slot){
 						return i;
 	return -1;
 }
+
+#endif
 //---------------- TLB Update-----------------------------
 //When Calling the TLB Update
 //it will find the TLB slot to store the data
@@ -717,20 +804,68 @@ int getTLB_Slot(int ipt_slot){
 //the write the virtual and physical page data to it 
 //Pre:
 //	ppn: physical page number 
+// vpn: virtual page number(if w/o useing IPT)
 //Post:
 //	tlb table updated	
 //Return:
 //	[None]
+//---------------- TLB Update with IPT----------------------
+#ifdef HAVE_IPT
 void TLB_Update(int ppn)
 {
+   //printf("[TLB_Update]Using IPT ,ppn %d\n",ppn);
+   
 	bool dirty;
 	int tlb_slot = getTLBSlot(&dirty);
 	if(dirty)
 		propagateToIPT(tlb_slot);
 	updateTLBEntry(tlb_slot,ppn);	
 }
+#endif
+//---------------- TLB Update no IPT----------------------
+void TLB_Update(int ppn,int vpn)
+{
+   //printf("[TLB_Update]No IPT,ppn %d,vpn %d\n",ppn,vpn);
+	bool dirty;
+	int tlb_slot = getTLBSlot(&dirty);
+	updateTLBEntry(tlb_slot,ppn,vpn);	
+}
+//---------------- Update TLB Entry-----------------------
+//Calling by the TLB Update
+//the write the virtual and physical page data to TLB
+//Since we have two update method
+// 1. UpdateTLB Entry without IPT table:
+//       in this case, we need have 3 parameter 
+//         tlb_slot,physical page number,virtual page number
+//       Then default dirty bit will set false
+//
+// 2. UpdateTlB Entry with IPT
+//       Then we only need tlb_slot and physical page number
+//       We will get vpn by the IPT table,then copy the dirty bit
+//       data from IPT table.
+//Pre:
+// tlb_slot: which slot we need update in TLB
+//	ppn: physical page number 
+// vpn: virtual page number(if w/o useing IPT)
+//
+//Post:
+//	tlb table updated	
+//Return:
+//	[None]
+void updateTLBEntry(int tlb_slot,int ppn,int vpn)
+{
+   //printf("[updateTLBEntry]No IPT,slot %d,ppn %d,vpn %d\n",tlb_slot,ppn,vpn);
+	machine->tlb[tlb_slot].virtualPage = vpn;
+	machine->tlb[tlb_slot].physicalPage = ppn;
+	machine->tlb[tlb_slot].use = TRUE;
+	machine->tlb[tlb_slot].valid = TRUE;
+	machine->tlb[tlb_slot].dirty = FALSE;
+	machine->tlb[tlb_slot].readOnly;
+}
+#ifdef HAVE_IPT
 void updateTLBEntry(int tlb_slot,int ppn)
 {
+   //printf("[updateTLBEntry]With IPT,slot %d,ppn %d,vpn %d\n",tlb_slot,ppn,IPTable[ppn].vpn);
 	machine->tlb[tlb_slot].virtualPage = IPTable[ppn].vpn;
 	machine->tlb[tlb_slot].physicalPage = ppn;
 	machine->tlb[tlb_slot].use = TRUE;
@@ -751,10 +886,12 @@ void propagateToIPT(int tlb_slot)
 		interrupt->Halt();
 	}
 }
-int nextEvictTLBSlot = -1;
+#endif
 int getNextEvictTLBSlot(void)
 {
-	return (nextEvictTLBSlot++)%TLBSize;
+   nextEvictTLBSlot++;
+   nextEvictTLBSlot%= TLBSize;
+	return nextEvictTLBSlot;
 }
 int getTLBSlot(bool *dirty)
 {
