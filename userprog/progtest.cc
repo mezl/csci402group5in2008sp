@@ -25,33 +25,35 @@
 void
 StartProcess(char *filename)
 {
-    OpenFile *executable = fileSystem->Open(filename);
-    AddrSpace *space;
+   OpenFile *executable = fileSystem->Open(filename);
 
-    if (executable == NULL) {
-	printf("Unable to open file %s\n", filename);
-	return;
-    }
-   
-    space = new AddrSpace(executable);
+   if (executable == NULL) {
+      printf("Unable to open file %s\n", filename);
+      return;
+   }
 
-    currentThread->space = space;
+   AddrSpace *space;
+   space = new AddrSpace(executable);
 
-	/* Project 2 Part 2 addition
-		ensure main is added to process table */
-	int mySpaceID = processTable.AddThread(currentThread);
-	if(mySpaceID == -1)
-		printf("Failure adding main to process table\n");
+   currentThread->space = space;
 
-    delete executable;			// close file
+   /* Project 2 Part 2 addition
+      ensure main is added to process table */
+   int mySpaceID = processTable.AddThread(currentThread);
+   if(mySpaceID == -1)
+      printf("Failure adding main to process table\n");
+#ifdef PROJ3
+   space->setProcessID(mySpaceID);   
+#else
+   delete executable;			// close file
+#endif
+   space->InitRegisters();		// set the initial register values
+   space->RestoreState();		// load page table register
 
-    space->InitRegisters();		// set the initial register values
-    space->RestoreState();		// load page table register
-
-    machine->Run();			// jump to the user progam
-    ASSERT(FALSE);			// machine->Run never returns;
-					// the address space exits
-					// by doing the syscall "exit"
+   machine->Run();			// jump to the user progam
+   ASSERT(FALSE);			// machine->Run never returns;
+   // the address space exits
+   // by doing the syscall "exit"
 }
 
 // Data structures needed for the console test.  Threads making

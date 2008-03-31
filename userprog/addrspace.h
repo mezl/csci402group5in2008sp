@@ -72,7 +72,7 @@ class AddrSpace {
     void SaveState();			// Save/restore address space-specific
     void RestoreState();		// info on a context switch
     Table fileTable;			// Table of openfiles
-    unsigned int getNumPages(){return numPages;}
+    unsigned int getNumPages();
 #ifdef PROJ2
 	int getSpaceID();
 	int getMaxForkAddr();
@@ -83,6 +83,7 @@ class AddrSpace {
 	int getPageTableSize(){return itsPageTableSize;}
 	int getProcessID(){return itsProcessID;}
 	int getStackStartPage(){return itsStackStartPage;}
+	void setProcessID(int id){itsProcessID = id;}
    VmTranslationEntry* getPageTable(){return pageTable;}
 	OpenFile* getExec(){return exec;}
    int getFreeUserStack();
@@ -100,7 +101,7 @@ class AddrSpace {
     TranslationEntry *pageTable;	// Assume linear page table translation
 					// for now!
 #endif
-    unsigned int numPages;		// Number of pages in the virtual 
+    unsigned int itsNumPages;		// Number of pages in the virtual 
 					// address space
 #ifdef PROJ2
 	int itsSpaceID;
@@ -115,6 +116,7 @@ class AddrSpace {
 	int itsStackStartPage;
 	BitMap* itsUserStack;
 	Lock* itsUserStackLock;
+	Lock* itsSpaceLock;
 	OpenFile *exec;
 #endif
 };
