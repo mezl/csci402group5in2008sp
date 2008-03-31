@@ -64,6 +64,8 @@ enum IPT_Replace_Algorithm{FIFO,RAND};
 extern IPT_Replace_Algorithm ipt_replace_algorithm; 
 extern BitMap* swapFileMap;
 extern OpenFile* swapfile;
+extern int nextEvictIPTSlot;
+extern int nextEvictTLBSlot;
 #endif 
 #endif 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
