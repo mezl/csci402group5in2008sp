@@ -33,6 +33,8 @@ IPTEntry *IPTable;
 IPT_Replace_Algorithm ipt_replace_algorithm; 
 BitMap* swapFileMap;
 OpenFile* swapfile;
+int nextEvictIPTSlot;
+int nextEvictTLBSlot;
 #endif
 #endif
 #ifdef FILESYS_NEEDED
@@ -181,6 +183,8 @@ Initialize(int argc, char **argv)
 	}
 	swapFileMap = new BitMap(NumPhysPages*200);
 	swapfile = fileSystem->Open("swapfile"); 
+   nextEvictIPTSlot = -1;
+   nextEvictTLBSlot = -1;
 #endif    
 #endif    
 #ifdef USER_PROGRAM
