@@ -43,7 +43,8 @@ StartProcess(char *filename)
    if(mySpaceID == -1)
       printf("Failure adding main to process table\n");
 #ifdef PROJ3
-   space->setProcessID(mySpaceID);   
+   //space->setProcessID(mySpaceID);   
+   printf("===Process with pid=%d space now is Created!===\n",mySpaceID);
 #else
    delete executable;			// close file
 #endif
