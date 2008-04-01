@@ -35,6 +35,8 @@ BitMap* swapFileMap;
 OpenFile* swapfile;
 int nextEvictIPTSlot;
 int nextEvictTLBSlot;
+Lock *physMemoryLock;
+int processID_Counter;
 #endif
 #endif
 #ifdef FILESYS_NEEDED
@@ -182,9 +184,12 @@ Initialize(int argc, char **argv)
 		IPTable[i].space = NULL;
 	}
 	swapFileMap = new BitMap(NumPhysPages*200);
+   fileSystem->Create("swapfile",PageSize*NumPhysPages*200);
 	swapfile = fileSystem->Open("swapfile"); 
    nextEvictIPTSlot = -1;
    nextEvictTLBSlot = -1;
+   physMemoryLock = new Lock("PhysMemLock");
+   processID_Counter = 0;
 #endif    
 #endif    
 #ifdef USER_PROGRAM

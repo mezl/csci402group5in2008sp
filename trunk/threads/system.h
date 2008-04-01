@@ -35,6 +35,8 @@ extern Timer *timer;				// the hardware alarm clock
 #ifdef USER_PROGRAM
 #include "bitmap.h"
 #include "machine.h"
+#include "synch.h"
+
 extern Machine* machine;	// user program memory and registers
 
 //-------------------- Project 2 (part 1) -------------------
@@ -43,6 +45,7 @@ extern Table conditionTable;
 
 //-------------------- Project 2 (part 2) -------------------
 extern ProcessTable processTable;
+extern ProcessTable threadTable;
 extern Table memoryTable;
 
 #endif
@@ -66,6 +69,8 @@ extern BitMap* swapFileMap;
 extern OpenFile* swapfile;
 extern int nextEvictIPTSlot;
 extern int nextEvictTLBSlot;
+extern Lock* physMemoryLock;
+extern int processID_Counter;
 #endif 
 #endif 
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
