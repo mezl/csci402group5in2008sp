@@ -615,7 +615,6 @@ int AddrSpace::newStack()
 		VmTranslationEntry *newTable;
 #else
 		TranslationEntry *newTable;
-#endif
       int stackAddr[newNumPages];
       if(!stackAddr){
          printf("Not Enough Memory!\n");
@@ -628,6 +627,8 @@ int AddrSpace::newStack()
             return -1;
          }
       }
+#endif
+
 #ifdef PROJ3
       newTable = new VmTranslationEntry[newNumPages + itsNumPages];
 #else
@@ -635,20 +636,38 @@ int AddrSpace::newStack()
 #endif
 		for(unsigned int i = 0 ;i < itsNumPages+newNumPages ; i++)
 		{
-				if(i<itsNumPages){
+				if(i<itsNumPages)
+            {
+#ifdef PROJ3
+						newTable[i].virtualPage = pageTable[i].virtualPage;
+                  newTable[i].type     	= pageTable[i].type ;
+                  newTable[i].location 	= pageTable[i].location ;
+                  newTable[i].processID	= pageTable[i].processID ;
+                  newTable[i].timeStamp	= pageTable[i].timeStamp ;
+                  newTable[i].swapAddr 	= pageTable[i].swapAddr ;
+#endif
 						newTable[i].physicalPage = pageTable[i].physicalPage ;
 						newTable[i].valid        = pageTable[i].valid ;
 						newTable[i].use          = pageTable[i].use ;
 						newTable[i].dirty        = pageTable[i].dirty ;
 						newTable[i].readOnly     = pageTable[i].readOnly ; 
 				}else{
+#ifdef PROJ3
+               newTable[i].physicalPage = -1; 
+               newTable[i].type = MIXED;
+               newTable[i].location = EXEC;
+               newTable[i].processID = -1;
+               newTable[i].timeStamp = -1;
+               newTable[i].swapAddr = -1;
+                  
+#else
 						newTable[i].physicalPage = stackAddr[i - itsNumPages];
                   //memoryTable.Put(0);
 						if(newTable[i].physicalPage == -1){
 								printf("Not Enough Memory Space!\n");
 								return 0;
 						}
-							
+#endif							
 						newTable[i].valid        = TRUE; 
 						newTable[i].use          = FALSE;
 						newTable[i].dirty        = FALSE;
@@ -667,6 +686,8 @@ int AddrSpace::newStack()
 #endif   
 	pageTable = newTable;
 	itsNumPages+=newNumPages;
+	printf("[Sys_AddressSpace] Thread: num of page now is :%d\n",itsNumPages);
+   printf("[Sys_AddressSpace] Increasing New Fork of stack page:%d\n",newNumPages);
 	spaceLock->Release();
 	return itsNumPages*PageSize -16 ;//address before
 }
