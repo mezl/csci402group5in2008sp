@@ -28,7 +28,7 @@
 #ifndef PROJ3
 #define PROJ3
 #endif
-#define PRE_LOAD
+//#define PRE_LOAD
 extern "C" { int bzero(char *, int); };
 
 Table::Table(int s) : map(s), table(0), lock(0), size(s) {
@@ -173,8 +173,8 @@ int ProcessTable::RemoveThread(Thread* myThread)
 }
 // removeSuccessful = 0  : successful found thread and remove it 
 // removeSuccessful = -1 : no found thread
-// removeSuccessful = 1  : 
-// removeSuccessful = 2  : successfule found and table is empty
+// removeSuccessful = 1  : removing last thread in a process 
+// removeSuccessful = 2  : removing last thread in last process 
 
 
 int ProcessTable::CheckChildExist(int mySpaceId)
@@ -291,7 +291,8 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 	itsUserStack = new BitMap(STACK_NUM);	
 	itsUserStackLock = new Lock("User Stack Lock");	
 	itsSpaceLock = new Lock("Space Lock");	
-   itsProcessID = -1;
+   itsProcessID = processID_Counter++;
+   itsSpaceID = itsProcessID;
 #endif
     // Don't allocate the input or output to disk files
     fileTable.Put(0);
@@ -341,13 +342,6 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 #endif
 	for (i = 0; i < itsNumPages; i++) {
 			pageTable[i].virtualPage = i;	// for now, virtual page # = phys page #
-#ifdef PROJ3
-#ifdef PRE_LOAD
-#else
-         //printf("[Sys_AddressSpace]Don't preload file to memory\n");
-			pageTable[i].physicalPage = -1;
-#endif//PRE_LOAD
-#endif//PROJ3
 
 #ifdef PRE_LOAD
 //if define pre load
@@ -364,6 +358,9 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 			/////////////////////////////////////////////////////////////////////////////
 			pageTable[i].physicalPage = i;
 #endif//PROJ2
+#else//No pre load
+         //printf("[Sys_AddressSpace]Don't preload file to memory\n");
+			pageTable[i].physicalPage = -1;
 #endif//PRE_LOAD
 			/////////////////////////////////////////////////////////////////////////////
 			pageTable[i].valid = TRUE;
@@ -697,6 +694,8 @@ void AddrSpace::removeUserStack(int stackID)
 int AddrSpace::toSwap(int vaddr)
 {
 	int swapAddr = swapFileMap->Find();
+//   int vpn = IPTable[vaddr].vpn;
+// printf("[SysAddrSpaceToSwap] swapAddr %d vaddr %d\n",swapAddr,vaddr);
 	swapfile->WriteAt(
 		&(machine->mainMemory[PageSize * vaddr]),
 		PageSize,

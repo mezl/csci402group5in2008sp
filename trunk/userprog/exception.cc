@@ -309,6 +309,7 @@ void DestroyLock_Syscall(int id)
 
 void Acquire_Syscall(int id)
 {
+   printf("====Start Acquire_Sycall====\n");
 	Lock* myLock = (Lock*)lockTable.Get(id);
 
 	if(myLock == NULL)
@@ -322,6 +323,7 @@ void Acquire_Syscall(int id)
 
 void Release_Syscall(int id)
 {
+   printf("====Start Release_Syscall====\n");
 	Lock* myLock = (Lock*)lockTable.Get(id);
 
 	if(myLock == NULL)
@@ -365,6 +367,7 @@ void DestroyCondition_Syscall(int id)
 
 void Signal_Syscall(int lockID, int conditionID)
 {
+   printf("====Start Signal_Sycall====\n");
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
 
@@ -384,6 +387,7 @@ void Signal_Syscall(int lockID, int conditionID)
 
 void Wait_Syscall(int lockID, int conditionID)
 {
+   printf("====Start Wait_Sycall====\n");
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
 
@@ -403,6 +407,7 @@ void Wait_Syscall(int lockID, int conditionID)
 
 void Broadcast_Syscall(int lockID, int conditionID)
 {
+   printf("====Start BroadCast_Sycall====\n");
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
 
@@ -434,8 +439,20 @@ void exec_thread()
 	currentThread->space->RestoreState();
 	machine->Run();
 }
-SpaceId Exec_Syscall(char* name)
+SpaceId Exec_Syscall(int va)
 {
+   printf("====Start Exec_Sycall====\n");
+   
+	char *name = new char[MAXFILENAME];
+   if(!name){
+      printf("==Exec_Syscall==Can't allocate open name space\n");
+      return -1;
+   }
+   if(copyin(va,MAXFILENAME,name) == -1)
+   {
+      printf("==[Exec_Syscall]Can't open the file\n");
+   }
+
 	OpenFile* myFile = fileSystem->Open(name);
 	if(myFile == NULL)
 	{
@@ -445,9 +462,10 @@ SpaceId Exec_Syscall(char* name)
 	AddrSpace* mySpace = new AddrSpace(myFile);
 	Thread* myThread = new Thread(name);
 	myThread->space = mySpace;
-	int mySpaceId = myThread->space->getSpaceID();
-	int myThreadId = processTable.AddThread(myThread);
-	
+	int mySpaceId = processTable.AddThread(myThread);
+   //myThread->space->setSpaceID(mySpaceId);
+	//int myThreadId = processTable.AddThread(myThread);
+   printf("===Process with <<<pid:%d >>>space now is Created!===\n",mySpaceId);	
 	machine -> WriteRegister(2, mySpaceId);
 	myThread->Fork((VoidFunctionPtr)exec_thread, 0);
 	return mySpaceId;
@@ -470,6 +488,7 @@ void kernel_thread(int twoValues)
 
 void Fork_Syscall(int virtualaddress)
 {
+   printf("====Start Fork_Sycall====\n");
 	Thread* myThread = new Thread(currentThread->getName());
 	int* twoValues = new int[2];
 #ifdef PROJ3
@@ -485,8 +504,9 @@ void Fork_Syscall(int virtualaddress)
 
 	int stackAddress = currentThread->space->newStack();
 	myThread->space = currentThread->space;
-	int mySpaceId = processTable.AddThread(myThread);
-
+	int processId = processTable.AddThread(myThread);
+   
+   printf("====Fork_Sycall add one more thread in <<pid:%d>>====\n",processId);
 	if (stackAddress < 0)
 	{
 		printf("Failure when allocating a new stack for fork");
@@ -505,12 +525,21 @@ void Yield_Syscall()
 
 void Exit_Syscall(int status)
 {
+   printf("====Start Exit_Sycall with value [ %d ]====\n",status);
 	/*
 	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1)
 	{
 		currentThread -> Sleep();
 	}*/
-   
+
+   // removeSuccessful = 0  : successful found thread and remove it 
+   //                         not last thread in process
+   // removeSuccessful = -1 : no found thread
+   // removeSuccessful = 1  : removing last thread in a process,
+   //                         but still have the other process running   
+   // removeSuccessful = 2  : removing last thread in last process 
+
+ 
 	int check = processTable.RemoveThread(currentThread);
 	
 	if(check == -1)
@@ -519,10 +548,11 @@ void Exit_Syscall(int status)
 	}
 	if(check == 1 || check == 2)
 		currentThread->space->~AddrSpace();
-
-	if(check == 2)//if it's last thread and last process
+	if(check == 2){//if it's last thread and last process
 		interrupt->Halt();
-
+   }
+	if(check == 0)
+		currentThread->Finish();
 	if(status == 0)
 		currentThread->Finish();
 	else
@@ -533,6 +563,12 @@ void Exit_Syscall(int status)
 
 #ifdef PROJ3
 #define HAVE_IPT
+//#define TLB_DEBUG
+//#define IPT_DEBUG 
+//#define IPT_DEBUG_UPDATE 
+//#define IPT_DEBUG_SWAP_OUT 
+//#define IPT_DEBUG_SWAP_IN 
+//#define PGF_DEBUG 
 //------Pure TLB FUNCTION----------
 int getFreeTLBSlot(void);
 int getTLBSlot(bool *dirty);
@@ -550,7 +586,7 @@ void propagateToIPT(int tlb_slot);
 #ifdef HAVE_IPT
 int getTLB_Slot(int ipt_slot);
 void IPTSwapToMemory(int ipt_slot,int vpn);
-void IPTSwapToFile(int ipt_slot);
+void IPTSwapToFile(int ipt_slot,int vpn);
 int getNextEvictIPTSlot(void);
 int getFreeIPTSlot(void);
 int getIPT_Slot(void);
@@ -565,24 +601,32 @@ int getPhysAddr(int vpn);
 //-----------------------------------------------------
 void PageFault_Handler(unsigned int va)
 {
+#ifdef PGF_DEBUG
+   printf("[PageFault_Handler] Start Page Fault with vaddr %d\n",va);
+#endif
+   physMemoryLock->Acquire();
 	IntStatus old = interrupt->SetLevel(IntOff);
    unsigned int vpn = va/PageSize;	
-   if(currentThread->space !=NULL){
-      unsigned int cnpg = currentThread->space->getNumPages();
-      //printf("CurrentThread numPages %d\n",cnpg);
-      if(vpn >=cnpg){
-         printf("illeagle virtual address %d",vpn);
-         interrupt->Halt();
-      }
+   unsigned int cnpg = currentThread->space->getNumPages();
+#ifdef PGF_DEBUG
+   printf("[PageFault_Handler] vpn %d pageSize %d cnpg\n",vpn,PageSize,cnpg);
+#endif
+   //printf("CurrentThread numPages %d\n",cnpg);
+   if(vpn >=cnpg){
+      printf("illeagle virtual address %d\n",vpn);
+      interrupt->Halt();
    }
 	//Acquire the memory lock
    //Bug Here!
-	int ppn = getPhysAddr(vpn); 
+	//int ppn = getPhysAddr(vpn); 
+#ifdef PGF_DEBUG
+   //printf("[PageFault_Handler] vpn %d ppn %d pageSize %d\n",vpn,ppn,PageSize);
+#endif
 #ifdef HAVE_IPT   
-   //int pid = currentThread->space->getProcessID();
-	//int IPTFound = IPTHit(pid,vpn);
+   int pid = currentThread->space->getProcessID();
+	int IPTFound = IPTHit(pid,vpn);
    
-	int IPTFound = IPTHit(ppn,vpn);
+	//int IPTFound = IPTHit(ppn,vpn);
 	if(IPTFound == -1){
 		//Not in IPT
 		IPTFound = IPT_Update(vpn);
@@ -593,6 +637,7 @@ void PageFault_Handler(unsigned int va)
 #endif
 	interrupt->SetLevel(old);
 	//Release the memory lock
+   physMemoryLock->Release();
 
 }
 
@@ -625,11 +670,24 @@ int getPhysAddr(int vpn)
 //		  IPT Hit False: -1
 int IPTHit(int pid,int vpn)
 {
+#ifdef IPT_DEBUG
+   //printf("[IPTHit] Start search IPT which pid %d vpn %d\n",pid,vpn);
+#endif
 	for(int i = 0; i < NumPhysPages; i++)
 	{
+      //printf("[IPTHit] Search IPT slot %d while valid is [%s]\n",
+      //   i,IPTable[i].valid ? "True":"False");
+         
+
 		if(IPTable[i].valid == TRUE)
 		{
+         //printf("[IPTHit] IPT slot %d is valid, pid %d vpn %d\n",
+         //   i,IPTable[i].pid,IPTable[i].vpn);
 			if(IPTable[i].pid == pid && IPTable[i].vpn == vpn){
+#ifdef IPT_DEBUG
+     //       printf("[IPTHit] = IPT Hit! =Found ipt pid %d vpn %d in IPTslot %d\n"
+     //             ,pid,vpn,i);
+#endif
 				return i;
 			}
 		}
@@ -651,35 +709,43 @@ int IPT_Update(int vpn)
 	int ipt_slot = getIPT_Slot();
 	int tlb_slot; 
 	if(IPTable[ipt_slot].valid){
+#ifdef IPT_DEBUG_UPDATE
+      printf("[IPT_UPDATE]This slot %d have data in it\n");
+#endif
 		tlb_slot = getTLB_Slot(ipt_slot);
 		if(tlb_slot != -1){
 			IPTable[ipt_slot].dirty = machine->tlb[tlb_slot].dirty;
 			machine->tlb[tlb_slot].valid = FALSE;
 		}
 		if(IPTable[ipt_slot].dirty){
-			IPTSwapToFile(ipt_slot);
+			IPTSwapToFile(ipt_slot,vpn);
 		}
-		IPTSwapToMemory(ipt_slot,vpn);
 	}
+   IPTSwapToMemory(ipt_slot,vpn);
 	updateIPTEntry(ipt_slot,vpn);			
 	return ipt_slot;
 }
 void updateIPTEntry(int ipt_slot,int vpn)
 {
+#ifdef IPT_DEBUG_UPDATE
+   printf("[updateIPTEntry]Start ipt_slot %d vpn %d\n",ipt_slot,vpn);
+#endif
 //	VmTranslationEntry* pt = currentThread->space->getPageTable();
 //	int ppn = pt[ipt_slot].physicalPage;
-	IPTable[ipt_slot].pid = getPhysAddr(vpn);
-   //currentThread->space->getProcessID();
+	//IPTable[ipt_slot].pid = getPhysAddr(vpn);
+	IPTable[ipt_slot].pid = currentThread->space->getProcessID();
 	IPTable[ipt_slot].vpn= vpn; 
 	IPTable[ipt_slot].space = currentThread->space;
 	IPTable[ipt_slot].use = TRUE;
 	IPTable[ipt_slot].valid = TRUE;
 	IPTable[ipt_slot].readOnly = FALSE;
+#ifdef IPT_DEBUG_UPDATE
    printf("[updateIPTEntry] ipt_slot %d \n",ipt_slot);
    printf("[updateIPTEntry] pid %d vpn %d \n",IPTable[ipt_slot].pid,
          IPTable[ipt_slot].vpn);
+#endif
 }
-int getIPT_Slot(void)
+int getIPT_Slot()
 {
 	int ipt_slot = getFreeIPTSlot();
 	if(ipt_slot == -1)//no free slot in IPT,need evict some thing
@@ -710,8 +776,11 @@ int getIPT_Slot(void)
 //Post: 
 //Return: IPT Have Free Spot: free spot number 
 //		  IPT No Free Spot: -1
-int getFreeIPTSlot(void)
+int getFreeIPTSlot()
 {
+   //Try to match the same phys addr in ipt first
+   //if(IPTable[ppn].valid == FALSE)
+   //   return ppn;
 	for(int i = 0; i< NumPhysPages; i++){
 		if(IPTable[i].valid == FALSE)
 			return i;
@@ -735,9 +804,15 @@ int getNextEvictIPTSlot(void)
 //Post: save swap address to the PageTable Entry 
 //		change the location to the PageTable Entry
 //Return: None
-void IPTSwapToFile(int ipt_slot)
+void IPTSwapToFile(int ipt_slot,int vpn)
 {
+#ifdef IPT_DEBUG_SWAP_OUT
+   printf("[IPTSwapToFile]Start ipt_slot %d\n",ipt_slot);
+   printf("[IPTSwapToFile]vpn %d IPTable[%d].vpn %d\n",
+      vpn,ipt_slot,IPTable[ipt_slot].vpn);
+#endif
 	VmTranslationEntry* pt = (IPTable[ipt_slot].space)->getPageTable();
+
 	int swapAddr = (IPTable[ipt_slot].space)->toSwap(ipt_slot);
 	pt[IPTable[ipt_slot].vpn].location = SWAP;
 	pt[IPTable[ipt_slot].vpn].swapAddr = swapAddr;
@@ -751,13 +826,26 @@ void IPTSwapToFile(int ipt_slot)
 //Return: None
 void IPTSwapToMemory(int ipt_slot,int vpn)
 {
+#ifdef IPT_DEBUG_SWAP_IN
+//   printf("[IPTSwapToMemory] Start! ipt_slot %d vpn %d\n",ipt_slot,vpn);
+#endif
 	VmTranslationEntry* pt = currentThread->space->getPageTable();
 	switch(pt[vpn].location){
 		case EXEC:
+			IPTable[ipt_slot].vpn= vpn;
+#ifdef IPT_DEBUG_SWAP_IN
+   printf("[IPTSwapToMemory] Bring in Page[vpn %d] from execfile,IPTable[%d]\n" ,
+   vpn,ipt_slot,IPTable[ipt_slot].vpn);
+#endif
 			currentThread->space->readExec(ipt_slot,vpn);
+         pt[vpn].physicalPage = ipt_slot;//vpn;
+         //pt[vpn].physicalPage;
 			IPTable[ipt_slot].dirty = FALSE;
 			break;
 		case SWAP:
+#ifdef IPT_DEBUG_SWAP_IN
+   printf("[IPTSwapToMemory] Page[vpn %d] is in SWAP, ipt_slot %d\n" ,vpn,ipt_slot);
+#endif
 			swapfile->ReadAt(
 			&(machine->mainMemory[ipt_slot*PageSize]),
 			PageSize,
@@ -792,7 +880,14 @@ int getTLB_Slot(int ipt_slot){
 			for(int i = 0;i < TLBSize ; i++)
 				if(machine->tlb[i].valid == TRUE)
 					if(machine->tlb[i].virtualPage == c.vpn)
+               {
+               
+#ifdef TLB_DEBUG
+                  printf("[getTLB_Slot] Found TLB %d matach IPT %d\n",
+                  i,ipt_slot);
+#endif
 						return i;
+               }   
 	return -1;
 }
 
@@ -813,22 +908,32 @@ int getTLB_Slot(int ipt_slot){
 #ifdef HAVE_IPT
 void TLB_Update(int ppn)
 {
-   //printf("[TLB_Update]Using IPT ,ppn %d\n",ppn);
    
+#ifdef TLB_DEBUG
+   printf("[TLB_Update]Start Using IPT ,ppn %d\n",ppn);
+#endif
 	bool dirty;
 	int tlb_slot = getTLBSlot(&dirty);
 	if(dirty)
 		propagateToIPT(tlb_slot);
 	updateTLBEntry(tlb_slot,ppn);	
+#ifdef TLB_DEBUG
+   printf("[TLB_Update]Using IPT ,ppn %d,tlb_slot %d\n",ppn,tlb_slot);
+#endif
 }
 #endif
 //---------------- TLB Update no IPT----------------------
 void TLB_Update(int ppn,int vpn)
 {
-   //printf("[TLB_Update]No IPT,ppn %d,vpn %d\n",ppn,vpn);
+#ifdef TLB_DEBUG
+   printf("[TLB_Update]Start No IPT,ppn %d,vpn %d\n",ppn,vpn);
+#endif
 	bool dirty;
 	int tlb_slot = getTLBSlot(&dirty);
 	updateTLBEntry(tlb_slot,ppn,vpn);	
+#ifdef TLB_DEBUG
+   printf("[TLB_Update]No IPT ,ppn %d,vpn %d,tlb_slot %d\n",ppn,vpn,tlb_slot);
+#endif
 }
 //---------------- Update TLB Entry-----------------------
 //Calling by the TLB Update
@@ -854,30 +959,56 @@ void TLB_Update(int ppn,int vpn)
 //	[None]
 void updateTLBEntry(int tlb_slot,int ppn,int vpn)
 {
-   //printf("[updateTLBEntry]No IPT,slot %d,ppn %d,vpn %d\n",tlb_slot,ppn,vpn);
+#ifdef TLB_DEBUG
+   printf("[updateTLBEntry]Start No IPT,slot %d,ppn %d,vpn %d\n",tlb_slot,ppn,vpn);
+#endif
 	machine->tlb[tlb_slot].virtualPage = vpn;
 	machine->tlb[tlb_slot].physicalPage = ppn;
 	machine->tlb[tlb_slot].use = TRUE;
 	machine->tlb[tlb_slot].valid = TRUE;
 	machine->tlb[tlb_slot].dirty = FALSE;
 	machine->tlb[tlb_slot].readOnly;
+#ifdef TLB_DEBUG
+   printf("[updateTLBEntry]tlb[%d] vp %d,pp %d,use %s,valid %s,dirty %s\n",
+   tlb_slot,
+	machine->tlb[tlb_slot].virtualPage, 
+	machine->tlb[tlb_slot].physicalPage,
+	machine->tlb[tlb_slot].use ? "True" :"False", 
+	machine->tlb[tlb_slot].valid? "True" :"False",   
+	machine->tlb[tlb_slot].dirty? "True" :"False"  
+   );
+#endif
 }
 #ifdef HAVE_IPT
 void updateTLBEntry(int tlb_slot,int ppn)
 {
-   //printf("[updateTLBEntry]With IPT,slot %d,ppn %d,vpn %d\n",tlb_slot,ppn,IPTable[ppn].vpn);
+#ifdef TLB_DEBUG
+   printf("[updateTLBEntry]With IPT,slot %d,ppn %d,vpn %d\n",tlb_slot,ppn,IPTable[ppn].vpn);
+#endif
 	machine->tlb[tlb_slot].virtualPage = IPTable[ppn].vpn;
 	machine->tlb[tlb_slot].physicalPage = ppn;
 	machine->tlb[tlb_slot].use = TRUE;
 	machine->tlb[tlb_slot].valid = TRUE;
 	machine->tlb[tlb_slot].dirty = IPTable[ppn].dirty;
 	machine->tlb[tlb_slot].readOnly;
+#ifdef TLB_DEBUG
+   printf("[updateTLBEntry]tlb[%d] vp %d,pp %d,use %s,valid %s,dirty %s\n",
+   tlb_slot,
+	machine->tlb[tlb_slot].virtualPage, 
+	machine->tlb[tlb_slot].physicalPage,
+	machine->tlb[tlb_slot].use ? "True" :"False", 
+	machine->tlb[tlb_slot].valid? "True" :"False",   
+	machine->tlb[tlb_slot].dirty? "True" :"False"  
+   );
+#endif
 }
 void propagateToIPT(int tlb_slot)
 {
 	int pp = machine->tlb[tlb_slot].physicalPage;
 	int vp = machine->tlb[tlb_slot].virtualPage;
+	//int cpid = getPhysAddr(vp);//currentThread->space->getProcessID();
 	int cpid = currentThread->space->getProcessID();
+   //printf("[ppgToIPT] cpid %d ,IPTable[pp %d].pid = %d\n",cpid,pp,IPTable[pp].pid);
 	if(IPTable[pp].pid == cpid && IPTable[pp].vpn == vp)
 	{
 		IPTable[pp].dirty = machine->tlb[tlb_slot].dirty;
@@ -923,11 +1054,6 @@ int getFreeTLBSlot(void)
 void ExceptionHandler(ExceptionType which) {
 	int type = machine->ReadRegister(2); // Which syscall?
 	int rv=0; 	// the return value from a syscall
-	bool reading;
-	int tempo;
-	int vaddress;
-	char name[20];
-	int i;
 
 	if ( which == SyscallException ) 
 	{
@@ -1009,23 +1135,9 @@ void ExceptionHandler(ExceptionType which) {
 				break;
 
 			case SC_Exec:
+				//printf("Exec syscall.\n");
 				DEBUG('a', "Exec syscall.\n");
-
-				i=0;
-				reading = machine->ReadMem(machine->ReadRegister(4), 1, &tempo);
-				vaddress = machine->ReadRegister(4);
-				while(reading && !(tempo==0))
-				{
-					name[i] = tempo;
-					vaddress++;
-					reading = machine->ReadMem(vaddress, 1, &tempo);
-					i++;
-				}
-				if(!reading)
-					rv=-1;
-				else
-					rv =  Exec_Syscall(name);
-
+					rv =  Exec_Syscall(machine->ReadRegister(4));
 				break;
 
 			case SC_Exit:
