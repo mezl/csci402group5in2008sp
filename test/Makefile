@@ -34,7 +34,7 @@ INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 CCFLAGS =  -G 0 -c $(INCDIR)
 
-all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond test_exit 
+all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond test_exit test_matmult 
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -115,7 +115,14 @@ test_exit: test_exit.o start.o
 	$(LD) $(LDFLAGS) start.o test_exit.o -o test_exit.coff
 	../bin/coff2noff test_exit.coff test_exit
 
+test_matmult.o: test_matmult.c
+	$(CC2C) test_matmult.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o test_matmult.o
+	rm -f tmp.c
+test_matmult: test_matmult.o start.o
+	$(LD) $(LDFLAGS) start.o test_matmult.o -o test_matmult.coff
+	../bin/coff2noff test_matmult.coff test_matmult
 clean:
-	rm -f test_exit 
+	rm -f test_exit test_matmult 
 	rm -f *.o *.coff
 	rm -f multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond 
