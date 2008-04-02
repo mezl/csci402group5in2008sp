@@ -544,20 +544,18 @@ void Exit_Syscall(int status)
 	
 	if(check == -1)
 	{
-		printf("Can't exit current thread\n");
+	//	printf("Can't exit current thread\n");
 	}
 	if(check == 1 || check == 2)
 		currentThread->space->~AddrSpace();
 	if(check == 2){//if it's last thread and last process
 		interrupt->Halt();
    }
-	if(check == 0)
+	if(check == 0 || status == 0)
 		currentThread->Finish();
-	if(status == 0)
-		currentThread->Finish();
-	else
-		printf("Cannot exit current thread\n");
-
+	else{
+//		printf("Cannot exit current thread\n");
+   }
 }
 #endif
 
