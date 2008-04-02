@@ -60,6 +60,9 @@ extern void ThreadTest(void), Copy(char *unixFile, char *nachosFile);
 extern void Print(char *file), PerformanceTest(void);
 extern void StartProcess(char *file), ConsoleTest(char *in, char *out);
 extern void MailTest(int networkID);
+extern void ServerTest(void);
+
+
 #ifdef THREADS
 extern void Problem2(void), TestSuite(void);
 #endif
@@ -159,6 +162,12 @@ main(int argc, char **argv)
             MailTest(atoi(*(argv + 1)));
             argCount = 2;
         }
+		
+		else if(!strcmp(*argv, "-s")) 
+		{
+            ServerTest();
+       }
+
 #endif // NETWORK
     }
 

@@ -17,7 +17,7 @@
 #include "timer.h"
 
 #ifndef PROJ3
-#define PROJ3
+//#define PROJ3
 #endif
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,

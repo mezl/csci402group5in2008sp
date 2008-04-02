@@ -59,6 +59,10 @@ inline void printx(int i) {
     char *s = itoa(i,16);
     Write(s,itsStrlen(s),ConsoleOutput);
 }
+inline void printi(int i) {
+    char *s = itoa(i,10);
+    Write(s,itsStrlen(s),ConsoleOutput);
+}
 inline void printn() {
     Write("\n",1,ConsoleOutput);
 }

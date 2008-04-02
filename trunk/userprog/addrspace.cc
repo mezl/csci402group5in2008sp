@@ -26,7 +26,7 @@
 #define PROJ2
 #endif
 #ifndef PROJ3
-#define PROJ3
+//#define PROJ3
 #endif
 //#define PRE_LOAD
 extern "C" { int bzero(char *, int); };
@@ -316,8 +316,13 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 #endif
 
 #ifdef PROJ3
+<<<<<<< .mine
+	numPages = stackPageNum + execPageNum;
+	printf("[Sys_AddressSpace] Thread: num of page :%d\n,num of stack page:%d\n,num of exec page:%d",numPages,stackPageNum,execPageNum);
+=======
 	itsNumPages = stackPageNum + execPageNum;
 	printf("[Sys_AddressSpace] Thread: num of page :%d\n[Sys_AddressSpace]num of stack page:%d\n[Sys_AddressSpace]num of exec page:%d\n",itsNumPages,stackPageNum,execPageNum);
+>>>>>>> .r537
 #else
     itsNumPages = divRoundUp(size, PageSize) + divRoundUp(UserStackSize,PageSize);
 #endif

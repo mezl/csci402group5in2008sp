@@ -26,7 +26,7 @@
 #define PROJ2
 #endif
 #ifndef PROJ3
-#define PROJ3
+//#define PROJ3
 #endif
 
 #ifdef PROJ3

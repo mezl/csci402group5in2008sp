@@ -65,42 +65,44 @@ void func2(){
 int main()
 {
 
-  println("[main]Main! start");
-  println("[main]Start test");
+  println("[CLIENT]Main! start");
+  println("[CLIENT]Start test");
   lock1 = CreateLock();
-  print("[main]lock1 id is ");
+  print("[CLIENT]lock1 id is ");
+	printi(lock1);
   //printf("%d",lock1);
   printn();
   lock2 = CreateLock();
-  print("[main]lock2 id is ");
+  print("[CLIENT]lock2 id is ");
+	printi(lock2);
   //printf("%d",lock2);
   printn();
-  println("[main]Start test");
+  println("[CLIENT]Start test");
   cond1 = CreateCondition();
   cond2 = CreateCondition();
   cond3 = CreateCondition();
 
-  println("[main]Create All Lock & Cond");
+  println("[CLIENT]Create All Lock & Cond");
   Acquire(lock1);
-  println("[main]func1 forked by main");
+  println("[CLIENT]func1 forked by main");
   Fork(func1);
-  println("[main]main waits on cond1 with lock1");
+  println("[CLIENT]main waits on cond1 with lock1");
   Wait(lock1,cond1);
-  println("[main]Main releaseing lock1");
+  println("[CLIENT]Main releaseing lock1");
 /*  Release(lock1);*/
 
-  println("[main]Main acquiring lock1");
+  println("[CLIENT]Main acquiring lock1");
 /*  Acquire(lock1);*/
-  println("[main]func2 will fork by main");
+  println("[CLIENT]func2 will fork by main");
   Fork(func2);
-  println("[main]func2 forked by main,now wait from func2");
+  println("[CLIENT]func2 forked by main,now wait from func2");
   Wait(lock1,cond2);
-  println("[main]main wake up on cond2 with lock1");
-  println("[main]Main releaseing lock1");
+  println("[CLIENT]main wake up on cond2 with lock1");
+  println("[CLIENT]Main releaseing lock1");
 
   Acquire(lock2);
   Release(lock1);
-  println("[main]Main released lock1");
+  println("[CLIENT]Main released lock1");
 
 
   println("main broadcasts on cond3 with lock2\n");
@@ -111,7 +113,7 @@ int main()
   Release(lock2);
 
 /*
-  println("[main]main waits on cond1 with lock1\n");
+  println("[CLIENT]main waits on cond1 with lock1\n");
   
   Wait(lock1,cond1);
   Release(lock1);
@@ -119,7 +121,7 @@ int main()
 */
 
 
-  println("[main]main exits\n");
+  println("[CLIENT]main exits\n");
 
 
   DestroyLock(lock1);
