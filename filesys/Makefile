@@ -1889,7 +1889,8 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/limits \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/typeinfo \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/istream \
-  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/istream.tcc
+  /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/istream.tcc \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
   ../threads/system.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \

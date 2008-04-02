@@ -143,14 +143,14 @@ void Yield();
 /*---------------------- PROJECT 2 (part 1) ---------------------*/
 
 /* system calls for locks */
-int CreateLock();
+int CreateLock(char*);
 void DestroyLock(int);
 void Acquire(int);
 void Release(int);
 
 
 /* system calls for conditions */
-int CreateCondition();
+int CreateCondition(char*);
 void DestroyCondition(int);
 void Signal(int, int);
 void Wait(int, int);

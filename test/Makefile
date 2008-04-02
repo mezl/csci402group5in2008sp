@@ -34,7 +34,11 @@ INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 CCFLAGS =  -G 0 -c $(INCDIR)
 
+<<<<<<< .mine
+all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond simplelock testCond1 testCond2
+=======
 all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond test_exit test_matmult 
+>>>>>>> .r537
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -76,6 +80,27 @@ lockcond.o: lockcond.c
 lockcond: lockcond.o start.o
 	$(LD) $(LDFLAGS) start.o lockcond.o -o lockcond.coff
 	../bin/coff2noff lockcond.coff lockcond
+simplelock.o: simplelock.c
+	$(CC2C) simplelock.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o simplelock.o
+	rm -f tmp.c
+simplelock: simplelock.o start.o
+	$(LD) $(LDFLAGS) start.o simplelock.o -o simplelock.coff
+	../bin/coff2noff simplelock.coff simplelock
+testCond1.o: testCond1.c
+	$(CC2C) testCond1.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o testCond1.o
+	rm -f tmp.c
+testCond1: testCond1.o start.o
+	$(LD) $(LDFLAGS) start.o testCond1.o -o testCond1.coff
+	../bin/coff2noff testCond1.coff testCond1
+testCond2.o: testCond2.c
+	$(CC2C) testCond2.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o testCond2.o
+	rm -f tmp.c
+testCond2: testCond2.o start.o
+	$(LD) $(LDFLAGS) start.o testCond2.o -o testCond2.coff
+	../bin/coff2noff testCond2.coff testCond2
 office.o: office.c
 	$(CC2C) office.c > tmp.c
 	$(CC) $(CFLAGS) -c tmp.c -o office.o
@@ -125,4 +150,4 @@ test_matmult: test_matmult.o start.o
 clean:
 	rm -f test_exit test_matmult 
 	rm -f *.o *.coff
-	rm -f multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond 
+	rm -f multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond simplelock testCond1 testCond2

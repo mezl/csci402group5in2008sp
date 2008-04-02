@@ -26,8 +26,9 @@
 #include "syscall.h"
 #include <stdio.h>
 #include <iostream>
-#include "../threads/synch.h"
-
+#include "../network/post.h"
+#include "network.h"
+#include <stdlib.h>
 using namespace std;
 
 int copyin(unsigned int vaddr, int len, char *buf) {
@@ -267,10 +268,70 @@ void Close_Syscall(int fd) {
 // -------------- PROJECT 2 (part 1) ---------------------
 // -------------------------------------------------------
 
+#ifdef NETWORK
+class PacketHeader;
+class MailHeader;
+PacketHeader outPktHdr, inPktHdr;
+MailHeader outMailHdr, inMailHdr;
+char buffer[15];
+bool success;
+char outMessage[15];
+char inMessage[15];
+char tempMessage[15];
 
-#ifdef USER_PROGRAM
-int CreateLock_Syscall()
+void ClearArray(char name[15])
 {
+	for(int i=0; i<15; i++)
+		name[i] = ' ';
+}
+void ClientSendReceiveRequest()
+{
+	outPktHdr.to = 0; //send to machine 0, which is the server
+	outMailHdr.to = 0;
+	outMailHdr.from = 1;
+	outMailHdr.length = strlen(outMessage)+1;
+	success = postOffice->Send(outPktHdr, outMailHdr, outMessage);
+	printf("[CLIENT]Sending a packet of \"%s\" to %d, box %d\n", outMessage, outPktHdr.to, outMailHdr.to);
+	
+	
+	if(!success)
+	{
+		printf("[CLIENT]Send failed. Probably don't have server running. Terminating Nachos\n");
+		interrupt->Halt();
+	}
+
+	printf("[CLIENT]Client waiting for response...\n");
+	postOffice->Receive(1, &inPktHdr, &inMailHdr, buffer);
+	strcpy(inMessage, buffer);
+	printf("[CLIENT]Client got \"%s\" from %d, box %d\n", inMessage, inPktHdr.from,inMailHdr.from);
+	fflush(stdout);
+}
+#endif
+
+//#ifdef USER_PROGRAM
+int CreateLock_Syscall(char* lockName)
+{
+#ifdef NETWORK
+	int lockID;
+	char temp[15];
+	ClearArray(temp);
+	char tempName[15];
+	
+	sscanf(lockName, "%s", tempName);
+	ClearArray(outMessage);
+	sprintf(outMessage, "LC %s\0", tempName);
+	ClientSendReceiveRequest(); //send the RPC and gather the response
+
+	sscanf(inMessage, "%s %d", temp, &lockID);
+	if(strcmp(temp, "LCS") != 0)
+	{
+		printf("[CLIENT]Creating a Lock %s failed\n", tempName);
+		return -1;
+	}
+	printf("[CLIENT]Creating a Lock %s successful\n", tempName, lockID);
+	return lockID;
+
+#else
 	// create a new lock
 	Lock* myLock = new Lock("New Lock");
 	
@@ -288,10 +349,24 @@ int CreateLock_Syscall()
 	// printf("[exception] returning lock %d \n", id);
 	// return lock index
 	return id;
+#endif
 }
 
 void DestroyLock_Syscall(int id)
 {
+#ifdef NETWORK
+	
+	ClearArray(outMessage);
+	sprintf(outMessage, "LD %d\0", id);
+	ClientSendReceiveRequest(); // send request and gather response
+	if(strcmp(inMessage, "LDS") != 0)  // destroy lock failed
+	{
+		printf("[CLIENT]Lock %d fail to be destroyed\n", id);
+		return;
+	}
+	printf("[CLIENT]Lock successfully destroyed \n");
+
+#else
 	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1)
 	{
 		Lock* myLock = (Lock*)lockTable.Remove(id);
@@ -304,12 +379,28 @@ void DestroyLock_Syscall(int id)
 	}
 	else
 		;//printf("Unable to destroy Lock because not last child thread \n");
-	
+#endif
 }
 
 void Acquire_Syscall(int id)
 {
+
+#ifdef NETWORK
+	
+	ClearArray(outMessage);
+	sprintf(outMessage, "LA %d\0", id);
+	ClientSendReceiveRequest();
+	while(strcmp(inMessage, "LAF") == 0) //acquire again until the request success (go into busy waiting)
+	{
+		printf("[CLIENT]Lock fail to be acquired, requesting service again \n");
+		ClientSendReceiveRequest();
+	}
+	printf("[CLIENT]Lock successfully acquired \n");
+
+#else
+
    printf("====Start Acquire_Sycall====\n");
+
 	Lock* myLock = (Lock*)lockTable.Get(id);
 
 	if(myLock == NULL)
@@ -319,24 +410,63 @@ void Acquire_Syscall(int id)
 	}
 	else{
 		myLock -> Acquire();}
+#endif
 }
 
 void Release_Syscall(int id)
 {
+
+#ifdef NETWORK
+	
+	ClearArray(outMessage);
+	sprintf(outMessage, "LR %d\0", id);
+	ClientSendReceiveRequest();
+	if(strcmp(inMessage, "LRS") != 0)
+	{
+		printf("Lock %d fail to be released \n", id);
+		return;
+	}
+	printf("[CLIENT]Lock %d successfully released \n", id);
+
+#else
+
    printf("====Start Release_Syscall====\n");
+
 	Lock* myLock = (Lock*)lockTable.Get(id);
 
 	if(myLock == NULL)
 	{
-		printf("Failure Releasing a lock of index %d \n", id);
+		printf("Failure Releasing a lock %d \n", id);
 		return;
 	}
 	else{
 		myLock -> Release();}
+#endif
 }
 
-int CreateCondition_Syscall()
+int CreateCondition_Syscall(char* condName)
 {
+#ifdef NETWORK
+	
+	int condID;
+	char temp[15];
+	ClearArray(temp);
+	char tempName[15];
+	
+	sscanf(condName, "%s", tempName);
+	ClearArray(outMessage);
+	sprintf(outMessage, "CC %s\0", tempName);
+	ClientSendReceiveRequest();
+
+	sscanf(inMessage, "%s %d", temp, &condID);
+	if(strcmp(temp, "CCS") != 0)
+	{
+		printf("[CLIENT]Creating a Condition %s failed\n", tempName);
+		return -1;
+	}
+	printf("[CLIENT]Creating a condition %s successful\n", tempName, condID);
+	return condID;
+#else
 	Condition* myCondition = new Condition("New Condition");
 	int id = conditionTable.Put(myCondition);
 
@@ -346,10 +476,24 @@ int CreateCondition_Syscall()
 		delete myCondition;
 	}
 	return id;
+#endif
 }
 
 void DestroyCondition_Syscall(int id)
 {	
+#ifdef NETWORK
+	
+	ClearArray(outMessage);
+	sprintf(outMessage, "CD %d\0", id);
+	ClientSendReceiveRequest();
+	if(strncmp(inMessage, "CDS", 6) != 0)
+	{
+		printf("[CLIENT]Condition %d fail to be destroyed\n", id);
+		return;
+	}
+	printf("Condition successfully destroyed \n");
+
+#else
 	if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1)
 	{
 		Condition* myCondition = (Condition*)conditionTable.Remove(id);
@@ -363,11 +507,28 @@ void DestroyCondition_Syscall(int id)
 	else
 		;//printf("Unable to destroy Condition because not last child thread \n");
 	
+#endif
 }
 
 void Signal_Syscall(int lockID, int conditionID)
 {
+
+#ifdef NETWORK
+	
+	ClearArray(outMessage);
+	sprintf(outMessage, "CS %d %d\0", lockID, conditionID);
+	ClientSendReceiveRequest();
+	if(strcmp(inMessage, "CSS") != 0)
+	{
+		printf("[CLIENT]Condition %d fail to be signaled\n", conditionID);
+		return;
+	}
+	printf("[CLIENT]Condition %d successfully signaled \n", conditionID);
+
+#else
+
    printf("====Start Signal_Sycall====\n");
+
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
 
@@ -383,11 +544,42 @@ void Signal_Syscall(int lockID, int conditionID)
 	}
 	
 	myCondition -> Signal(myLock);
+#endif
 }
 
 void Wait_Syscall(int lockID, int conditionID)
 {
+
+#ifdef NETWORK
+	
+	ClearArray(outMessage);
+	sprintf(outMessage, "CW %d %d\0", lockID, conditionID);
+	ClientSendReceiveRequest();
+	if(strcmp(inMessage, "CWF") == 0)
+	{
+		printf("[CLIENT]Condition %d fail to be waited\n", conditionID);
+		return;
+	}
+	printf("[CLIENT]Condition %d successfully waited \n", conditionID);
+	printf("[CLIENT]Client now goes into sleep.. \n");
+
+	while(true)
+	{
+		postOffice->Receive(1, &inPktHdr, &inMailHdr, buffer);
+		strcpy(inMessage, buffer);
+		printf("[CLIENT]Client got \"%s\" from %d, box %d\n", inMessage, inPktHdr.from, inMailHdr.from);
+		fflush(stdout);
+		if(strcmp(inMessage, "UP") == 0)
+		{
+			printf("[CLIENT]Client has been waken up! \n");
+			return;
+		}
+	}
+
+#else
+
    printf("====Start Wait_Sycall====\n");
+
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
 
@@ -403,11 +595,33 @@ void Wait_Syscall(int lockID, int conditionID)
 	}
 	
 	myCondition -> Wait(myLock);
+#endif
 }
 
 void Broadcast_Syscall(int lockID, int conditionID)
 {
+
+#ifdef NETWORK
+	
+	ClearArray(outMessage);
+	sprintf(outMessage, "%s", "CB ");
+	sprintf(tempMessage, "%d", lockID);
+	strcat(outMessage, tempMessage);
+	sprintf(tempMessage, "%d", conditionID);
+	strcat(outMessage, ".");
+	strcat(outMessage, tempMessage);
+	ClientSendReceiveRequest();
+	while(strncmp(inMessage, "CBS", 6) != 0)
+	{
+		printf("Condition fail to be broadcasted, requesting service again \n");
+		ClientSendReceiveRequest();
+	}
+	printf("Condition successfully broadcasted \n");
+
+#else
+
    printf("====Start BroadCast_Sycall====\n");
+
 	Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
 	Lock* myLock = (Lock*)lockTable.Get(lockID);
 
@@ -423,15 +637,16 @@ void Broadcast_Syscall(int lockID, int conditionID)
 	}
 	
 	myCondition -> Broadcast(myLock);
+#endif
 }
 
-#endif
+//#endif
 
 // ----------------------------------------------------
 // --------------- PROJECT 2 PART 2 -------------------
 // ----------------------------------------------------
 
-#ifdef USER_PROGRAM
+//#ifdef USER_PROGRAM
 
 void exec_thread()
 {
@@ -557,7 +772,7 @@ void Exit_Syscall(int status)
 		printf("Cannot exit current thread\n");
    }
 }
-#endif
+//#endif
 
 #ifdef PROJ3
 #define HAVE_IPT
@@ -637,7 +852,19 @@ void PageFault_Handler(unsigned int va)
 	//Release the memory lock
    physMemoryLock->Release();
 
+
+void ExceptionHandler(ExceptionType which) {
+    int type = machine->ReadRegister(2); // Which syscall?
+    int rv=0; 	// the return value from a syscall
+	bool reading;
+	int tempo;
+	int vaddress;
+	char name[15];
+	int i;
+
 }
+
+	char tempChar;
 
 int getPhysAddr(int vpn)
 {
@@ -651,10 +878,83 @@ int getPhysAddr(int vpn)
       
 }
 
+<<<<<<< .mine
+		// Project 2 part 1 addition
+#ifdef USER_PROGRAM
+		case SC_CreateLock:
+		DEBUG('a', "CreateLock syscall.\n");
+		for(i=0; i<15; i++)
+			name[i] = ' ';
+		i=0;
+		vaddress = machine->ReadRegister(4);
+		reading = machine->ReadMem(vaddress, 1, &tempo);
+		while(reading && tempo != 0)
+		{	
+			//strncat(name, (char*)tempo, 1);
+			name[i] = tempo;
+			vaddress++;
+			i++;
+			reading = machine->ReadMem(vaddress, 1, &tempo);
+		}
+		rv =  CreateLock_Syscall(name);
+		break;
+		case SC_DestroyLock:
+		DEBUG('a', "DestroyLock syscall.\n");
+		DestroyLock_Syscall(machine->ReadRegister(4));
+		break;
+		case SC_Acquire:
+		DEBUG('a', "Acquire syscall.\n");
+		Acquire_Syscall(machine->ReadRegister(4));
+		break;
+		case SC_Release:
+		DEBUG('a', "Release syscall.\n");
+		Release_Syscall(machine->ReadRegister(4));
+		break;
+		case SC_CreateCondition:
+		DEBUG('a', "CreateCondition syscall.\n");
+		for(i=0; i<15; i++)
+			name[i] = ' ';
+		i=0;
+		vaddress = machine->ReadRegister(4);
+		reading = machine->ReadMem(vaddress, 1, &tempo);
+		while(reading && tempo != 0)
+		{	
+			//strncat(name, (char*)tempo, 1);
+			name[i] = tempo;
+			vaddress++;
+			i++;
+			reading = machine->ReadMem(vaddress, 1, &tempo);
+		}
+		rv =  CreateCondition_Syscall(name);
+		break;
+		case SC_DestroyCondition:
+		DEBUG('a', "DestroyCondition syscall.\n");
+		DestroyCondition_Syscall(machine->ReadRegister(4));
+		break;
+		case SC_Signal:
+		DEBUG('a', "Signal syscall.\n");
+		Signal_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+		break;
+		case SC_Wait:
+		DEBUG('a', "Wait syscall.\n");
+		Wait_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+		break;
+		case SC_Broadcast:
+		DEBUG('a', "Broadcast syscall.\n");
+		Broadcast_Syscall(machine->ReadRegister(4), machine->ReadRegister(5));
+		break;
+		
+		// Project 2 part 2 addition
+		case SC_Fork:
+		DEBUG('a', "Fork syscall.\n");
+		Fork_Syscall(machine->ReadRegister(4));
+		break;
+=======
 #ifdef HAVE_IPT
 //-----------------------------------------------------
 //---------------- IPT Function------------------------
 //-----------------------------------------------------
+>>>>>>> .r537
 
 //---------------- IPT Hit-----------------------------
 //Check the address is in IPT or not
