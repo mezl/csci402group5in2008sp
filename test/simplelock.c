@@ -3,9 +3,9 @@ test lock and condition RPC
 */
 
 
+#define NETWORK
 #include "syscall.h"
 #include "string.h"
-
 
 void TestLockOnly()
 {

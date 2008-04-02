@@ -23,11 +23,6 @@ Timer *timer;				// the hardware timer device,
 //--------------- Project 3 (part 1) ------------------
 //-------------------- Project 3 (part 1) -------------------
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
-#ifndef PROJ3
-//#define PROJ3
-#endif
-#endif
-#ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 #ifdef PROJ3 
 IPTEntry *IPTable;
 IPT_Replace_Algorithm ipt_replace_algorithm; 

@@ -119,6 +119,7 @@ main(int argc, char **argv)
 			interrupt->Halt();		// once we start the console, then 
 			// Nachos will loop forever waiting 
 			// for console input
+#ifdef PROJ3         
 		} else if (!strcmp(*argv, "-P")) {      // test the console
          if(argc <=1)printf("Please Enter algorithm\n");
 			ASSERT(argc > 1);
@@ -130,6 +131,7 @@ main(int argc, char **argv)
 				printf("Can't find supported algorithm\n");
 				interrupt->Halt();		
 			}
+#endif         
 		}
 #endif // USER_PROGRAM
 #ifdef FILESYS

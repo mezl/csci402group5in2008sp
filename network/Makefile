@@ -8,7 +8,7 @@
 # All rights reserved.  See copyright.h for copyright notice and limitation 
 # of liability and disclaimer of warranty provisions.
 
-DEFINES = -DUSER_PROGRAM -DFILESYS_NEEDED -DFILESYS_STUB -DNETWORK
+DEFINES = -DUSER_PROGRAM -DFILESYS_NEEDED -DFILESYS_STUB -DNETWORK -DPROJ3 -DUSE_TLB
 INCPATH = -I../filesys -I../bin -I../userprog -I../threads -I../machine -I../network 
 HFILES = $(THREAD_H) $(USERPROG_H) $(VM_H) $(NETWORK_H)
 CFILES = $(THREAD_C) $(USERPROG_C) $(VM_C) $(NETWORK_C)
@@ -95,8 +95,8 @@ main.o: ../threads/main.cc ../threads/copyright.h ../threads/utility.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 list.o: ../threads/list.cc ../threads/copyright.h ../threads/list.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -191,8 +191,8 @@ scheduler.o: ../threads/scheduler.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/system.h ../machine/interrupt.h ../machine/stats.h \
-  ../machine/timer.h ../network/post.h ../machine/network.h \
-  ../threads/synchlist.h ../threads/synch.h
+  ../machine/timer.h ../threads/synch.h ../network/post.h \
+  ../machine/network.h ../threads/synchlist.h
 synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
   ../threads/thread.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -424,8 +424,8 @@ system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -599,8 +599,8 @@ threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 test_code.o: ../threads/test_code.cc ../threads/copyright.h \
   ../threads/system.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -678,8 +678,8 @@ test_code.o: ../threads/test_code.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
   ../threads/manager.cc ../threads/customer.h ../threads/cline.h \
   ../threads/clerk.h ../threads/ctable.h ../threads/appclerk.cc \
   ../threads/picclerk.cc ../threads/passclerk.cc ../threads/cashclerk.cc
@@ -839,8 +839,8 @@ customer.o: ../threads/customer.cc ../threads/customer.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
   ../threads/cline.h
 ctable.o: ../threads/ctable.cc ../threads/ctable.h ../threads/list.h \
   ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
@@ -1399,8 +1399,8 @@ office.o: ../threads/office.cc ../threads/office.h ../threads/manager.cc \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
   ../threads/cline.h ../threads/clerk.h ../threads/ctable.h
 interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
   ../machine/interrupt.h ../threads/list.h ../threads/utility.h \
@@ -1479,8 +1479,8 @@ interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../machine/stats.h ../machine/timer.h \
-  ../network/post.h ../machine/network.h ../threads/synchlist.h \
-  ../threads/synch.h
+  ../threads/synch.h ../network/post.h ../machine/network.h \
+  ../threads/synchlist.h
 sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
   /usr/include/stdlib.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/stdlib_iso.h \
@@ -1578,8 +1578,8 @@ sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../machine/stats.h ../machine/timer.h \
-  ../network/post.h ../machine/network.h ../threads/synchlist.h \
-  ../threads/synch.h
+  ../threads/synch.h ../network/post.h ../machine/network.h \
+  ../threads/synchlist.h
 stats.o: ../machine/stats.cc ../threads/copyright.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -1674,8 +1674,8 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../network/post.h ../machine/network.h \
-  ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../threads/synch.h ../network/post.h \
+  ../machine/network.h ../threads/synchlist.h
 addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
   ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -1753,8 +1753,8 @@ addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
   ../bin/noff.h
 bitmap.o: ../userprog/bitmap.cc ../threads/copyright.h \
   ../userprog/bitmap.h ../threads/utility.h ../threads/bool.h \
@@ -1852,8 +1852,8 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
   ../userprog/syscall.h /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iostream \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ostream \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ios \
@@ -1974,8 +1974,8 @@ progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h \
   ../machine/console.h
 console.o: ../machine/console.cc ../threads/copyright.h \
   ../machine/console.h ../threads/utility.h ../threads/bool.h \
@@ -2054,8 +2054,8 @@ console.o: ../machine/console.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 machine.o: ../machine/machine.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2133,8 +2133,8 @@ machine.o: ../machine/machine.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2212,8 +2212,8 @@ mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 translate.o: ../machine/translate.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2291,8 +2291,8 @@ translate.o: ../machine/translate.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/system.h ../threads/thread.h ../threads/scheduler.h \
   ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
-  ../machine/timer.h ../network/post.h ../machine/network.h \
-  ../threads/synchlist.h ../threads/synch.h
+  ../machine/timer.h ../threads/synch.h ../network/post.h \
+  ../machine/network.h ../threads/synchlist.h
 nettest.o: ../network/nettest.cc ../threads/copyright.h \
   ../threads/system.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2370,8 +2370,8 @@ nettest.o: ../network/nettest.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 post.o: ../network/post.cc ../threads/copyright.h ../network/post.h \
   ../machine/network.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2526,8 +2526,8 @@ network.o: ../machine/network.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../network/post.h \
-  ../machine/network.h ../threads/synchlist.h ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../network/post.h ../machine/network.h ../threads/synchlist.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above
