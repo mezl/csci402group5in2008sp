@@ -125,7 +125,7 @@ int ProcessTable::RemoveThread(Thread* myThread)
 
 	if (myThread == NULL)
 	{
-		printf("Failure removing non existance thread\n");
+		//printf("Failure removing non existance thread\n");
 		removeSuccessful =  -1;
 	}
 
@@ -154,7 +154,7 @@ int ProcessTable::RemoveThread(Thread* myThread)
 	
 	if(found == 0)
 	{
-		printf("RemoveThread Failure: Thread doesn't exist in process table\n");
+		//printf("RemoveThread Failure: Thread doesn't exist in process table\n");
 		removeSuccessful = -1;
 	}
 
