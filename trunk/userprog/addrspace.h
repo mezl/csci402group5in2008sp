@@ -13,6 +13,7 @@
 #ifndef ADDRSPACE_H
 #define ADDRSPACE_H
 
+//#include "../threads/system.h"
 #include "copyright.h"
 #include "filesys.h"
 #include "table.h"
@@ -24,9 +25,6 @@
 
 #ifndef PROJ2
 #define PROJ2
-#endif
-#ifndef PROJ3
-//#define PROJ3
 #endif
 
 #ifdef PROJ3

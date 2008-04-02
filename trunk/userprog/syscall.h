@@ -143,14 +143,22 @@ void Yield();
 /*---------------------- PROJECT 2 (part 1) ---------------------*/
 
 /* system calls for locks */
-int CreateLock(char*);
+#ifdef NETWORl2K
+int CreateLock(int);
+#else
+int CreateLock();
+#endif
 void DestroyLock(int);
 void Acquire(int);
 void Release(int);
 
 
 /* system calls for conditions */
-int CreateCondition(char*);
+#ifdef NETWORlllK
+int CreateCondition(int);
+#else
+int CreateCondition();
+#endif
 void DestroyCondition(int);
 void Signal(int, int);
 void Wait(int, int);

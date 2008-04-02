@@ -34,11 +34,7 @@ INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 CCFLAGS =  -G 0 -c $(INCDIR)
 
-<<<<<<< .mine
-all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond simplelock testCond1 testCond2
-=======
-all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond test_exit test_matmult 
->>>>>>> .r537
+all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond test_exit test_matmult simplelock testCond1 testCond2  
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s

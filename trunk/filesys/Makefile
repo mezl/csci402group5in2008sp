@@ -102,8 +102,8 @@ main.o: ../threads/main.cc ../threads/copyright.h ../threads/utility.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 list.o: ../threads/list.cc ../threads/copyright.h ../threads/list.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -198,7 +198,7 @@ scheduler.o: ../threads/scheduler.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/system.h ../machine/interrupt.h ../machine/stats.h \
-  ../machine/timer.h ../filesys/synchdisk.h ../threads/synch.h
+  ../machine/timer.h ../threads/synch.h ../filesys/synchdisk.h
 synch.o: ../threads/synch.cc ../threads/copyright.h ../threads/synch.h \
   ../threads/thread.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -430,8 +430,8 @@ system.o: ../threads/system.cc ../threads/copyright.h ../threads/system.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 thread.o: ../threads/thread.cc ../threads/copyright.h ../threads/thread.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -604,8 +604,8 @@ threadtest.o: ../threads/threadtest.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 test_code.o: ../threads/test_code.cc ../threads/copyright.h \
   ../threads/system.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -683,8 +683,8 @@ test_code.o: ../threads/test_code.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h ../threads/manager.cc ../threads/customer.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h ../threads/manager.cc ../threads/customer.h \
   ../threads/cline.h ../threads/clerk.h ../threads/ctable.h \
   ../threads/appclerk.cc ../threads/picclerk.cc ../threads/passclerk.cc \
   ../threads/cashclerk.cc
@@ -843,8 +843,8 @@ customer.o: ../threads/customer.cc ../threads/customer.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h ../threads/cline.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h ../threads/cline.h
 ctable.o: ../threads/ctable.cc ../threads/ctable.h ../threads/list.h \
   ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -1396,8 +1396,8 @@ office.o: ../threads/office.cc ../threads/office.h ../threads/manager.cc \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h ../threads/cline.h ../threads/clerk.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h ../threads/cline.h ../threads/clerk.h \
   ../threads/ctable.h
 interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
   ../machine/interrupt.h ../threads/list.h ../threads/utility.h \
@@ -1476,7 +1476,7 @@ interrupt.o: ../machine/interrupt.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../machine/stats.h ../machine/timer.h \
-  ../filesys/synchdisk.h ../threads/synch.h
+  ../threads/synch.h ../filesys/synchdisk.h
 sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
   /usr/include/stdlib.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/iso/stdlib_iso.h \
@@ -1574,7 +1574,7 @@ sysdep.o: ../machine/sysdep.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../machine/stats.h ../machine/timer.h \
-  ../filesys/synchdisk.h ../threads/synch.h
+  ../threads/synch.h ../filesys/synchdisk.h
 stats.o: ../machine/stats.cc ../threads/copyright.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -1669,7 +1669,7 @@ timer.o: ../machine/timer.cc ../threads/copyright.h ../machine/timer.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../filesys/synchdisk.h ../threads/synch.h
+  ../machine/stats.h ../threads/synch.h ../filesys/synchdisk.h
 addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
   ../threads/copyright.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -1747,8 +1747,8 @@ addrspace.o: ../userprog/addrspace.cc ../threads/system.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h ../bin/noff.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h ../bin/noff.h
 bitmap.o: ../userprog/bitmap.cc ../threads/copyright.h \
   ../userprog/bitmap.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -1845,8 +1845,8 @@ exception.o: ../userprog/exception.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h ../userprog/syscall.h \
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h ../userprog/syscall.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/iostream \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ostream \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/ios \
@@ -1968,8 +1968,8 @@ progtest.o: ../userprog/progtest.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h ../machine/console.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h ../machine/console.h
 console.o: ../machine/console.cc ../threads/copyright.h \
   ../machine/console.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2047,8 +2047,8 @@ console.o: ../machine/console.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 machine.o: ../machine/machine.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2126,8 +2126,8 @@ machine.o: ../machine/machine.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2205,8 +2205,8 @@ mipssim.o: ../machine/mipssim.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 translate.o: ../machine/translate.cc ../threads/copyright.h \
   ../machine/machine.h ../threads/utility.h ../threads/bool.h \
   ../machine/sysdep.h \
@@ -2284,7 +2284,7 @@ translate.o: ../machine/translate.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/system.h ../threads/thread.h ../threads/scheduler.h \
   ../threads/list.h ../machine/interrupt.h ../machine/stats.h \
-  ../machine/timer.h ../filesys/synchdisk.h ../threads/synch.h
+  ../machine/timer.h ../threads/synch.h ../filesys/synchdisk.h
 directory.o: ../filesys/directory.cc ../threads/copyright.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -2381,8 +2381,8 @@ filehdr.o: ../filesys/filehdr.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h ../filesys/filehdr.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h ../filesys/filehdr.h
 filesys.o: ../filesys/filesys.cc ../threads/copyright.h ../machine/disk.h \
   ../threads/utility.h ../threads/bool.h ../machine/sysdep.h \
   /usr/usc/gnu/gcc/3.3.2/lib/gcc-lib/sparc-sun-solaris2.8/3.3.2/include/stdio.h \
@@ -2478,8 +2478,8 @@ fstest.o: ../filesys/fstest.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 openfile.o: ../filesys/openfile.cc ../threads/copyright.h \
   ../filesys/filehdr.h ../machine/disk.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
@@ -2557,8 +2557,8 @@ openfile.o: ../filesys/openfile.cc ../threads/copyright.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 synchdisk.o: ../filesys/synchdisk.cc ../threads/copyright.h \
   ../filesys/synchdisk.h ../machine/disk.h ../threads/utility.h \
   ../threads/bool.h ../machine/sysdep.h \
@@ -2712,8 +2712,8 @@ disk.o: ../machine/disk.cc ../threads/copyright.h ../machine/disk.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/stl_bvector.h \
   /usr/usc/gnu/gcc/3.3.2/include/c++/3.3.2/bits/vector.tcc \
   ../threads/scheduler.h ../threads/list.h ../machine/interrupt.h \
-  ../machine/stats.h ../machine/timer.h ../filesys/synchdisk.h \
-  ../threads/synch.h
+  ../machine/stats.h ../machine/timer.h ../threads/synch.h \
+  ../filesys/synchdisk.h
 # DEPENDENCIES MUST END AT END OF FILE
 # IF YOU PUT STUFF HERE IT WILL GO AWAY
 # see make depend above

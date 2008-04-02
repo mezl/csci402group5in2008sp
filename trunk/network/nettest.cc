@@ -282,7 +282,7 @@ int DestroyLock(int lockID, int processID)
 		lockArray[lockID].lockID = -1;
 		lockArray[lockID].name[0] = '\0';
 		lockArray[lockID].ownerID = -1;
-		delete lockArray[lockID].waitQueue;
+		//delete lockArray[lockID].waitQueue;
 		lockCount--;
 		return 1;
 	}
@@ -398,7 +398,7 @@ int DestroyCondition(int ID, int processID)
 	condArray[ID].lockID = -1;
 	condArray[ID].condID = -1;
 	condArray[ID].name[0] = '\0';
-	delete condArray[ID].waitQueue;
+	//delete condArray[ID].waitQueue;
 	condCount--;
 	return 1;
 }

@@ -1,6 +1,6 @@
-Ttitle: Writeup for Project 1, Spring 2008
+Ttitle: Writeup for Project 2, Spring 2008
 
-Date: 02/10/08
+Date: 03/02/08
 
 Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 		Yang-Hsuen Liu		yanghsul@usc.edu	2925356804
@@ -10,25 +10,61 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 * I. Requirements: *
 ********************
 ====================================================== PART 1 ======================================================
-	- To create a scenario of LOCK and CONDITION to solve the synchronization problems.
+	- Implement the Lock Syscalls, Condition Syscalls, Exit Syscall, Yield Syscall, and Process Table.
+	- Need to "bullet-proof" the Nachos kernel from user program errors.
+	- Require a test suite of user programs that demonstrate the correctness of your system calls.
+	- Demonstrate system calls work when used correctly and show it does not crash Nachos when used incorrectly.
 
-	+ LOCK:
+	+ Lock Syscalls:
 		- LOCK is not allowed to be acquired by Thread if other thread already acquired. 
 		- Thread can not acquire the same LOCK which it already acquired.
 		- Acquire and Release functions must be atomic.
 		- Thread must wake up the waiting thread if current thread releases the LOCK.
 		- If thread already acquired one LOCK, no second LOCK allow to acquire.
 		- Thread can not release a LOCK if it doesn't have the LOCK.
+		- CreateLock should return an integer value which is an index position into a kernel structure array of actual Lock. 
+		- DestroyLock takes a single integer parameter as identifier for the Lock kernel object that is to be deleted.
 
-	+ CONDITION:
+	+ Condition Syscalls:
 		- Wait, Signal, and Broadcast functions can be called by Thread with LOCK only.
 		- Wait, Signal, and Broadcast functions must be atomic.
 		- Sleep function can be called by Thread without LOCK only.
 		- Signal function wake up next thread.
 		- Broadcast function wake up waiting threads.
+		- CreateCondition should return an integer value which is an index position into a kernel structure array of actual Condition. 
+		- DestroyCondition takes a single integer parameter as identifier for the Condition kernel object that is to be deleted.
+
+	+ Exit Syscalls
+		- Ensure that Thread::Finish is called except for the very last thread running in Nachos.
+		- Call interrupt->Halt() to actually stop Nachos for the last thread.
+
+	+ Exec Syscalls
+		- Create a new addresss space with the provided filename
+		- Start a new thread in the address space and that will run the code
+
+	+ Fork Syscalls
+		- Create a new thread in the same address space.
+		- Allocate new stack in the address space for the new thread to work with.
+		
+	+ Yield Syscalls
+		- Call Thread::Yield() to give up or sleep.
+
+	+ Process Table
+		- Ensure to delete the address space and release any main memory for that thread's stack when exiting a thread.
 
 ====================================================== PART 2 ======================================================
+	- Complete the implementation of the Exec and Fork system calls.
+	- Keep track of allocating physical memory frames using a bitmap.
+	- Copying data to/from the kernel from/to the user's virtual address space.
+	- Allocate the new stack memory for the Fork. It will create the new pageTable which is larger than old pageTable and then copy the old pageTable data to the new pageTable.
+	- Design a test suite that shows Exec and Fork perform correctly and show Nachos does not terminate abnormally when improper input is captured.
+
+====================================================== PART 3 ======================================================
 	- To create a scenario of customers applying passport at United States Passport Office.
+	- To have multiple Passport Office running independently and executing by different processes simultaneously.
+	- Implement this scenario as a set of multithreaded Nachos user programs with new Lock and Condition system calls in Part 1.
+	- Require to use the Fork system call to create all threads in the program.
+	- Implement a test suite that proves your implementation is correct.
 
 	+ CUSTOMERS:
 		- Upon entering Passport Office, Customers have choices of entering Application Clerk line or Picture Clerk line.
@@ -86,14 +122,16 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 		- Gets to go to each Clerk type and get their passport.
 		- Wait until all Customers currently being serviced are handled.
 
-
 ********************
 * II. Assumptions: *
 ********************
 ====================================================== PART 1 ======================================================
-	- None
+	- Nachos pages and memory size are 512 bytes. User Stack Size is by default.
 
 ====================================================== PART 2 ======================================================
+	- Nachos pages and memory size are 512 bytes. User Stack Size is by default.
+
+====================================================== PART 3 ======================================================
 	- All customers are given $600 to help reduce the time required to get their passport completed.
 	- The application is assumed to be passed, it is not explicitly provided in the shared data between the 2 threads.
 	- Customers have 25% chance of not liking their picture.
@@ -106,1007 +144,1249 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 * III. Design: *
 ****************
 ====================================================== PART 1 ======================================================
-	+ void Lock::Acquire()
-		- Disable interrupt.
-		- If the LCOK is available, make thread as LOCK owner.
-		- If the LOCK is not available, add thread to LOCK waiting queue.
-		- Restore interrupt.
+	+ exception.cc
+		- int CreateLock_Syscall()
+			- Create a new LOCK
+			- Get index of the new LOCK
+			- If failure to creat a LOCK, print failure message.
 
-	+ void Lock::Release()
-		- Disable interrupt.
-		- Check LOCK's ownership, print error message if thread did not own the LOCK. 
-		- Check for a waiting thread in lock waiting queue.
-			- If thread found in LOCK's waiting queue.
-				1. Wake Next thread up - put it on ReadyToRun Queue
-				2. Remove thread from queue.
-				3. Make the thread the lock owner
-			- If no thread found in LOCK's waiting queue.
-				1. Clear LOCK's ownership.
-		- Restore interrupt.
+		- void DestroyLock_Syscall(int id)
+			- Delete  index of a existing LOCK.
+			- If failure to delete a LOCK, print failure message.
 
-	+ void Condition::Wait(Lock* conditionLock)
-		- Disable interrupt.
-		- Check if current LOCK matches with saved LOCK.
-			- Save LOCK's pointer.
-			- Add myself to condition wait queue and sleep until LOCK available.
-		- Restore interrupt.
+		- void Acquire_Syscall(int id)
+			- Acquire index of a LOCK.
+			- If failure to acquire a LOCK, print failure message.
 
-	+ void Condition::Signal(Lock* conditionLock)
-		- Disable interrupt.
-		- Check if current LOCK matches with save LOCK.
-			- Print error message about signal wrong LOCK.
-		- Check for a waiting thread in condition waiting queue.
-			- If waiting threads founded.
-				1. Wake Next thread up - put it on ReadyToRun Queue.
-			- If no waiting threads founded.
-				1. Clear LOCK's ownership.
-		- Restore interrupt.
+		- void Release_Syscall(int id)
+			- Release index of a LOCK.
+			- If failure to release a LOCK, print failure message.
 
-	+ void Condition::Broadcast(Lock* conditionLock)
-		- Thread with condition's LOCK can be broadcast only.
-		- Wake up all threads if waiting queue is not empty.
+		- int CreateCondition_Syscall()
+			- Create a condition of index.
+			- If index is less than zero, print failure message.
+
+		- void DestroyCondition_Syscall(int id)
+			- Destroy the condition call.
+			- If failure to destroy the condition, print failure message.
+	
+		- void Signal_Syscall(int conditionID, int lockID)
+			- Signaling index of the LOCK.
+			- If condition does not exist, print failure message.
+			- If LOCK does not exist, print failure message.
+
+		- void Wait_Syscall(int conditionID, int lockID)
+			- Waiting index of the LOCK.
+			- If condition does not exist, print failure message.
+			- If LOCK does not exist, print failure message.
+
+		- void Broadcast_Syscall(int conditionID, int lockID)
+			- Broadcasting index of the LOCK.
+			- If condition does not exist, print failure message.
+			- If LOCK does not exist, print failure message.
 
 ====================================================== PART 2 ======================================================
-	+ clerk.cc
-		
-		- Notes: This is a parents class that defines the behavior of all types of clerks in the passport office
-		
-		-	 The specific handling procedures for each type of clerk is implemented in the children objects of clerk.cc
-
-
-		- void Clerk::run()
-			- Clerk starts running.
-			- Acquire LOCKs for both regular line and preferred line.
-			- If there is Customers in the preferred line.
-				- Informs/Signals Customers served by clerk.
-			- If there is no Customers in the preferred line, the clerks checks the regular line
-			
-			- If there is Customers in the regular line.
-				- Informs/Signals Customers served by clerk.
-			- If no Customers in the line.
-				- Clerks go on break.
-			- Release the LOCK for both regular line and preferred line. 	
-
-	+ appClerk.cc (Children Object of clerk.cc)
-		- void handleCustomer(Customer *c)
-			- Application Clerk Handles and completes Customers.
-
-	+ cashclerk.cc (Children Object of clerk.cc)
-		- void handleCustomer(Customer *c)
-			- Cashier Clerk handles Customers.
-			- Check Customers if passport complete.
-				- If complete, charge $100 for passport fee.
-				- If not complete, Customers get punshined to wait certain amount of time and back to Cashier Clerk's line.
-			- Cashier Clerk completes Customers.
-
-	+ passclerk.cc (Children Object of clerk.cc)
-		- void handleCustomer(Customer *c)
-			- Passport Clerk Handles Customers.
-			- Passport Clerk checks customer's both application and picture completeness.
-			- Passport Clerk completes Customers.
+	+ exception.cc	
+		- void exec_thread()
+			- Assign currentThread to initial register.
+			- Assign currentThread to restore state.
 	
-	+ picclerk.cc (Children Object of clerk.cc)
-		- void handleCustomer(Customer *c)
-			- Picture Clerk Handles Customers.
-			- Customer might has 25% of not liking his/her picture, retakes the picture until the customer is satisfied
-			- Picture Clerk completes Customers.
+		- SpaceId Exec_Syscall(char* name)
+			- Open the virtual address and convert to physical address from register.
+			- Create a new Kernel Thread and insert thread space or address space to the Process Table.
+			- Kernel forks the exec_thread and return space id.
 
-	+ cline.cc
-		
-		- Notes: The cline class manages two lines (or queues) for each tasks(Application/Picture/Passport/Cashier).
-		
-		-        The cline class contains two locks and conditions (one for each line)
-		
-		-        to enforce mutual exclusion and synchronization when accessing line object.
-		
-		-        A clerk/customer must acquire both locks before calling/queueing a specific line.
-		
-		-        A clerk/customer must release both locks after calling/queueing a specific line.
-		
-		-	 The Line also keep track of the money the customers spent while getting into the prefered line.
-	
-		
-		- void cLine::preferAcquire(char *name,int id,bool display)
-			- Preferred line is acquired by Customers.
+		- void kernel_thread(int virtualaddress)
+			- Write PC register to virtual address.
+			- write Next PC register to myIncrementPC.
+			- Write Stack register to new stack.
 
-		- void cLine::preferRelease(char *name,int id,bool display)
-			- Preferred line is released by Customers.
+		- void Fork_Syscall(int virtualaddress)
+			- Create a new kernel Thread with process's name and address space and insert the Thread to Process Table.
+			- Kernel forks the thread with virtual address.
+		
+		- void Yield_Syscall()
+			- If Yield Syscall is called, put currentThread into sleep.
 
-		- void cLine::regAcquire(char *name,int id,bool display)
-			- Regular line is acquired by Customers.
+		- void Exit_Syscall(int status)
+			- If Process Table has thread in the process, put currentThread into sleep.
+			- If there are more than one thread in remove thread of Process Table, delete thread's address space.
+			- If there is only one thread in the remove thread of Process Table, delete address space and interrupt using Halt().
 
-		- void cLine::regRelease(char *name,int id,bool display)
-			- Regular line is released by Customers.
+	+ addrspace.cc
+		- ProcessTable::ProcessTable()
+			- Create a new Lock in Process Table.
 
-		- void cLine::Acquire(char *name,int id,bool display)
-			- Both regular line and preferred line are acquired by Customers.
+		- ProcessTable::~ProcessTable()
+			- Delete the lock in Process Table.
+			- Allow hashmap begin to run and clear when finished.
 
-		- void cLine::Release(char *name,int id,bool display)
-			- Both regular line and preferred line are released by Customers.
+		- int ProcessTable::AddThread(Thread* myThread)
+			- Add a new thread in the Process Table.
 
-		- void cLine::addPreferLine(int c,int mount)
-			- One Customer go to preferred line and enter the preferred line.
+		- int ProcessTable::RemoveThread(Thread* myThread)
+			- Removing an existing thread in the Process Table.
+			- Check the existence of thread in Process Table.
+				-If not found or empty, removed thread success.
+
+		- int ProcessTable::CheckChildExist(int mySpaceId)
+			- Check the existence of current thread's space id.
 			
-			- The customer went to sleep after being added to the preferred line.
+
+	+ test_code.cc
+		- void myCustomerForkFunc(int x)
+			- To create a new customer thread in order to run.
+
+		- void myClerkForkFunc(int x)
+			- To create a new clerk thread in order to run.
+
+====================================================== PART 3 ======================================================
+	+ project2_final.c
+		- void customerRun()
+			- Get the Customer's ID and start running.
+			- Customer go to Application Line.
+			- Check the length of Prefer Line and Regular Line.
+				- If Prefer Line is shorter than Regular Line or both line are empty.
+					- Add Customer into Prefer Line. $500 will remove from Customer. Add one to Prefer Line count.
+				- If Regular Line is shorter than Prefer Line.
+					- Add Customer into Regular Line. Add one to Regular Line count.
+			- Print message when Customer complete the Application Line.
+			- Customer go to Picture Line.
+			- Check the length of Prefer Line and Regular Line.
+				- If Prefer Line is shorter than Regular Line or both line are empty.
+					- Add Customer into Prefer Line. $500 will remove from Customer. Add one to Prefer Line count.
+				- If Regular Line is shorter than Prefer Line.
+					- Add Customer into Regular Line. Add one to Regular Line count.
+			- Print message when Customer complete the Picture Line.
 			
-			- The customer is charged $500 dollars getting into the preferred line.	
-			
-			- The Line adds $500 dollars to keep track of the money collected.
+			- If Customer done with their picture and application, customer go to Passport Line.
+			- Check the length of Prefer Line and Regular Line.
+				- If Prefer Line is shorter than Regular Line or both line are empty.
+					- Add Customer into Prefer Line. $500 will remove from Customer. Add one to Prefer Line count.
+				- If Regular Line is shorter than Prefer Line.
+					- Add Customer into Regular Line. Add one to Regular Line count.
+			- Print message when Customer complete the Passport Line.
+			- Customer go to Cashier Line.
+			- Check the length of Prefer Line and Regular Line.
+				- If Prefer Line is shorter than Regular Line or both line are empty.
+					- Add Customer into Prefer Line. $500 will remove from Customer. Add one to Prefer Line count.
+				- If Regular Line is shorter than Prefer Line.
+					- Add Customer into Regular Line. Add one to Regular Line count.
+			- Print message when Customer complete the Cashier Line.
+			- Print message when Custmeer complete everything.
 
-		- void cLine::addRegLine(int c)	
-			- One Customer go to regular line and enter the regular line.
-			
-			- The customer went to sleep after being added to the regular line.
+		- void applicationClerkRun()
+			- Get Application Clerk ID and start running.
+			- Acquire Prefer Line's Lock.
+			- Check either there is Customer in the Prefer Line and print message.
+				- If there is Customer in the Prefer Line.
+					- Signal and release Prefer Line's Lock and back to CPU queue.
+				- If there is no Customer in the Prefer Line.
+					- Release prefer Line's Lock and acquire Regular Line's Lock.
+			- Check either there is Customer in the Regular Line.
+				- If there is Customer in the Regular Line.
+					- Signal and release Regular Line's Lock.
+				- If there is no Customer in the Regular Line.
+					- Acquire Table Lock and wait on Table Condition.
+					- Release Table Lock and print message. 
 
-		- void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID)
-			- If there are Customers in the preferred line.
-				- Call/Signal next Customers in the preferred line.
-				
-		- void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID)
-			- If there are Customers in the regular line.
-				- Call/Signal next Customers in the regular line.
+		- void pictureClerkRun()
+			- Get Picture Clerk ID and start running.
+			- Acquire Prefer Line's Lock.
+			- Check either there is Customer in the Prefer Line and print message.
+				- If there is Customer in the Prefer Line.
+					- Signal and release Prefer Line's Lock and back to CPU queue.
+				- If there is no Customer in the Prefer Line.
+					- Release prefer Line's Lock and acquire Regular Line's Lock.
+			- Check either there is Customer in the Regular Line.
+				- If there is Customer in the Regular Line.
+					- Signal and release Regular Line's Lock.
+				- If there is no Customer in the Regular Line.
+					- Clerk go on break.
+					- Acquire Table Lock and wait on Table Condition.
+					- Release Table Lock and print message. 
 
-		- int cLine::reportMoney()
-			- Report amount of money the line has.
+		- void passportClerkRun()
+			- Get Passport Clerk ID and start running.
+			- Acquire Prefer Line's Lock.
+			- Check either there is Customer in the Prefer Line and print message.
+				- If there is Customer in the Prefer Line.
+					- Signal and release Prefer Line's Lock and back to CPU queue.
+				- If there is no Customer in the Prefer Line.
+					- Release prefer Line's Lock and acquire Regular Line's Lock.
+			- Check either there is Customer in the Regular Line.
+				- If there is Customer in the Regular Line.
+					- Signal and release Regular Line's Lock.
+				- If there is no Customer in the Regular Line.
+					- Clerk go on break.
+					- Acquire Table Lock and wait on Table Condition.
+					- Release Table Lock and print message. 
 
-	+ ctable.cc
-		
-		- Notes: The table is used by clerk/manager to keep track of the number of clerk sleeping or working
-		
-		-        Each table is created for each task (application/picture/passport/cashier)
-		
-		-	 Each table contains a lock and a condition variable.
-		
-		-	 Clerk/Manager must acquire the lock before add/remove a clerk from the table
-		
-		-        Clerk/Manager must release the lock after add/remove a clerk from the table
-		
-		-	 The condition variable queue is used to keep track the number/order of sleeping clerks
-		
-		- 	 The table keeps track of the money of all the money of all the clerks working at that specific table 
-		
-		-	 have collected from the customers.
+		- void cashierClerkRun()
+			- Get Cashier Clerk ID and start running.
+			- Acquire Prefer Line's Lock.
+			- Check either there is Customer in the Prefer Line and print message.
+				- If there is Customer in the Prefer Line.
+					- Signal and release Prefer Line's Lock and back to CPU queue.
+				- If there is no Customer in the Prefer Line.
+					- Release prefer Line's Lock and acquire Regular Line's Lock.
+			- Check either there is Customer in the Regular Line.
+				- If there is Customer in the Regular Line.
+					- Signal and release Regular Line's Lock.
+				- If there is no Customer in the Regular Line.
+					- Clerk go on break.
+					- Acquire Table Lock and wait on Table Condition.
+					- Release Table Lock and print message.
+ 
+		- void managerRun()
+			- Check total finish Customers and print total number of finish customers.
+			- Check the numbers of Clerk in Application Line.
+				- If there is no Clerk in the line.
+					- Manager wake up one Application Clerk.
+			- Check the numbers of Clerk in Picture Line.
+				- If there is no Clerk in the line.
+					- Manager wake up one Picture Clerk.
+			- Check the numbers of Clerk in Passport Line.
+				- If there is no Clerk in the line.
+					- Manager wake up one Passport Clerk.
+			- Check the numbers of Clerk in Cashier Line.
+				- If there is no Clerk in the line.
+					- Manager wake up one Cashier Clerk.
 
+		- void Initialize()
+			- Create all required lock and condition for table, and line for passport office.
+			- Initialize Clerk count equal zero for Application, Picture, Passport, and Cashier Clerk.
+			- Initialize values for the four lines.
+			- Create Customers give with $1,600 and no customer has been done in the beginning.
+			- Creating Clerks for Application, Picture, Passport, and Cashier table.
+			- Create manager.
 
-		- int cTable::clerkCount()
-			- Calculate how many Clerks are working at the table now.
+		- void handleCustomer(int c,int type)
+			- Type 0 : Application Clerk.
+			- Type 1 : Picture Clerk.
+			- Type 2 : Clerk.
+			- Type 3 : Application Clerk.
 
-		- void cTable::addClerk(char *name,int id,bool display)
-			- If no Clerk is sleeping (in the conditional queue), no Clerk is added to the table.
-			- Else, the table will signal a clerk from the conditional queue.
-			
-			- A new clerk is now working at the table
-
-		- void cTable::leaveTable(char *name,int id,bool display)
-			- Display which Clerk is going on a break, how many Clerks are still working, how many Clerk are asleep.
-			- Add the specified clerk to the conditional queue.
-			
-			- The specified clerk is now asleep.
-
-		- void cTable::acquireLock(char *name,int id,bool display)
-			- Display which Clerk is acquiring the LOCK to access the table.
-			- Display which Clerk get the LOCK now.
-
-		- void cTable::releaseLock(char *name,int id,bool display)
-			- Display which Clerk is releasing LOCK after accessing the table.
-			- Display which Clerk released the LOCK now.
-
-		- void cTable::addMoney(int amount)
-			- Add amount of money collected by all the clerk working at the specific table.
-
-		- int cTable::reportMoney()
-			- Report the amount of money collected by all the clerk working at the specific table.
-
-	+ customer.cc
-		
-		- Notes: This class define the customer's behavior, amount of money they carry once entering the passport office.
-
-
-		- void Customer::customerRun()
-			- Customer start the scenario.
-			- Customer choose randomly between entering a application line or picture line.
-			- the customer will use the 500 dollars to get into the prefered line whenever possible.
-
-		- void Customer::gotoApplicationLine()
-			- If Customers have more than $500 and less Customers in the preferred application line than regular application line.
-				- Customers choose to go preferred application line, $500 removed from Customer. 
-			- If Customers do not go preferred application line.
-				- Customers go to regular application line.
-			
-		- void Customer::gotoPictureLine()
-			- If Customers have more than $500 and less Customers in the preferred Picture line than regular picture line.
-				- Customers choose to go preferred Picture line, $500 removed from Customer. 
-			- If Customers do not go preferred Picture line.
-				- Customers go to regular Picture line.
-			
-		- void Customer::gotoPassportLine()
-			- If Customers have more than $500 and less Customers in the preferred Passport line than regular Passport line.
-				- Customers choose to go preferred Passport line, $500 removed from Customer. 
-			- If Customers do not go preferred Passport line.
-				- Customers go to regular Passport line.
-
-		- void Customer::gotoCashierLine()
-			- If Customers have more than $500 and less Customers in the preferred Cashier line than regular Cashier line.
-				- Customers choose to go preferred Cashier line, $500 removed from Customer. 
-			- If Customers do not go preferred Cashier line.
-				- Customers go to regular Cashier line.
-
-	+ test_code.cc	
-		- Notes: This class simulates the entire passport office by adding customers, clerks and manager.
-		
-		-        Four tables and four lines are created to be handled by customers, clerks and manager.
-
-
-		- void Office::myCustomerForkFunc(int x)
-			- To forks the customerRun() function from Customer.cc
-
-		- void Office::myClerkForkFunc(int x)
-			- To forks the run() function from Clerk.cc.
-
-		- void Office::run()
-			- Creates Manager, Clerks, and Customers.
-
-		- void Office::Manager(int x)
-			
-			- This function is being called by the timer object as interrupt handler
-			- Check each table for numbers of Clerk and add one Clerk to table if empty, while there are customer waiting.
-			- check each line for numbers of Customer and add one Clerk to if greater than three Customers in the line.
- 			- Must acquire the LOCK for both line and table before adding a Clerk or checking customer
-			- Must release all locks at completion.
+		- int getCustomerID(int l,int PreOrReg)
+			- Return the Customer ID to Clerk.
+			- Check the Prefer Line and return Customer ID if existed.
+			- Check the Regular Line and return Customer ID if existed.
 
 ***********************
 * IV. Implementation: *
 ***********************
 ====================================================== PART 1 ======================================================
 	+ Files Modified
-		- synch.cc
-		- synch.cc
+		- exception.cc, system.cc, syscall.h, system.h, start.s.
 
 	+ Files added
 		- None.
 
 	+ Data Structures added, and the file they were added to.
-		- None.
+		+ system.h
+			- extern Table lockTable.
+			- extern Table conditionTable.
+
+		+ system.cc
+			- extern void Cleanup().
 
 	+ Data Structures modified, and the file they were added to.
 		- None.
 
 	+ Functions added and in which file.
-		- None.
+		+ exception.cc
+			- int CreateLock_Syscall(){
+				// create a new lock
+				Lock* myLock = new Lock("New Lock");
+	
+				// get index of the new lock
+				int id;
+				id = lockTable.Put(myLock);
+
+				// failure creating a lock
+				if(id < 0){
+					delete myLock;
+					printf("Failure creating a lock of index %d \n", id);
+				}
+
+				// return lock index
+				return id;
+			  }
+
+			- void DestroyLock_Syscall(int id){
+				if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1){
+					Lock* myLock = (Lock*)lockTable.Remove(id);
+					if(myLock == NULL){
+						printf("Failure deleting a lock of index %d \n", id);
+						return;
+					}
+					delete myLock;
+				}
+				else
+					printf("Unable to destroy Lock because not last child thread \n");	
+			  }
+
+			- void Acquire_Syscall(int id){
+				Lock* myLock = (Lock*)lockTable.Get(id);
+
+				if(myLock == NULL){
+					printf("Failure Acquiring a lock of index %d \n", id);
+					return;
+				}
+				else{
+					myLock -> Acquire();
+				}
+			  }
+
+			- void Release_Syscall(int id){
+				Lock* myLock = (Lock*)lockTable.Get(id);
+
+				if(myLock == NULL){
+					printf("Failure Releasing a lock of index %d \n", id);
+					return;
+				}
+				else{
+					myLock -> Release();
+				}
+			  }
+
+			- int CreateCondition_Syscall(){
+				Condition* myCondition = new Condition("New Condition");
+				int id = conditionTable.Put(myCondition);
+
+				if(id < 0){
+					printf("Failure creating a condition of index %d \n", id);
+					delete myCondition;
+				}
+				return id;
+			  }
+
+			- void DestroyCondition_Syscall(int id){	
+				if(processTable.CheckChildExist(currentThread->space->getSpaceID()) == 1){
+					Condition* myCondition = (Condition*)conditionTable.Remove(id);
+					
+					if(myCondition == NULL){	
+						printf("Failure destroying a condition of index %d \n", id);
+						return;
+					}	
+					delete myCondition;
+				}
+				else
+					printf("Unable to destroy Condition because not last child thread \n");
+	
+			   }
+
+			- void Signal_Syscall(int lockID, int conditionID){
+				Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
+				Lock* myLock = (Lock*)lockTable.Get(lockID);
+
+				if(myCondition == NULL){
+					printf("Failure Signaling a condition (condition %d dont exist)", conditionID);
+					return;
+				}	
+				if(myLock == NULL){
+					printf("Failure Signaling a condition (lock %d dont exist)", lockID);	
+					return;
+				}
+	
+				myCondition -> Signal(myLock);
+			  }
+
+			- void Wait_Syscall(int lockID, int conditionID){
+				Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
+				Lock* myLock = (Lock*)lockTable.Get(lockID);
+
+				if(myCondition == NULL){
+					printf("Failure waiting a condition (condition %d dont exist)", conditionID);
+					return;
+				}	
+				if(myLock == NULL){
+					printf("Failure waiting a condition (lock %d dont exist)", lockID);	
+					return;
+				}
+	
+				myCondition -> Wait(myLock);
+			  }
+
+			- void Broadcast_Syscall(int lockID, int conditionID){
+				Condition* myCondition = (Condition*)conditionTable.Get(conditionID);
+				Lock* myLock = (Lock*)lockTable.Get(lockID);
+
+				if(myCondition == NULL){
+					printf("Failure broadcasting a condition (condition %d dont exist)", conditionID);
+					return;
+				}	
+				if(myLock == NULL){
+					printf("Failure broadcasting a condition (lock %d dont exist)", lockID);	
+					return;
+				}
+	
+				myCondition -> Broadcast(myLock);
+			  }
+
 
 	+ Functions modified and in which file.
-		- Synch.cc
-			void Lock::Acquire() {	
-				//Disable interrupts
-				IntStatus oldLevel = interrupt->SetLevel(IntOff);
-
-				//If lock is avaiable
-				if(lockOwner == NULL){
-					//I get Lock
-					//Make my self lock owner
-					lockOwner = currentThread;
-				}else if(currentThread != lockOwner){//Lock is not avaiable
-					//Add myself to lock wait queue
-					lockWaitQueue->Append((void *)currentThread);	// so go to sleep
-					//Go to sleep
-					currentThread->Sleep();
-				}
-				//Restore Interrupt
-				(void) interrupt->SetLevel(oldLevel);
-
-			}
-			void Lock::Release() {
-				Thread *thread;
-
-				//Disable interrupts
-				IntStatus oldLevel = interrupt->SetLevel(IntOff);
-
-				//Check lock ownership
-				if(isHeldByCurrentThread()){
-					//Check for a waiting thread in lock waiting queue
-					thread = (Thread *)lockWaitQueue->Remove();
-				
-					if (thread != NULL){	   //If found thread in lock wait queue
-	       					//1.Wake Next thread up - put it on ReadyToRun Queue
-						scheduler->ReadyToRun(thread);
-	       					//2.Remove thread from queue(we did it before)
-	       					//3.Make the thread the lock owner
-						lockOwner = thread;
-					}
-					else{//No thread in lock waiting queue
-					lockOwner = NULL;//clear lock ownership	
-					}
-				}// if held by current thread
-	
-				//Restore Interrupt
-				(void) interrupt->SetLevel(oldLevel);	
-			}
-
-			void Condition::Wait(Lock* conditionLock) { 	
-				//Disable interrupts
-				IntStatus oldLevel = interrupt->SetLevel(IntOff);
-				//check saved lock is match the current lock
-				if(conditionLock->isHeldByCurrentThread()){
-					if(condLock == NULL)
-						condLock = conditionLock;//Save lock pt first
-					conditionLock->Release();//Leave Monitor
-					//Add myself to condition wait queue
-					condWaitQueue->Append((void *)currentThread);
-					currentThread->Sleep(); // so go to sleep
-
-					//After some one wake me up
-					conditionLock->Acquire();//Reenter monitor
-				}
-
-				//Restore Interrupt
-				(void) interrupt->SetLevel(oldLevel);
-				//Don't know what's this
-				//ASSERT(FALSE); 
-
-			}
-
-			void Condition::Signal(Lock* conditionLock) {
-				//Disable interrupts
-				IntStatus oldLevel = interrupt->SetLevel(IntOff);
-				Thread *thread;
-				if(conditionLock != condLock){
-					//check saved lock is match the current lock
-					printf("Thread %s try signal cond %s with wrong lock",currentThread->getName(),name);
-				}
-				else if(conditionLock->isHeldByCurrentThread()){
-					//Check for a waiting thread in condition waiting queue
-					thread = (Thread *)condWaitQueue->Remove();
-					if (thread != NULL){
-						//Wake Next thread up - put it on ReadyToRun Queue
-						scheduler->ReadyToRun(thread);
-					}
-				}
-				else{	
-					//printf("Error, thread should not empty\n");
-				}		
-	
-				//Restore Interrupt
-				(void) interrupt->SetLevel(oldLevel);
-			}
-
-			void Condition::Broadcast(Lock* conditionLock) {
-				while(!condWaitQueue->IsEmpty() ) {
-					Signal(conditionLock);
-				}
-			}
+		- None.
 
 ====================================================== PART 2 ======================================================
 	+ Files Modified
-		- test_code.cc
+		- addrspace.cc, addrspace.h, system.cc, system.h, syscall.h, exception.cc, processTable.h, progtest.cc
 
 	+ Files added
-		- appClerk.cc		
-		- cashclerk.cc
-		- clerk.cc		- clerk.h
-		- cline.cc		- cline.h
-		- ctable.cc		- ctable.h
-		- customer.cc		- customer.h
-		- manager.cc
-		- office.cc		- office.h
-		- picclerk.cc
-		- passclerk
+		- None.
 
 	+ Data Structures added, and the file they were added to.
-		- None
-		
+		+ system.h
+			- extern ProcessTable processTable.
+			- extern Table memoryTable.
+
 	+ Data Structures modified, and the file they were added to.
-		- None
+		- None.
 
 	+ Functions added and in which file.
-		- appclerk.cc
-			void handleCustomer(Customer *c){	
-				printf("[AppClerk]%s%d is handling customer %d.................\n",clerkName,clerkID,c->getID());
-				c->completeApplication();
-				printf("[AppClerk]%s%d has complete customer %d application.................\n",clerkName,clerkID,c->getID());
-			}
+		+ exception.cc
+			- void exec_thread(){
+				currentThread->space->InitRegisters();
+				currentThread->space->RestoreState();
+				machine->Run();
+			  }
 
-		- cashclerk.cc
-			void handleCustomer(Customer *c){	
-				printf("[CashClerk]%s%d is handling customer %d.................\n",clerkName,clerkID,c->getID());
+			- SpaceId Exec_Syscall(char* name){
+				OpenFile* myFile = fileSystem->Open(name);
+				AddrSpace* mySpace = new AddrSpace(myFile);
+				Thread* myThread = new Thread(name);
+				myThread->space = mySpace;
+				int mySpaceId = myThread->space->getSpaceID();
+				int myThreadId = processTable.AddThread(myThread);
+	
+				machine -> WriteRegister(2, mySpaceId);
+				myThread->Fork((VoidFunctionPtr)exec_thread, 0);
+				return mySpaceId;
+			  }
+
+			- void kernel_thread(int twoValues){
+				int* twoValues_temp = (int*) twoValues;
+				int virtualaddress = twoValues_temp[0];
+				int stackAddress = twoValues_temp[1];
+
+				int myIncrementPC = virtualaddress + 4;
+
+				machine -> WriteRegister(PCReg, virtualaddress);	
+				machine -> WriteRegister(NextPCReg, myIncrementPC);
+				currentThread -> space -> RestoreState();
+				machine -> WriteRegister(StackReg, stackAddress);
+				machine -> Run();
+			  }
+
+			- void Fork_Syscall(int virtualaddress){
+				Thread* myThread = new Thread(currentThread->getName());
+				int* twoValues = new int[2];
+				twoValues[0] = virtualaddress;
+
+				int stackAddress = currentThread->space->newStack();
+				myThread->space = currentThread->space;
+				int mySpaceId = processTable.AddThread(myThread);
+
+				if (stackAddress < 0){
+					printf("Failure when allocating a new stack for fork");
+					return;
+				}
+				twoValues[1] = stackAddress;
+	
+				myThread->Fork((VoidFunctionPtr)kernel_thread, (int)twoValues);
+			  }
+
+
+			- void Yield_Syscall(){	
+				currentThread -> Yield();
+			  }
+
+			- void Exit_Syscall(int status){
+				int check = processTable.RemoveThread(currentThread);
+	
+				if(check == -1){
+					printf("Can't exit current thread\n");
+				}
+				if(check == 1 || check == 2)
+					currentThread->space->~AddrSpace();
+
+				if(check == 2)
+					interrupt->Halt();
+
+				if(status == 0)
+					currentThread->Finish();
+				else
+					printf("Cannot exit current thread\n");
+			  }
+
+		+ addrspace.cc
+			- ProcessTable::ProcessTable(){
+				processTableLock = new Lock("Process Table Lock");
+			  }
+
+			- ProcessTable::~ProcessTable(){
+				delete processTableLock;
+				std::map<int, std::vector<Thread*> >::iterator iter;
+				iter = hashmap.begin();
+				while(!(iter == hashmap.end())){
+					(iter->second).clear();
+					iter++;
+				}
+				hashmap.clear();
+			  }
+
+			- int ProcessTable::AddThread(Thread* myThread){
+				if(myThread == NULL){
+					return -1;
+				}
+
+				processTableLock->Acquire();
+				hashmap[myThread->space->getSpaceID()].push_back(myThread);
+				processTableLock->Release();
+				return myThread->space->getSpaceID();
+			  }
+
+			- int ProcessTable::RemoveThread(Thread* myThread){
+				int removeSuccessful = -1;	
+
+				if (myThread == NULL){
+					printf("Failure removing non existance thread\n");
+					removeSuccessful =  -1;
+				}
+
+				processTableLock->Acquire();
+	
+				int mySpaceId = myThread->space->getSpaceID();
+				int targetThreadFound = 0;
+				unsigned int i = 0;
+				int found = 0;
+
+				std::vector<Thread*>::iterator iter;
+				iter = hashmap[mySpaceId].begin();
+				while(i < hashmap[mySpaceId].size() ){
+				if(myThread == (*iter)){
+					found = 1;
+					hashmap[mySpaceId].erase(iter);
+					removeSuccessful = 0;
+				}
+				iter++;
+				i++;
+				if(i > hashmap[mySpaceId].size())
+					break;
+				}
+	
+				if(found == 0){
+					printf("RemoveThread Failure: Thread doesn't exist in process table\n");
+					removeSuccessful = -1;
+				}
+
+
+				if(hashmap[mySpaceId].empty()){
+					hashmap.erase(mySpaceId);
+					removeSuccessful = 1;
+				}
+
+				if(hashmap.empty() == TRUE)
+					removeSuccessful = 2;
+
+				processTableLock->Release();
+				return removeSuccessful;
+			  }
+
+
+			- int ProcessTable::CheckChildExist(int mySpaceId){
+				if(hashmap[mySpaceId].empty()){
+					return 1;
+				}
+				return 0;
+			  }
 			
-				// check customer if passport is complete
-				if (c->checkPassport() == true){
-					// passport is complete, charge 100 dollars and customer complete cashier
-					c->completeCashier();
-					c->chargeMoney(100);
-					table->addMoney(100);
-					printf("[CashClerk]%s%d has complete customer %d cashier.................\n",clerkName,clerkID,c->getID());
-				}
-				else{
-					// passport is not complete
-					// customer gets punished to wait for a certain amount of time 
-					// then ask the customer to go to back of the cashier line
-					c->punished();
-					c->gotoCashierLine();
-				}
-			}
+		+ test_code.cc
+			- void myCustomerForkFunc(int x){
+				Customer *c = (Customer*)x;
+				printf("[custFork]Customer %d run\n",c->getID());
+				c -> customerRun();
+				delete c;
+			  }
 
-		- clerk.cc
-			void Clerk::run(){
-				printf("[Clerk]%s %d Start Running \n",clerkName,clerkID);
-				while(1){
-					//Do Lock
-					bool serviced= false;
-					Customer *c;
-
-					cline->preferAcquire(clerkName,clerkID);		
-					printf("[Clerk]%s %d Get prefer line lock\n",clerkName,clerkID);
-					if(!cline->IsPreferLineEmpty()) //if there is customer in prefer line
-					{
-						serviced= true;
-						printf("[Clerk]%s %d check prefer line %d\n",clerkName,clerkID,cline->getID());
-						c = (Customer *)cline->getNextPreferLineCustomer(clerkName,clerkID);
-					}
-					cline->preferRelease(clerkName,clerkID);
-					if(serviced){
-						c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
-						handleCustomer(c);
-						//c->wakeup();
-					}
-
-					if(!serviced){	
-						cline->regAcquire(clerkName,clerkID);		
-						if(!cline->IsRegLineEmpty()){
-							serviced = true;
-							printf("[Clerk]%s %d check reg line %d\n",clerkName,clerkID,cline->getID());
-							c =(Customer *)cline->getNextRegLineCustomer(clerkName,clerkID);
-						}
-						cline->regRelease(clerkName,clerkID);		
-						if(serviced){
-							c->setClerk(clerkLock,clerkCondition);//tell this customer is served by me	
-							handleCustomer(c);
-							//c->wakeup();
-						}	
-					}
-					if(!serviced){
-						//Go Sleep
-						printf("[Clerk]%s %d have no customer in line %d,leave table\n",clerkName,clerkID,cline->getID());
-						table->acquireLock(clerkName,clerkID);
-						table->leaveTable(clerkName,clerkID);
-						table->releaseLock(clerkName,clerkID);
-						printf("[Clerk]%s %d now come back to table \n",clerkName,clerkID);
-					}
-				}//while(1);
-			}
-
-		- cline.cc
-			void cLine::preferAcquire(char *name,int id,bool display){	
-				if(display)printf("[Line]Prefer %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
-				preferLineLock->Acquire();
-				if(display)printf("[Line]Get prefer lock\n");
-			}
-
-			void cLine::preferRelease(char *name,int id,bool display){
-				if(display)printf("[Line]Prefer %s%d is release lock by %s %d\n",lineName,lineID,name,id);
-				preferLineLock->Release();
-			}
-
-			void cLine::regAcquire(char *name,int id,bool display){
-				if(display)printf("[Line]Reg %s%d is acquired lock by %s %d\n",lineName,lineID,name,id);
-				regLineLock->Acquire();
-			}
-
-			void cLine::regRelease(char *name,int id,bool display){
-				if(display)printf("[Line]Reg %s%d is release lock by %s %d\n",lineName,lineID,name,id);
-				regLineLock->Release();
-			}
-
-			void cLine::Acquire(char *name,int id,bool display){
-				lineLock->Acquire();
-				if(display)printf("[Line]Both %s%d is acquired lock by %s %d \n",lineName,lineID,name,id);
-				preferAcquire(name,id,false);
-				regAcquire(name,id);
-				lineLock->Release();
-			}
-
-			void cLine::Release(char *name,int id,bool display){
-				lineLock->Acquire();
-				if(display)printf("[Line]Both %s%d is release lock by %s %d\n",lineName,lineID,name,id);
-				preferRelease(name,id,false);
-				regRelease(name,id);
-				lineLock->Release();
-			}
-
-			bool cLine::IsRegLineEmpty(){
-				lineLock->Acquire();
-				bool count =  (regLineCount == 0);
-				lineLock->Release();
-				return count;
-			}
-
-			bool cLine::IsPreferLineEmpty(){
-				lineLock->Acquire();
-				bool count =  (preferLineCount == 0);
-				lineLock->Release();
-				return count;
-			}
-
-			void cLine::addPreferLine(int c,int mount){
-				printf("[Line]One Customer go the prefer %s%d\n",lineName,lineID);
-				lineLock->Acquire();
-				preferLineCount++;
-				lineLock->Release();
-				printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
-				amount+=mount;//receive money from customer
-				preferLineQueue->Append((void *)c);	
-				//while(callNext == 0)
-				preferLineCond->Wait(preferLineLock);
-				callNext --;
-				printf("[Line]One Customer in front the prefer %s%d\n",lineName,lineID);
-	
-			}
-
-			void cLine::addRegLine(int c)	{
-				printf("[Line]One Customer go the reg %s%d\n",lineName,lineID);
-				lineLock->Acquire();
-				regLineCount++;
-				lineLock->Release();
-				printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
-				regLineQueue->Append((void *)c);
-
-				//while(regCallNext == 0)
-				regLineCond->Wait(regLineLock);
-				regCallNext --;
-
-				printf("[Line]One Customer in front the reg %s%d\n",lineName,lineID);
-			}
-
-			void * cLine::getNextPreferLineCustomer(char *clerkName,int clerkID){
-				if(IsPreferLineEmpty()){
-					printf("[Line]No customer in prefer %s%d\n",lineName,lineID);
-					//preferLineLock->Release();
-					return NULL;
-				}
-				lineLock->Acquire();
-				preferLineCount--;
-				lineLock->Release();
-				printf("[Line]Prefer %s%d have[%d]Customer in the line\n",lineName,lineID,preferLineCount);
-				callNext++;
-				preferLineCond->Signal(preferLineLock);
-				printf("[Line]%s %d call next customer in prefer %s%d\n",clerkName,clerkID,lineName,lineID);
-				return preferLineQueue->Remove();
-			}
-
-			void * cLine::getNextRegLineCustomer(char *clerkName,int clerkID){
-				if(IsRegLineEmpty()){
-					printf("[Line]No customer in reg %s%d\n",lineName,lineID);
-					//regLineLock->Release();
-					return NULL;
-				}
-				lineLock->Acquire();
-				regLineCount--;
-				lineLock->Release();
-				regCallNext++;
-				printf("[Line]Reg %s%d have[%d]Customer in the line\n",lineName,lineID,regLineCount);
-				regLineCond->Signal(regLineLock);
-				printf("[Line]%s %d call next customer in reg %s%d\n",clerkName,clerkID,lineName,lineID);
-				return regLineQueue->Remove();
-			}
-
-			int cLine::reportMoney(){
-				return amount;
-			}
-
-			bool cLine::nobody(){
-				if(IsRegLineEmpty() && IsPreferLineEmpty())
-					return true;
-				return false;
-			}
-
-		-ctable.cc
-			int cTable::clerkCount(){
-				return cCount-leaveCount;
-			}
-
-			void cTable::addClerk(char *name,int id,bool display){
-				display = true;
-				if(leaveCount == 0){
-					if(display)printf("[Table]No clerk can add!\n");
-						return;
-				}
-				leaveCount--;
-				needClerk  ++;
-				if(display)printf("[Table]%s%d table %d is prepare adding a clerk\n", name,id,tableID);
-				tableCondition->Signal(tableLock);
-				if(display)printf("[Table]%s%d table %d is added a clerk\n",name,id, tableID);
-			}
-
-			void cTable::leaveTable(char *name,int id,bool display){
-				leaveCount++;
-				if(display)printf("[Table]%s %d is leave table now,[%d]still work[%d]leave\n",name,id,cCount,leaveCount);
-				while(needClerk == 0)
-					tableCondition->Wait(tableLock);
-				needClerk--;
-				if(display)printf("[Table]%s %d is come back now\n",name,id);
-			}
-
-			void cTable::acquireLock(char *name,int id,bool display){
-				if(display)printf("[Table]%s %d is acquire lock now\n",name,id);
-				tableLock->Acquire();
-				if(display)printf("[Table]%s %d is get lock now\n",name,id);
-			}
-
-			void cTable::releaseLock(char *name,int id,bool display){
-				if(display)printf("[Table]%s %d is prepare releasing lock now\n",name,id);
-				tableLock->Release();
-				if(display)printf("[Table]%s %d is released lock now\n",name,id);
-			}
-	
-			void cTable::addMoney(int amount){
-				tableMoney += amount;
-			}
-
-			int cTable::reportMoney(){
-				return tableMoney;
-			}
-
-		- passclerk.cc
-			void handleCustomer(Customer *c){	
-				printf("[PassClerk]%s%d is handling customer %d.................\n",clerkName,clerkID,c->getID());
-
-				// clerk checks customer got application and picture complete
-				if( (c->checkApplication() == true) && (c->checkPicture() == true)){
-					// both application and picture are complete, the customer complete passport
-					// the clerk takes 100 ticks to file the passport
-					currentThread->Yield();
-					c->completePassport();
-					printf("[PassClerk]%s%d has complete customer %d passport.................\n",clerkName,clerkID,c->getID());
-				}
-				else{
-					// application and picture are not complete.
-					// the clerk ask the customer to do something???
-				}
-			}
-
-		- picclerk.cc
-			void handleCustomer(Customer *c){	
-				printf("[PicClerk]%s%d is handling customer %d ................\n",clerkName,clerkID,c->getID());
-		
-				// there is a 25% of customer not liking the picture
-				// retake the picture until the customer is satisfied
-				while(rand()%4 == 0){
-					printf("[PicClerk]%s%d is retaking picture for customer %d \n",clerkName,clerkID,c->getID());
-				}
-				printf("[PicClerk]%s%d has complete customer %d picture ..............\n",clerkName,clerkID,c->getID());
-				c->completePicture();
-			}
-
-		-customer.cc
-			void Customer::customerRun(){
-				printf("[CUST]Customer %d Start run \n",customerID);
-				// Choose randomly between entering a application line or picture line
-				// the customer will use the 500 dollars to get into the prefered line
-				// whenever possible
-				if ((rand()%2) == 0){
-					printf("[CUST]Customer %d choose app first \n",customerID);
-					gotoApplicationLine();
-					printf("[CUST]Customer %d then go to pic line \n",customerID);
-					gotoPictureLine();
-				}
-				else{
-					printf("[CUST]Customer %d choose pic first \n",customerID);
-					gotoPictureLine();
-					printf("[CUST]Customer %d then go to app line \n",customerID);
-					gotoApplicationLine();
-				}
-				printf("[CUST]Customer %d finish both app & pic \n",customerID);
-
-			void Customer::gotoApplicationLine(){
-				bool notGoToPreferLine = true;
-				if(money > 500){
-					applicationLine->preferAcquire(customerName,customerID);
-					printf("[CUST]Customer %d get both app line lock\n",customerID);
-					if((applicationLine->preferCustomerCount() == 0));//<= applicationLine->regCustomerCount())){
-						notGoToPreferLine = false;
-						printf("[CUST]Customer %d go to prefer app line \n",customerID);
-						money = money-500;
-						applicationLine -> addPreferLine((int)this, 500);
-
-						printf("[CUST]Customer %d wake up in %s%d \n",customerID,
-							applicationLine->getName(),
-							applicationLine->getID());
-					}
-					applicationLine->preferRelease(customerName,customerID);
-				}
-				if(notGoToPreferLine){
-					applicationLine->regAcquire(customerName,customerID);
-					printf("[CUST]Customer %d go to reg app line \n",customerID);
-					applicationLine -> addRegLine((int)this);
-					applicationLine->regRelease(customerName,customerID);
-				}
-			}
-
-			void Customer::gotoPictureLine(){
-				bool notGoToPreferLine = true;
-				if(money >500){
-					pictureLine -> preferAcquire(customerName,customerID);
-					if((pictureLine->preferCustomerCount() == 0));//<= pictureLine->regCustomerCount())){
-						notGoToPreferLine = false;
-						printf("[CUST]Customer %d go to prefer pic line \n",customerID);
-						money = money-500;
-						pictureLine -> addPreferLine((int)this, 500);
-					}
-					pictureLine -> preferRelease(customerName,customerID);
-				}
-				if(notGoToPreferLine){
-					printf("[CUST]Customer %d go to reg pic line \n",customerID);
-					pictureLine -> regAcquire(customerName,customerID);
-					pictureLine -> addRegLine((int)this);
-					pictureLine -> regRelease(customerName,customerID);
-				}
-			}
-
-			void Customer::gotoPassportLine(){
-				bool notGoToPreferLine = true;
-				if(money > 500 ){	
-					passportLine -> preferAcquire(customerName,customerID);
-					if (passportLine->preferCustomerCount() ==0)//<= passportLine->regCustomerCount())){
-						notGoToPreferLine = false;
-						printf("[CUST]Customer %d go to prefer passport line \n",customerID);
-						money = money-500;
-						passportLine -> addPreferLine((int)this, 500);
-					}
-					passportLine -> preferRelease(customerName,customerID);	
-				}
-				if(notGoToPreferLine)	{
-					printf("[CUST]Customer %d go to reg passport line \n",customerID);
-					passportLine -> regAcquire(customerName,customerID);
-					passportLine -> addRegLine((int)this);
-					passportLine -> regRelease(customerName,customerID);
-				}
-			}
-
-			void Customer::gotoCashierLine(){
-				bool notGoToPreferLine = true;
-				if(money > 500){ 
-					cashierLine -> preferAcquire(customerName,customerID);
-					if (cashierLine->preferCustomerCount()==0)// <= cashierLine->regCustomerCount())){
-						notGoToPreferLine = false;
-						printf("[CUST]Customer %d go to prefer cashier line \n",customerID);
-						money = money-500;
-						cashierLine -> addPreferLine((int)this, 500);
-					}
-					cashierLine -> preferRelease(customerName,customerID);
-				}
-				if(notGoToPreferLine){
-					printf("[CUST]Customer %d go to reg cashier line \n",customerID);
-					cashierLine -> regAcquire(customerName,customerID);
-					cashierLine -> addRegLine((int)this);
-					cashierLine -> regRelease(customerName,customerID);
-				}
-			}
+			- void myClerkForkFunc(int x){
+				Clerk *cl = (Clerk*)x;
+				printf("[ckerkFork]%s %d run\n",cl->getName(),cl->getID());
+				cl -> run();
+				delete cl;
+			  }
 
 	+ Functions modified and in which file.
-		- test_code.cc
-			void Office::myCustomerForkFunc(int x){
-				Customer *c = (Customer*)x;
-				c -> customerRun();
+		- None.
 
-				delete c;
-			}
+====================================================== PART 3 ======================================================
+	+ Files Modified
+		- None.
 
-			void Office::myClerkForkFunc(int x){
-				Clerk *cl = (Clerk*)x;
-				cl -> run();
+	+ Files added
+		- project2_final.c
 
-				delete cl;
-			}
+	+ Data Structures added, and the file they were added to.
+		- None.
 
-			void Office::run(){
-				// create the manager
-				Timer *timer = new Timer((VoidFunctionPtr)Manager, 0, false);
+	+ Data Structures modified, and the file they were added to.
+		- None.
 
-				// create 4 clerks (1 clerk for each table/job)
-
-				// create 2 customers
-				// customer 1 with ID = 1 and $1600
-				Customer *cus1 = new Customer(1, 1600, applicationLine, pictureLine, passportLine, cashierLine);
-				Thread *t1 = new Thread("Customer 1");
-				t1 -> Fork((VoidFunctionPtr)myCustomerForkFunc, (int)t1);
-
-				// customer 2 with ID = 2 and $1100
-				Customer *cus2 = new Customer(2, 1100, applicationLine, pictureLine, passportLine, cashierLine);
-				Thread *t2 = new Thread("Customer 2");
-				t2 -> Fork((VoidFunctionPtr)myCustomerForkFunc, (int) t2);
-
-			}
-
-			void Office::Manager(int x){
-				// check each table for number of clerks
-				// add 1 clerk if table is empty
-
-				applicationTable->acquireLock();
-				if (applicationTable->clerkCount() == 0){
-					applicationTable->addClerk();
-				}
-				applicationTable->releaseLock();
-
-				pictureTable->acquireLock();
-				if (pictureTable->clerkCount() == 0){
-					pictureTable->addClerk();
-				}
-				pictureTable->releaseLock();
-
-				passportTable->acquireLock();
-				if (passportTable->clerkCount() == 0){
-					passportTable->addClerk();
-				}
-				passportTable->releaseLock();
+	+ Functions added and in which file.
+		- project2_final.c
+			- void customerRun(){
+				int myOwnID = -1;
+				int i;
 	
-				cashierTable->acquireLock();
-				if (cashierTable->clerkCount() == 0){
-					cashierTable->addClerk();
+				/*get the customer ID*/
+				Acquire(customerIDLock);
+				myOwnID = customerIDCount;
+				customerIDCount++;
+				Release(customerIDLock);
+				printf("[CUST] Customer %d start running \n", myOwnID);
+	
+	
+				/* goto application line first*/
+				printf("[CUST] Customer %d go queue up at applicaiton line \n", myOwnID);
+
+				if(applicationLine.preferLineCount <= applicationLine.regLineCount){
+					/* add itself to prefer line*/
+					Acquire(applicationLine.preferLineLock);
+					customerArray[myOwnID].money -= 500;
+					applicationLine.money += 500;
+					applicationLine.preferLineCount += 1;
+					printf("[CUST] Customer %d have joined the app prefer Line \n", myOwnID);
+					Wait(applicationLine.preferLineLock, applicationLine.preferLineCond);
+					Release(applicationLine.preferLineLock);
 				}
-				cashierTable->releaseLock();
-
-
-				// check for number of customers in each line
-				// add 1 clerk if # of customer in line is >3
-				// must acquire the lock for both line and table before adding a clerk or checkin customer
-				// must release all locks at completion.
-
-				applicationLine->regAcquire();
-				applicationLine->preferAcquire();
-				applicationTable->acquireLock();
-				if ((applicationLine->regCustomerCount() > 3) || (applicationLine->preferCustomerCount() > 3)){
-					applicationTable->addClerk();
+				else{
+					/*add itself to regular line*/
+					Acquire(applicationLine.regLineLock);
+					applicationLine.regLineCount += 1;
+					printf("[CUST] Customer %d have joined the app regular Line \n", myOwnID);
+					Wait(applicationLine.regLineLock, applicationLine.regLineCond);
+					Release(applicationLine.regLineLock);
 				}
-				applicationLine->regRelease();
-				applicationLine->preferRelease();
-				applicationTable->releaseLock();
+	
+				/*application complete*/
+				customerArray[myOwnID].applicationDone = 1;
+				printf("[CUST] Customer %d have completed application", myOwnID);
 
-				pictureLine->regAcquire();
-				pictureLine->preferAcquire();
-				pictureTable->acquireLock();
-				if ((pictureLine->regCustomerCount() > 3) || (pictureLine->preferCustomerCount() > 3)){
-					pictureTable->addClerk();
+				/*customer now goes to picture line*/
+				printf("[CUST] Customer %d go queue up at picture line \n", myOwnID);
+
+				if(pictureLine.preferLineCount <= pictureLine.regLineCount){
+					/* add itself to prefer line*/
+					Acquire(pictureLine.preferLineLock);
+					customerArray[myOwnID].money -= 500;
+					pictureLine.money += 500;
+					pictureLine.preferLineCount += 1;
+					printf("[CUST] Customer %d have joined the pic prefer Line \n", myOwnID);
+					Wait(pictureLine.preferLineLock, pictureLine.preferLineCond);
+					Release(pictureLine.preferLineLock);
 				}
-				pictureLine->regRelease();
-				pictureLine->preferRelease();
-				pictureTable->releaseLock();
-
-				passportLine->regAcquire();
-				passportLine->preferAcquire();
-				passportTable->acquireLock();
-				if ((passportLine->regCustomerCount() > 3) || (passportLine->preferCustomerCount() > 3)){
-					passportTable->addClerk();
-				}	
-				passportLine->regRelease();
-				passportLine->preferRelease();
-				passportTable->releaseLock();
-
-				cashierLine->regAcquire();
-				cashierLine->preferAcquire();
-				cashierTable->acquireLock();
-				if ((cashierLine->regCustomerCount() > 3) || (cashierLine->preferCustomerCount() > 3)){
-					cashierTable->addClerk();
+				else{
+					/*add itself to regular line*/
+					Acquire(pictureLine.regLineLock);
+					pictureLine.regLineCount += 1;
+					printf("[CUST] Customer %d have joined the pic regular Line \n", myOwnID);
+					Wait(pictureLine.regLineLock, pictureLine.regLineCond);
+					Release(pictureLine.regLineLock);
 				}
-				cashierLine->regRelease();
-				cashierLine->preferRelease();
-				cashierTable->releaseLock();
+	
+				/*picture complete*/
+				customerArray[myOwnID].pictureDone = 1;
+				printf("[CUST] Customer %d have completed picture", myOwnID);
+	
+				while(customerArray[myOwnID].passportDone == 0){
+					/*customer now goes to passport line*/
+					printf("[CUST] Customer %d go queue up at passport line \n", myOwnID);
+
+					if(passportLine.preferLineCount <= passportLine.regLineCount){
+						/* add itself to prefer line*/
+						Acquire(passportLine.preferLineLock);
+						customerArray[myOwnID].money -= 500;
+						passportLine.money += 500;
+						passportLine.preferLineCount += 1;
+						printf("[CUST] Customer %d have joined the pass prefer Line \n", myOwnID);
+						Wait(passportLine.preferLineLock, passportLine.preferLineCond);
+						Release(passportLine.preferLineLock);
+					}
+					else{
+						/*add itself to regular line*/
+						Acquire(passportLine.regLineLock);
+						passportLine.regLineCount += 1;
+						printf("[CUST] Customer %d have joined the pass regular Line \n", myOwnID);
+						Wait(passportLine.regLineLock, passportLine.regLineCond);
+						Release(passportLine.regLineLock);
+					}
+		
+					/*picture complete*/
+					if(customerArray[myOwnID].applicationDone == 1 && customerArray[myOwnID].pictureDone == 1){
+						customerArray[myOwnID].passportDone = 1;
+						printf("[CUST] Customer %d have completed passport", myOwnID);
+					}
+				}
+	
+				/*customer now goes to cashier line*/
+				printf("[CUST] Customer %d go queue up at cashier line \n", myOwnID);
+		
+				if(cashierLine.preferLineCount <= cashierLine.regLineCount){
+					/* add itself to prefer line*/
+					Acquire(cashierLine.preferLineLock);
+					customerArray[myOwnID].money -= 500;
+					cashierLine.money += 500;
+					cashierLine.preferLineCount += 1;
+					printf("[CUST] Customer %d have joined the cash prefer Line \n", myOwnID);
+					Wait(cashierLine.preferLineLock, cashierLine.preferLineCond);
+					Release(cashierLine.preferLineLock);
+				}
+				else{
+					/*add itself to regular line*/
+					Acquire(cashierLine.regLineLock);
+					cashierLine.regLineCount += 1;
+					printf("[CUST] Customer %d have joined the cash regular Line \n", myOwnID);
+					Wait(cashierLine.regLineLock, cashierLine.regLineCond);
+					Release(cashierLine.regLineLock);
+				}
+	
+				/*cashier complete*/
+				customerArray[myOwnID].cashierDone = 1;
+   				Yield(); 
+				//printf("[CUST] Customer %d done cashier\n", myOwnID);
+  				 Acquire(totalFinishCustomerLock);
+  				 totalFinishCustomer++;
+  				 Release(totalFinishCustomerLock);
+	
+				printf("[CUST] Customer %d completed !\n", myOwnID);
+				printf("[CUST] !!!!!!!!!!!!!!!!!!!!!!!\n" );
+				Exit(0);
+			  }
+
+			- void applicationClerkRun(){
+   				int clerkID = -1;
+  				int c = 0;//customer
+  				int type = 0;//App type = 0;
+   				//Get Application Clerk ID
+   				Acquire(applicationClerkLock);
+   				clerkID = applicationClerkIDCount ++;
+  			 	Release(applicationClerkLock);
+   
+				printf("[Clerk]AppClerk %d Start Running \n",clerkID);
+   				while(1){
+      					//Do Lock
+     					Acquire(applicationLine.preferLineLock);
+     					printf("[Clerk]AppClerk %d Get app line lock \n",clerkID);
+     					if(applicationLine.preferLineCount != 0){
+						//if there is customer in prefer line
+       						printf("[Clerk]AppClerk %d check prefer line \n",clerkID);
+         					applicationLine.preferLineCount --;
+       						Signal(applicationLine.preferLineLock,applicationLine.preferLineCond); 
+         					printf("[Clerk]AppClerk %d Release app line lock \n",clerkID);
+         					Release(applicationLine.preferLineLock);
+         					Yield();
+      					}
+					else{
+         					Release(applicationLine.preferLineLock);
+        					Acquire(applicationLine.regLineLock);
+
+         					if(applicationLine.regLineCount != 0){
+         						printf("[Clerk]AppClerk %d check reg line \n",clerkID);
+            						applicationLine.regLineCount --;
+            						Signal(applicationLine.regLineLock,applicationLine.regLineCond); 
+            						Release(applicationLine.regLineLock);
+            						Yield();
+         					}
+ 						else{
+           						Release(applicationLine.regLineLock);
+            						//Go Sleep
+           					 	printf("[Clerk]AppClerk %d leave table now",clerkID);
+            						Acquire(applicationTable.tableLock);
+           						applicationTable.clerkCount--;
+            						Wait(applicationTable.tableLock,applicationTable.tableCond);
+            						Release(applicationTable.tableLock);
+            						printf("[Clerk]AppClerk %d now come back to table \n",clerkID);
+         					}
+      					} 
+				}//while(1);
+
+				Exit(0);
+			  }
+
+			- void pictureClerkRun(){
+   				int clerkID = -1;
+   				int c = 0;//customer
+  				int type = 0;//Pic type = 0;
+   				//Get Picture Clerk ID
+   				Acquire(pictureClerkLock);
+   				clerkID = pictureClerkIDCount ++;
+   				Release(pictureClerkLock);
+   
+				printf("[Clerk]PicClerk %d Start Running \n",clerkID);
+   				while(1){
+      					//Do Lock
+      					Acquire(pictureLine.preferLineLock);
+     	 				printf("[Clerk]PicClerk %d Get Pic line lock \n",clerkID);
+      					if(pictureLine.preferLineCount != 0){
+						//if there is customer in prefer line
+         					printf("[Clerk]PicClerk %d check prefer line \n",clerkID);
+         					pictureLine.preferLineCount --;
+         					Signal(pictureLine.preferLineLock,pictureLine.preferLineCond); 
+         					printf("[Clerk]PicClerk %d Rel Pic line lock \n",clerkID);
+         					Release(pictureLine.preferLineLock);
+         					Yield();
+      					}
+					else{
+         					Release(pictureLine.preferLineLock);
+         					Acquire(pictureLine.regLineLock);
+
+        					if(pictureLine.regLineCount != 0){
+            						printf("[Clerk]PicClerk %d check reg line \n",clerkID);
+            						pictureLine.regLineCount --;
+           						Signal(pictureLine.regLineLock,pictureLine.regLineCond); 
+            						Release(pictureLine.regLineLock);
+            						Yield();
+         					}
+						else {
+           						Release(pictureLine.regLineLock);
+            						//Go Sleep
+           				 		printf("[Clerk]PicClerk %d leave table now\n",clerkID);//Must have
+            						Acquire(pictureTable.tableLock);
+            						//printf("[Clerk]PicTableClerk [%d]",pictureTable.clerkCount);
+            						pictureTable.clerkCount--;
+            						Wait(pictureTable.tableLock,pictureTable.tableCond);
+            						Release(pictureTable.tableLock);
+            						//printf("[Clerk]PicClerk %d now come back\n",clerkID);
+         					}
+      					} 
+				}//while(1);
+				Exit(0);
+			  }
+
+			- void passportClerkRun(){
+   				int clerkID = -1;
+   				int c = 0;//customer
+   				int type = 0;//Passport type = 0;
+   				//Get Passportture Clerk ID
+   				Acquire(passportClerkLock);
+   				clerkID = passportClerkIDCount ++;
+   				Release(passportClerkLock);
+   
+				printf("[Clerk]PaClerk %d Start Running \n",clerkID);
+   				while(1){
+      					//Do Lock
+      					Acquire(passportLine.preferLineLock);
+     	 				printf("[Clerk]PaClerk %d Get line lock \n",clerkID);
+      					if(passportLine.preferLineCount != 0){
+						//if there is customer in prefer line
+         					printf("[Clerk]PaClerk %d check prefer line \n",clerkID);
+         					passportLine.preferLineCount --;
+         					Signal(passportLine.preferLineLock,passportLine.preferLineCond); 
+         					printf("[Clerk]PastClerk %d Release line lock \n",clerkID);
+         					Release(passportLine.preferLineLock);
+         					Yield();
+      					}
+					else{
+        				 	Release(passportLine.preferLineLock);
+         					Acquire(passportLine.regLineLock);
+
+         					if(passportLine.regLineCount != 0){
+           						printf("[Clerk]PassportClerk %d check reg line \n",clerkID);
+           			 			passportLine.regLineCount --;
+            						Signal(passportLine.regLineLock,passportLine.regLineCond); 
+           	 					Release(passportLine.regLineLock);
+            						Yield();
+         					}
+						else {
+           						Release(passportLine.regLineLock);
+            						//Go Sleep
+            						printf("[Clerk]PatClerk %d leave now \n",clerkID);
+            						Acquire(passportTable.tableLock);
+           						passportTable.clerkCount--;
+            						Wait(passportTable.tableLock,passportTable.tableCond);
+            						Release(passportTable.tableLock);
+            						printf("[Clerk]PaClerk %d now come back \n",clerkID);
+         					}
+      					} 
+				}//while(1);
+				Exit(0);
+			  }
+
+			- void cashierClerkRun(){
+   				int clerkID = -1;
+   				int c = 0;//customer
+   				int type = 0;//cashier type = 0;
+   				//Get cashier Clerk ID
+   				Acquire(cashierClerkLock);
+   				clerkID = cashierClerkIDCount ++;
+   				Release(cashierClerkLock);
+   
+				printf("[Clerk]cashierClerk %d Start Running \n",clerkID);
+   			while(1){
+      				//Do Lock
+      				Acquire(cashierLine.preferLineLock);
+      				printf("[Clerk]cClerk %d Get cashier line lock\n",clerkID);
+      				if(cashierLine.preferLineCount != 0){ 
+					//if there is customer in prefer line
+         				printf("[Clerk]cClerk %d check prefer line\n",clerkID);
+        		 		cashierLine.preferLineCount --;
+         				Signal(cashierLine.preferLineLock,cashierLine.preferLineCond); 
+        	 			printf("[Clerk]cClerk %d Release cashier line lock\n",clerkID);
+         				Release(cashierLine.preferLineLock);
+         				Yield();
+      				}
+				else{
+        				Release(cashierLine.preferLineLock);
+         				Acquire(cashierLine.regLineLock);
+
+         				if(cashierLine.regLineCount != 0){
+           					printf("[Clerk]cashierClerk %d check reg line \n",clerkID);
+            					cashierLine.regLineCount --;
+            					Signal(cashierLine.regLineLock,cashierLine.regLineCond); 
+            					Release(cashierLine.regLineLock);
+            					Yield();
+         				}
+					else {
+           			 		Release(cashierLine.regLineLock);
+            					//Go Sleep
+           					printf("[Clerk]caClerk %d leave now\n",clerkID);
+            					Acquire(cashierTable.tableLock);
+            					cashierTable.clerkCount--;
+            					Wait(cashierTable.tableLock,cashierTable.tableCond);
+            					Release(cashierTable.tableLock);
+            					printf("[Clerk]caClerk %d now come \n",clerkID);
+         				}
+      				} 
+			}//while(1);
+			Exit(0);
+		  }
+
+		- void managerRun(){
+      			while(totalFinishCustomer != NUM_OF_CUSTOMER){
+     				printf("[Manager] %d total finish customer \n",totalFinishCustomer);
+         			Acquire(applicationTable.tableLock);
+            			//Keep this print
+            			printf("[Manager] app table clerk count %d \n",applicationTable.clerkCount);
+                  		if(applicationTable.clerkCount == 0){
+            				applicationTable.clerkCount++;
+            				//printf("[Manager] wake one app clerk up \n");
+            				Signal(applicationTable.tableLock,applicationTable.tableCond);
+         			} 
+         			Release(applicationTable.tableLock);
+         			Acquire(pictureTable.tableLock);
+         			if(pictureTable.clerkCount == 0){
+           				pictureTable.clerkCount++;
+            				//printf("[Manager] wake one pic clerk up \n ");
+            				Signal(pictureTable.tableLock,pictureTable.tableCond);
+         			} 
+         			Release(pictureTable.tableLock);
+        			Acquire(passportTable.tableLock);
+            			//printf("[Manager] passport table clerk count %d \n",passportTable.clerkCount);
+                		if(passportTable.clerkCount == 0){
+            				passportTable.clerkCount++;
+            				//printf("[Manager] wake one passport clerk up \n ");
+            				Signal(passportTable.tableLock,passportTable.tableCond);
+         			} 
+         			Release(passportTable.tableLock);
+         			Acquire(cashierTable.tableLock);
+            			//printf("[Manager] cashier table clerk count %d \n",cashierTable.clerkCount);
+                  		if(cashierTable.clerkCount == 0){
+            				cashierTable.clerkCount++;
+            				//printf("[Manager] wake one cashier clerk up \n ");
+            				Signal(cashierTable.tableLock,cashierTable.tableCond);
+         			} 
+         			Release(cashierTable.tableLock);
+      				Yield();
+   			}
+  			Exit(0);
+		  }
+
+		- void Office(){
+			int i;
+	
+			/*  Create all required lock and condition for table, and line for passport office*/
+	
+			totalFinishCustomerLock = CreateLock();
+	
+			applicationTable.tableLock = CreateLock();
+			pictureTable.tableLock = CreateLock();
+			passportTable.tableLock = CreateLock();
+			cashierTable.tableLock = CreateLock();
+
+			customerIDLock = CreateLock();
+			applicationClerkLock = CreateLock();
+			pictureClerkLock = CreateLock();
+			passportClerkLock = CreateLock();
+			cashierClerkLock = CreateLock();
+		
+			applicationTable.tableCond = CreateCondition();
+			pictureTable.tableCond = CreateCondition();
+			passportTable.tableCond = CreateCondition();
+			cashierTable.tableCond = CreateCondition();
+			
+			applicationLine.regLineLock = CreateLock();
+			applicationLine.preferLineLock = CreateLock();
+			applicationLine.regLineCond = CreateCondition();
+			applicationLine.preferLineCond = CreateCondition();
+	
+			pictureLine.regLineLock = CreateLock();
+			pictureLine.preferLineLock = CreateLock();
+			pictureLine.regLineCond = CreateCondition();
+			pictureLine.preferLineCond = CreateCondition();
+	
+			passportLine.regLineLock = CreateLock();
+			passportLine.preferLineLock = CreateLock();
+			passportLine.regLineCond = CreateCondition();
+			passportLine.preferLineCond = CreateCondition();
+	
+			cashierLine.regLineLock = CreateLock();
+			cashierLine.preferLineLock = CreateLock();
+			cashierLine.regLineCond = CreateCondition();
+			cashierLine.preferLineCond = CreateCondition();
+	   
+			pplicationTable.clerkCount = 0;
+   			pictureTable.clerkCount = 0;
+   			passportTable.clerkCount = 0;
+   			cashierTable.clerkCount = 0;
+   
+			/*Initialize values for the four lines, clean them up*/
+			for(i=0; i<NUM_OF_CUSTOMER; i++){
+				applicationLine.regLine[i].ID = -1;
+				applicationLine.regLine[i].status = 0;
+				applicationLine.preferLine[i].ID = -1;
+				applicationLine.preferLine[i].status = 0;
 			}
+			for(i=0; i<NUM_OF_CUSTOMER; i++){
+				pictureLine.regLine[i].ID = -1;
+				pictureLine.regLine[i].status = 0;
+				pictureLine.preferLine[i].ID = -1;
+				pictureLine.preferLine[i].status = 0;
+			}
+			for(i=0; i<NUM_OF_CUSTOMER; i++){
+				passportLine.regLine[i].ID = -1;
+				passportLine.regLine[i].status = 0;
+				passportLine.preferLine[i].ID = -1;
+				passportLine.preferLine[i].status = 0;
+			}
+			for(i=0; i<NUM_OF_CUSTOMER; i++){
+				cashierLine.regLine[i].ID = -1;
+				cashierLine.regLine[i].status = 0;
+				cashierLine.preferLine[i].ID = -1;
+				cashierLine.preferLine[i].status = 0;
+			}
+	
+			/*Creating Customers*/
+			for(i=0; i<NUM_OF_CUSTOMER; i++){
+				customerArray[i].money = 1600;
+				customerArray[i].applicationDone = 0;
+				customerArray[i].pictureDone = 0;
+				customerArray[i].passportDone = 0;
+				customerArray[i].cashierDone = 0;
+				Fork(customerRun);
+			}
+	
+			/* Creating Clerks for application table*/
+			for(i=0; i<NUM_OF_CLERK; i++){
+				applicationClerkArray[i].responsibleTable = 0;
+      				applicationTable.clerkCount++;
+				Fork(applicationClerkRun);
+			}
+	
+			/* Creating Clerks for picture table*/
+			for(i=0; i<NUM_OF_CLERK; i++){
+				pictureClerkArray[i].responsibleTable = 1;
+     	 			pictureTable.clerkCount ++;
+				Fork(pictureClerkRun);
+			}
+	
+			/* Creating Clerks for passport table*/
+			for(i=0; i<NUM_OF_CLERK; i++){
+				passportClerkArray[i].responsibleTable = 2;
+      				passportTable.clerkCount ++;
+				Fork(passportClerkRun);
+			}
+	
+			/* Creating Clerks for cashier table*/
+			for(i=0; i<NUM_OF_CLERK; i++){
+				cashierClerkArray[i].responsibleTable = 3;
+      				cashierTable.clerkCount ++;
+				Fork(cashierClerkRun);
+			}
+	
+			/*Create Manager*/
+			Fork(managerRun);
+		  }
+
+		- void finalization(){
+			/* Destroy all created lock and condition */
+			DestroyLock(applicationLine.preferLineLock);
+			DestroyLock(applicationLine.regLineLock);
+			DestroyLock(pictureLine.preferLineLock);
+			DestroyLock(pictureLine.regLineLock);
+			DestroyLock(passportLine.preferLineLock);
+			DestroyLock(passportLine.regLineLock);
+			DestroyLock(cashierLine.preferLineLock);
+			DestroyLock(cashierLine.regLineLock);
+ 
+			DestroyLock(applicationTable.tableLock);
+			DestroyLock(pictureTable.tableLock);
+			DestroyLock(passportTable.tableLock);
+			DestroyLock(cashierTable.tableLock);
+		
+			DestroyCondition(applicationTable.tableCond);
+			DestroyCondition(pictureTable.tableCond);
+			DestroyCondition(passportTable.tableCond);
+			DestroyCondition(cashierTable.tableCond);
+		  }
+
+		- void handleCustomer(int c,int type){
+   			// Type 0 : Application Clerk
+   			// Type 1 : Picture Clerk
+   			// Type 2 : Clerk
+   			// Type 3 : Application Clerk
+   			switch(type){
+   				case 0:
+      					customerArray[c].applicationDone = 1;
+     					break;
+   				case 1:
+      					customerArray[c].pictureDone= 1;
+      					break;
+   				case 2:
+      					customerArray[c].passportDone= 1;
+      					break;
+  				 case 3:
+      					customerArray[c].cashierDone= 1;
+      					break;
+      			}
+		  }
+
+		- int getCustomerID(int l,int PreOrReg){
+   			// PreOrReg 0 : prefer line 
+   			// PreOrReg 1 : regular line
+  			cLine *line = (cLine*)l;
+  	 		int i;
+   			int customerID = -1;
+  			for(i = 0 ; i < NUM_OF_CUSTOMER ; i++){
+   				if(PreOrReg == 0){
+      					//check prefer line
+     					if(line->preferLine[i].status == 1){
+      						//get id than set spot to empty
+     					 	customerID = line->preferLine[i].ID;
+      						line->preferLine[i].status = 0;
+      						line->preferLineCount --;
+      						break;
+     					} 
+   				}
+				else{
+      					//check regular line
+     					if(line->regLine[i].status == 1){
+      						//get id than set spot to empty
+      						customerID = line->regLine[i].ID;
+      						line->regLine[i].status = 0;
+      						line->regLineCount --;
+      						break;
+     					} 
+   				}//end PreOrReg
+  
+  			}//end for 
+  			return customerID;
+		  } 
+
+
+	+ Functions modified and in which file.
+		- None.
+
 ***************
 * V. Testing: *
 ***************
-====================================================== PART 1 ======================================================
+================================================= PART 1 & PART 2 ==================================================
 	+ How to test
 		- Input "gmake" under /code/ directory for compile from command prompt.
-		- Input "./nachos -T" under /code/Threads/ director from command prompt.
+		- Input "make" under code/test directory, make sure you can run the cpp2c.pl perl script 
+		- Go to code/test directory when running testfile (to ensure the path of filename used by exec syscall)
+		- Input "../userprog/nachos -x lockcond" under /code/test/ directory to display the behavior of all lock, condition, fork and exit Syscall.
+		- Input "../userprog/nachos -x test_fork" under /code/test/ directory to display the behavior of fork syscall.
+		- Input "../userprog/nachos -x test_exec" under /code/test/ directory to display the behavior of Exec syscall.
 
 	+ Test output
-		- Test 1: Threads trying to acquire LOCK where LOCK already acquired by other thread.
-			  Another thread trying to release a LOCK which it doesn't acquire and system shows error message.
-		- Test 2: Signals are not stored, but Signal with no thread waiting is ignored.
-		- Test 3: Signal function wake up next one thread only.
-		- Test 4: Broadcast function wake up all waiting threads. 
-		- Test 5: Signalling a thread waiting under one lock while holding another is a Fatal error.
+		- Lock and Condition Syscalls. (test_lockcond.c)
+			- Main starts in the beginning and starts the test.
+			- Assign Lock 1's id to 0 and Lock 2's id to 1.
+			- Main starts the test and create all Locks and Conditions.
+			- Function 1 forked by Main and Main waits on condition 1 with Lock 1.
+			- Function 1 starts and signals on conditional 1 with Lock 1.
+			- Function 1 waits on Conditional 2 with Lock 2.
+			- Main releasing Lock 1 and acquiring Lock 1 again.
+			- Main prepares to forked Function 2, and waits from Function 2.
+			- Function 2 starts and signals on Conditional 2 with Lock 1.
+			- Function 2 waits on Conditional 3 with Lock 2.
+			- Main wakes up on Condition 2 with Lock 1 and released Lock 1.
+			- Main broadcasts on Condition 2 with Lock 2 after released Lock 1.
+			- Main, Function 1, and Function 2 exit.
+			- Finally, machine halted.
 
-====================================================== PART 2 ======================================================
+		- Fork Function. (test_fork.c)
+			- Main starts in the beginning and function 1 and function 2 are forked by the main.
+			- Function 1 starts and exits after Main exits.
+ 			- Function 2 starts and exits after Function 1 exits.
+			- Finally, Machine halted.
+			
+		- Exec Function. (test_exec.c)
+			- Main starts in the beginning and calls Exec Syscall twice.
+			- Main execute the fork test file twice.
+		
+====================================================== PART 3 ======================================================
 	+ How to test
 		- Input "gmake" under /code/ directory for compile from command prompt.
-		- Input "./nachos -rs -P2" under /code/Threads/ directory from command prompt, this display the entire office behavior.
+		- Input "make" under code/test directory, make sure you can run the cpp2c.pl perl script 
+		- Input "../userprog/nachos -x project2_final" under /code/test/ directory to simulate one office.
+		- Input "../userprog/nachos -x multi_office" under /code/test/ directory from command prompt, this display the entire multiple office behavior.
 		
-		- Input "./nachos -rs -P2 | grep CUST" to observe only customers' behaviors.
-		
-		- Input "./nachos -rs -P2 | grep Manager" to observe only Manager's behaviors.
-		
-		- Input "./nachos -rs -P2 | grep Clerk" to observe only clerks' behaviors.
-		
-		- Input "./nachos -rs -P2 | grep Line" to observe only Line's behaviors.
-		
-		- Input "./nachos -rs -P2 | grep Table" to observe only Table's behaviors.
-		
-		- The current program supports 4 clerks at each table and 4 customers entering the office
-		
-		- To increase/decrease the number of clerks working at each table, modify the defined "CLERK_NUM" value in test_code.cc
-		
-		- To increase/decrease the number of customer entering the office, modify the defined "CUSTOMER_NUM" value in test_code.cc
-		
-		- To display the total amount of money collected by the office, uncomment the "#define SHOW_MONEY" line in test_code.cc
 
 	+ Test output
-		- Computer generates and create Customers, Manager, Application Clerks, Picture Clerks, Passport Clerks, Senators and Cashier clerks.
-		- Upon Customers entering the Passport Office, the computer randomly generated which clerk (Application or Picture) that customer will enter.
-		- By entering the line, the computer randomly generated which line (preferred or regular) that customer will enter if customer has more than $500.
-		- Picture Clerk shown Customer's picture to Customer and the computer randomly generated percentage that Customer might not like their picture.
-		- Application Clerk records Customer's application and pass to Passport Clerk.
-		- Passport Clerk checked both Customer's application and picture.
-		- Cashier Clerk checked Customer's Certification by Passpport Clerk and takes $100 from Customer for passport fee.
-		- Finally, Cashier Clerk gives passport to Customer and Customer leaves the Passport Office.
-		- Clerks go on break when no Customers wait in the line.
-		- On regular interval, the Manager checks each table/line, and determine whether to add/wakeup a clerk to each table.
+		- Both sigle office and multiple office works!!
 		
-
 *******************
 * VI. Discussion: *
 *******************
 ====================================================== PART 1 ======================================================
 	+ Experiment expectation.  (What you hope will happen.)
-		- LOCK and CONDITION will function perfectly and meet the requirements on the CSCI-402 class website.
- 
+		- Lock Syscalls, Condition Syscalls, Exit Syscall, Yield Syscall, and Process Table should be able to function correctly.
+		- Demonstrate system calls work does not crash Nachos when used incorrectly.
+
 	+ Experiment result.  (What actually happens.)
 		- Functioned perfectly.
 		- The result of this program meets the requirements.
 
 	+ Explanation
-		- Most codes were given in class, just grab and input the codes.
+		- The basic techniques were told by professor, simply modified into program's specification.
 
 ====================================================== PART 2 ======================================================
-	+ Experiment expectation.  (What you hope will happen.) 
-		- Continue to use LOCK and CONDITION
-		
-		- Simulate a scenario that satisfy all the behaviors of passport office described in the design specification.
+	+ Experiment expectation.  (What you hope will happen.)
+		- Be able to Keep track of allocating physical memory frames using a bitmap.
+		- Copying data to/from the kernel from/to the user's virtual address space.
 
 	+ Experiment result.  (What actually happens.)
-		
-		- Customers:
-		
-		- 		Customer behaviors meet the design requirement.
-		- 		The customers complete each tasks and obtain their own passport in orderly fashion.
-		
-		-		The customers are able to complete all the task and leave the office.
-		- Clerks:
-		
-		- 		Clerk behaviors meet the design requirement.
-		
-		- 		The clerks execute tasks and go to sleep in orderly fashion
-		
-		- 		The clerks go to sleep correctly when there are no more customers to be handled.
-		
-		- 		The clerks come back to work correctly when being called by the manager.
-		
-		- Manager:
-		
-		-		The Manager determine whether to add/wakeup a clerk to each table as the requirement. 
-		
-		- 		The manager, suppose to wake up clerks only when certain requirements are satisfied, 
-		
-		-      		and wakes up a clerk only as customer need in the program.
-		
-		- 		Manager is able to check the number of clerk at each table, and number of customers in line
-		
-		-		and wakeup a clerk at each table if need.
-		- Senator:
-		
-		-		Senator related features is incomplete, therefore no senator is presented in the office.
-		
-		- 		Mechanism to handle when the senator is incomplete.
+		- The result of this program meets the requirements.
 
 	+ Explanation
-		- We believe part of the problem lie in the fact that as each time the timer interrupt is handled, a new manager is created,as the manager tries to acquire locks for manager lock. The it will keep pipe up the stack until stack crash.  The manager thread must wait for a amount of time until the other clerk or customer has given up the lock. While the current manager thread is waiting to acquire its lock, a new timer interupt has occured result in creating a new unwanted manager thread. The new unwated manager thread also tried to acquire identical lock for accessing variables. In the end, countless manager threads are being created and stacked trying to acquire the same lock. Finally, when a waiting manager threads obtain the lock of its interests, the office condition have already been change which results in adding unwanted clerk to each table. Eventually the program crash when there are too many manager thread stacking up in the memory but too few of them being able to complete. Fortunately, the customers and clerks are usually able to complete their tasks before the program crash.
-		
-		- Since there are no ways to kill an existing waiting manager thread or stop a new manager thread being created by timer until it has run to completion, the office money variable is being announced countless times by the manager thread overloading the program log. To view the amount of money collected by the office, user must use the method described in the above "How to test" section, and perform the necessary modification.
-		
-		- There are also no methods given to adjust the frequency at which the timer creates the manager threads.
-		
-		- If allowed to deviate from the design specification, we should be able to implement working manager thread (just one) without using a timer.
-		
-		- Due to lack of time and majority of effort being spent on debugging our broken manager system, we didn't get the chance to implemente much of the senator features.
+		- With carefully reviewed the AddrSpace constructor and file handling system calls, the goal of our program achieved.
+
+====================================================== PART 3 ======================================================
+	+ Experiment expectation.  (What you hope will happen.)
+		- Project2_final runs a single passport office with multiple customer and clerk threads.
+ 		- On further approach, we try to run multiple Passport Office (multi_office) independently and executing by different processes simultaneously.
+		- Implement as a set of multithreaded Nachos user program with the Fork system call to create all threads in the program.
+
+	+ Experiment result.  (What actually happens.)
+		- Running single passport office meets the expected behavior or simulation.
+		- Running multiple passport office meets the expected behavior of simulation.
+		- The output log present several unnecessary "ne" "ln" ... comment in the log file, this is due
+        to buggy string function(printf) we have implemented ourselves.
+		- To cleanup the log, simply add "| grep CUST" to monitor costomer behavior, replace CUST with any other variable to monitor specific behavior.
+
+	+ Explanation
+		- With careful manipulation of the Fork system call to create all threads in the system, the program run as expected.
 
 ***********************
 * VII. Miscellaneous: *
@@ -1117,3 +1397,16 @@ Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
 ====================================================== PART 2 ======================================================
 	- None.
 
+====================================================== PART 3 ======================================================
+	- We implement our own // <-> /**/ comment convert tool for nachos test program. 
+	   - cpp2c.pl will delete all the C++ style single line // comment when doing the make
+	   - c2cpp.pl will convert all the C style /* */comment to C++ style // comment 
+	   - In the code/test/Makefile, it will call cpp2c.pl to output tmp.c file which don't have
+        //comment 
+	- We implement our own string.h library for nachos userprogram. 
+      - itsStrlen : compute the string length,same as strlen
+      - itsStrcpy : copy string ,same as strcpy
+      - itoa      : convert number to string by base number
+      - vsprintf  : take the string patten then output string,current support %d,%c,%x
+      - printf    : same as C lib printf, but only support %d,%c,%x
+      - sprintf   : same as C lib sprintf, but only support %d,%c,%x

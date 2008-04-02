@@ -25,10 +25,10 @@
 #ifndef PROJ2
 #define PROJ2
 #endif
+//Since proj3 don't need pre_load
 #ifndef PROJ3
-//#define PROJ3
+#define PRE_LOAD
 #endif
-//#define PRE_LOAD
 extern "C" { int bzero(char *, int); };
 
 Table::Table(int s) : map(s), table(0), lock(0), size(s) {
@@ -316,13 +316,8 @@ AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles) {
 #endif
 
 #ifdef PROJ3
-<<<<<<< .mine
-	numPages = stackPageNum + execPageNum;
-	printf("[Sys_AddressSpace] Thread: num of page :%d\n,num of stack page:%d\n,num of exec page:%d",numPages,stackPageNum,execPageNum);
-=======
 	itsNumPages = stackPageNum + execPageNum;
 	printf("[Sys_AddressSpace] Thread: num of page :%d\n[Sys_AddressSpace]num of stack page:%d\n[Sys_AddressSpace]num of exec page:%d\n",itsNumPages,stackPageNum,execPageNum);
->>>>>>> .r537
 #else
     itsNumPages = divRoundUp(size, PageSize) + divRoundUp(UserStackSize,PageSize);
 #endif

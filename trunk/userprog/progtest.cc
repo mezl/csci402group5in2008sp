@@ -46,7 +46,7 @@ StartProcess(char *filename)
    //space->setProcessID(mySpaceID);   
    printf("===Process with pid=%d space now is Created!===\n",mySpaceID);
 #else
-   delete executable;			// close file
+   //delete executable;			// close file
 #endif
    space->InitRegisters();		// set the initial register values
    space->RestoreState();		// load page table register

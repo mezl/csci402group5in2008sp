@@ -16,9 +16,6 @@
 #include "stats.h"
 #include "timer.h"
 
-#ifndef PROJ3
-//#define PROJ3
-#endif
 // Initialization and cleanup routines
 extern void Initialize(int argc, char **argv); 	// Initialization,
 						// called before anything else
@@ -36,7 +33,9 @@ extern Timer *timer;				// the hardware alarm clock
 #include "bitmap.h"
 #include "machine.h"
 #include "synch.h"
-
+//if there is no vm,then we make physmemory large
+#ifndef PROJ3
+#endif
 extern Machine* machine;	// user program memory and registers
 
 //-------------------- Project 2 (part 1) -------------------
