@@ -1,0 +1,576 @@
+Ttitle: Writeup for Project 3, Spring 2008
+
+Date: 03/30/08
+
+Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
+			Yang-Hsuen Liu		yanghsul@usc.edu	2925356804
+			Cheng-Yu Lee		chengyul@usc.edu	9027332848
+
+********************
+* I. Requirements: *
+********************
+====================================================== PART 1 ======================================================
+	- Implement software-management of the TLB using software page translation in order for hardware no longer deals with page tables.
+	- Make sure the TLB state is set up properly on a context switch.
+	- Page translation scheme should keep track of the dirty and use flags for each page set by hardware in the TLB entry.
+	- Test cases must show that a single program that fits in main memory runs to completion.
+	- Test cases must show that two programs that fit in main memory together run to completion in different address spaces.
+	- Threads running in different address spaces cannot corrupt each other's memory.
+
+====================================================== PART 2 ======================================================
+	- Implement virtual memory to move a page from disk to memory and from memory to disk.
+	- Use the Nachos file system to contain the swap file.
+	- Require to have a single swap file for all Nachos processes and threads.
+	- Organize the swap file by pages and nothing is to be preloaded from the executable when a process starts up.
+	- Keep track of each virtual page to see whether it is in memory, swap file, or original executable.
+	- Must select a page to remove from memory to make room when memory is filled.
+	- Keep track of all of the pages in the system which are currently in use in order to find unreferenced pages to throw out on page faults.
+	- Implement Random page replacement policy and FIFO page replacement only.
+	- Demonstrate that two or more programs that are each larger than 32 pages of main memory are able to run to completion.
+
+====================================================== PART 3 ======================================================
+	- Implement remote procedure calls for the new Lock and Condition Variable system calls that implemented in project 2.
+	- Any of these system calls are to be sent from a "client", instance of Nachos to a "server" instance of Nachos.
+	- Server is to be able to handle multiple clients.
+	- Any Lock and Condition variable system calls that is made by a client is to be sent to the server Nachos.
+	- The server performs the system call for the client and returns any result back to the client.
+	- To build a complete abstraction for distributed application.
+
+********************
+* II. Assumptions: *
+********************
+====================================================== PART 1 ======================================================
+	- The swap file is larger enough to store all the dirty pages.
+	- The main memory is 32 pages.
+	- The TLB has 4 entries and each 1 page in size.
+
+====================================================== PART 2 ======================================================
+	- The main memory is 32 pages.
+	- The TLB has 4 entries and each 1 page in size.
+	- Do not have to worry about the executable being changed during a Nachos execution.
+	- Assume test cases may run other user-level programs on system to test implementation.
+
+====================================================== PART 3 ======================================================
+	- This program run as single threaded clients and server.
+	- Assume that server Nachos is always machine number zero.
+	- invalidating the TLB at every context switch.
+
+****************
+* III. Design: *
+****************
+================================================== PART 1 & Part 2 ==================================================
+	+Page Fault HANDLER
+		+ void PageFault_Handler(unsigned int va)
+			- If currentThread to space is not NULL, assign cnpg to get the number pages. Check if virtual page number is greater or equal to cnpg, print error message then halt.
+			- Acquire the memory lock, let physical page number to get physcial address from virtual page number. If not found in IPT, IPT will update the virtual page number and release the memory lock.
+
+		+ int getPhysAddr(int vpn)
+			- Translation virtual page number to physical page number. Use for test TLB.
+
+	+ IPT Function
+		+ IPT Hit
+			+ int IPTHit(int pid,int vpn)
+				- Check if the address is in IPT or not. If IPThit is true, return physical address. Otherwire return -1.
+				- Pre:	pid : proccess ID.
+						vpn : virtual page number.
+				- Post:	Return: IPT Hit True: physical page number .
+						IPT Hit False: -1
+		+ IPT Update
+			- Insert Current Physical Address in to the IPT table.
+			- Pre:	vpn: virtual page number.
+			- Post:	[None]
+			- Return:	Physical Page Number.
+		+ IPT Free Spot
+			- Check if any free spot in the IPT. If some of IPT is invalid, we return this spot. Otherwire return -1.
+			- Post:	[None]
+			- Return:	IPT Have Free Spot: free spot number.
+					IPT No Free Spot: -1.
+		+ Evict IPT Slot
+			- Pre:	[None]
+			- Post:	[None]
+			- Return: Next IPT spot count 
+			- Note the int nextEvictIPTSlot is a global variable
+		+ Write to Swap
+			- The Acutal Memory to Swap Handle is done by AddrSpace.
+			- Pre:	ipt slot which wrtie to swap.
+			- Post:	save swap address to the PageTable Entry .
+					change the location to the PageTable Entry
+			- Return: None
+
+		+ Read Swap to Memory
+			- Check the page table to find the location of those data
+			- if the it's in the executable file, we ask AddrSpace to bring
+			- it to memory,othwise we read from swapfile to memory and clear the swapMap
+			- Pre: ipt slot which want to read from swap
+			- Post: ipt data read into memory 
+			- Return: None
+
+	+ TLB Function
+		+ Get TLB slot
+			- get TLB slot by given IPT slot
+			- Pre:	ipt_slot: ipt slot for search 
+			- Post:	[None]
+			- Return:	If found, then return the TLB slot which map to the IPT slot
+					Else return -1
+		+ TLB Update
+			- When Calling the TLB Update, it will find the TLB slot to store the data.
+			- If the slot is dirty, it will propagate to IPT.
+			- The write the virtual and physical page data to it 
+			- Pre:	ppn: physical page number 
+					vpn: virtual page number(if w/o useing IPT)
+			- Post:	tlb table updated	
+			- Return:	[None]
+		+ Update TLB Entry
+			- Calling by the TLB Update
+			- The write the virtual and physical page data to TLB
+			+ Two update method
+				+ UpdateTLB Entry without IPT table(for part 1 use) :
+					- In this case, we need have 3 parameter 
+         				- tlb_slot,physical page number,virtual page number
+       				- Then default dirty bit will set false
+
+				+ UpdateTlB Entry with IPT
+					- Then we only need tlb_slot and physical page number
+					- We will get vpn by the IPT table,then copy the dirty bit data from IPT table.
+			- Pre:	tlb_slot: which slot we need update in TLB
+					ppn: physical page number 
+					vpn: virtual page number(if w/o useing IPT)
+			- Post:	tlb table updated	
+			- Return:	[None]
+
+	+ int AddrSpace::getFreeUserStack()
+		- Acquire the user stack lock, find the free user stack, release the user stack lock, and return free user stack.
+
+	+ void AddrSpace::removeUserStack(int stackID)
+		- Acquire the user stack lock, clear the stack, and release the user stack lock.
+
+	+ int AddrSpace::toSwap(int vaddr)
+		- Write page table to swap file.
+
+	+ void AddrSpace::readExec(int vaddr,int vpn)
+		- Read the execution file.
+
+	+ unsigned int AddrSpace::getNumPages()
+		- Get current address space number of pages 
+
+====================================================== PART 3 ======================================================
+	+ nettest.cc
+		+ Clean Message.
+			- Functions to support the Lock and Cond Array.
+
+		+ Wakeup Process. 
+			- Send a wakeup message to process.
+
+		+ Clear Lock Array.
+			- To clear the Lock of array.
+
+		+ Clear Conditon Array.
+			- To clear the Condition of array.
+
+		+ Find Lock.
+			- Return -1 if lockName is not found in array.
+			- Return lock index if lockName is found in array.
+
+		+ Find Conditiona. 
+			- Return -1 if condName is not found in array.
+			- Return condition index if condName is found in array.
+
+		+ Create Lock.
+			- Return lock index on successful add, return 0 if failed.
+			- Disable interrupts.
+			- Find if lock has already exist in the array.
+			- Lock haven't exist in array, find an empty spot to create new lock.
+			- Find empty slot in lock array.
+			
+		+ Destroy Lock. 
+			- Return 1 on successful destroy, return 0 if failed.
+
+		+ Acquire Lock.
+			- Return 0 if fail, 1 if success.
+
+		+ Release Lock.
+			- Return 0 if fail, 1 if success.
+
+		+ Create Condition.
+			- Return condition index on successful add, return 0 if failed.
+			- Disable interrupts.
+			- Find if condition has already exist in the array.
+			- Cond haven't exist in array, find an empty spot to create new cond.
+			- Find empty slot in condition array
+
+		+ Destroy Condition.
+			- Return 1 on successful destroy, return 0 if failed
+
+		+ Signal the syscall for Lock and Condition.
+			- Return 1 on successful Signal, return 0 if failed.
+
+		+ Wait the syscall for Lock and Condition.
+			- Return 1 on successful Signal, return 0 if failed
+
+		+ Broadcast the syscall for Lock and Condition.
+			- Return 1 on successful Signal, return 0 if failed
+
+		+ Initialization.
+			- Set all condition to 0.
+
+		+ Perform Server Test. 
+			- To perform the test for server.
+
+	+ simplelock.c
+		+ Test the Lock.
+			- Assign lock1 to certain ID.
+			- Assign lock2 to another ID
+			- Acquire lock1 and lock2, release lock1 and lock2, and destroy lock1 and lock2.
+		
+		+ Test Acquire Lock.
+			- Create lock1 and assign ID.
+			- Acquire lock1.
+			- Client go busy for some time before releasing lock.
+			- Release lock1.
+
+	+ exception.cc
+		+ Create Lock Syscall.
+			- If name of lock no found, then print error message.
+			- Send the RPC to create lock and gather the response.
+			- Create a new lock, get index of the new lock, and failure creating a lock.
+
+		+ Destroy Lock Syscall.
+			- Send request to destroy lock and gather response.
+			- Show message when lock destroyed or failure to destroy.
+
+		+ Acquire Syscall.
+			- Acquire lock or condition until the request success (go into busy waiting).
+			- Show message when failure to acquire lock or condition.
+
+		+ Release Syscall. 
+			- Release lock or condition until the request success (go into busy waiting).
+			- Show message when failure to acquire lock or condition.
+
+		+ Create Condition Syscall. 
+			- If name of condition no found, then print error message.
+			- Send the RPC to create condition and gather the response.
+			- Create a new condition, get index of the new condition, and failure creating a condition.
+
+		+ Destroy Condition Syscall. 
+			- Send request to destroy condition and gather response.
+			- Show message when condition destroyed or failure to destroy.
+
+		+ Signal Syscall for Lock and Condition.
+			- Check the condition, print message if failure to be signaled.
+			- Check the current lock, print message if failure signal a condition.
+
+		+ Wait Syscall for Lock and Condition. 
+			- Print message if condition failure to be wait.
+			- Print message if condition success to be wait and client goes into sleep.
+			- Print message if client has been waken up.
+			- If condition = NULL, print failure waiting a condition.
+			- If lock = NULL, print failure waiting a condition.
+			- Current condition wait the lock.
+
+		+ Broadcast Syscall for Lock and Condition. 
+			- Print message if condition failure to be broadcast and request again.
+			- If condition = NULL, print failure broadcast a condition.
+			- If lock = NULL, print failure broadcast a condition.
+			- Current condition broadcast the lock.
+
+***********************
+* IV. Implementation: *
+***********************
+================================================== PART 1 & Part 2 ==================================================
+	+ Files Modified
+		- exception.cc, addrspace.cc, system.cc, system.h, sort.c, test_exec.c, test_exit, test_fork, test_matmult, matmult.
+
+	+ Files added
+		- None.
+
+	+ Data Structures added, and the file they were added to.
+		- None.
+
+	+ Data Structures modified, and the file they were added to.
+		+addrspace.h
+			-enum PageLocation{MAIN,SWAP,EXEC};
+			-enum PageType{CODE,DATA,MIXED};
+			-class VmTranslationEntry {
+			/*
+			   1. Physical Page
+			   2. Virtual Page
+			   3. Page Type (code, data, mixed, etc.)
+			   4. Page Location (main memory, swapfile, executable, etc.)
+			   5. Dirty Bit (whether a page has been modified -- VERY important)
+			   6. Use Bit (Never did find anywhere that this is used...)
+			   7. Process ID (Important because there are multiple virtual page Xs)
+			   8. Timestamp (For Nachos LRU page replacement later)
+			   9. Swap Address
+			 */
+			public:
+				int physicalPage;   // The page number in real memory (relative to the
+				int virtualPage;    // The page number in virtual memory.
+				PageType type;
+				PageLocation location;
+				bool dirty;         // This bit is set by the hardware every time the
+				bool use;           // This bit is set by the hardware every time the
+				int processID;
+				int timeStamp;
+				bool valid;         // If this bit is set, the translation is ignored.
+				bool readOnly;   // If this bit is set, the user program is not allowed
+				int swapAddr;
+			};
+		+system.h
+			-class IPTEntry {
+			   public:
+				   int pid;//Proccess ID
+				   int vpn;//Virtual page number
+				   bool use;
+				   bool dirty;
+				   bool valid;
+				   bool readOnly;
+				   AddrSpace* space;
+			};
+
+
+	+ Functions added and in which file.
+		+ exception.cc
+			- void PageFault_Handler(unsigned int va){
+			- int getPhysAddr(int vpn)
+			- int IPTHit(int pid,int vpn)
+			- int IPT_Update(int vpn)
+			- void updateIPTEntry(int ipt_slot,int vpn)
+			- int getIPT_Slot()
+			- int getFreeIPTSlot()
+			- int getNextEvictIPTSlot(void)
+			- void IPTSwapToFile(int ipt_slot,int vpn)
+			- void IPTSwapToMemory(int ipt_slot,int vpn)
+			- int getTLB_Slot(int ipt_slot){
+			- void TLB_Update(int ppn)
+			- void TLB_Update(int ppn,int vpn)
+			- void updateTLBEntry(int tlb_slot,int ppn,int vpn)
+			- void updateTLBEntry(int tlb_slot,int ppn)
+			- void propagateToIPT(int tlb_slot)
+			- int getNextEvictTLBSlot(void)
+			- int getTLBSlot(bool *dirty)
+			- int getFreeTLBSlot(void)
+			- void ExceptionHandler(ExceptionType which)
+		+ addrspace.cc
+			- int AddrSpace::getFreeUserStack()
+			- void AddrSpace::removeUserStack(int stackID)
+			- int AddrSpace::toSwap(int vaddr)
+			- void AddrSpace::readExec(int vaddr,int vpn)
+			- unsigned int AddrSpace::getNumPages()
+
+	+ Functions modified and in which file.
+		+ addrspace.cc
+			- AddrSpace::AddrSpace(OpenFile *executable) : fileTable(MaxOpenFiles)
+			- void AddrSpace::RestoreState() 
+
+====================================================== PART 3 ======================================================
+	+ Files Modified
+		- nettest.cc, exception.cc, lockcond.c, syscall.h, main.cc.
+
+	+ Files added
+		- simplelock.c, testCond1.c, testCond2.c, .
+
+	+ Data Structures added, and the file they were added to.
+		+ nettest.cc
+			- class NETWORK_LOCK{
+				public:
+					int lockID;
+					char name[15];
+					int ownerID;
+					List* waitQueue;
+		
+					NETWORK_LOCK(){
+						lockID = -1;
+						name[0] = '\0';
+						ownerID = -1;
+						waitQueue = new List();
+					}
+					NETWORK_LOCK(int creatorID, char* lockName){
+						strcpy(name, lockName);
+						ownerID = creatorID;
+						waitQueue = new List();
+					}
+					~NETWORK_LOCK(){
+						delete waitQueue;
+					}
+			  };
+
+			- class NETWORK_COND{
+				public:
+					int condID;
+					char name[15];
+					int lockID;
+					List* waitQueue;
+
+					NETWORK_COND(){
+						condID = -1;
+						name[0] = '\0';
+						lockID = -1;
+						waitQueue = new List();
+					}
+					NETWORK_COND(char* condName){
+						strcpy(name, condName);
+						waitQueue = new List();
+					}
+					~NETWORK_COND(){
+						delete waitQueue;
+					}
+			  };
+
+	+ Data Structures modified, and the file they were added to.
+		- None.
+
+	+ Functions added and in which file.
+		+ nettest.cc
+			- void CleanMessage(char name[15])
+			- void WakeProcessUp(int callerID)
+			- void ClearLockArray()
+			- void ClearConditionArray()
+			- int FindLock(char* lockName)
+			- int FindCondition(char* condName)
+			- int CreateLock(char* lockName)
+			- int DestroyLock(int lockID, int processID)
+			- int Acquire(int lockID, int processID)
+			- int Release(int lockID, int processID)
+			- int CreateCondition(char* condName)
+			- int DestroyCondition(int ID, int processID)
+			- int Signal(int lockID, int condID, int processorID)
+			- int Wait(int lockID, int condID, int processorID)
+			- int Broadcast(int lockID, int condID, int processorID)
+			- void Initialization()
+			- void ServerTest()
+
+		+ simplelock.c
+			- void TestLockOnly()
+			- void TestAcquireLockFight()
+			- void TestLockAndCond()
+		
+		+ exception.cc
+			- int CreateLock_Syscall()
+			- void DestroyLock_Syscall(int id)
+			- void Acquire_Syscall(int id)
+			- void Release_Syscall(int id)
+			- int CreateCondition_Syscall()
+			- void DestroyCondition_Syscall(int id)
+			- void Signal_Syscall(int lockID, int conditionID)
+			- void Wait_Syscall(int lockID, int conditionID)
+			- void Broadcast_Syscall(int lockID, int conditionID)
+
+	+ Functions modified and in which file.
+		+ lockcond.c
+			- void func1()
+			- void func2()
+
+***************
+* V. Testing: *
+***************
+================================================== PART 1 & Part 2 ==================================================
+	+ How to test
+		- cd to test/ directory first
+		- Test 1: Input "../vm/nachos -rs -P FIFO -x matmult" OR "../vm/nachos -rs -P RAND -x matmult" under ../test/ directory.
+		- Test 2: Input "../vm/nachos -rs -P FIFO -x test_matmult" OR "../vm/nachos -rs -P RAND -x test_matmult" under ../test/ directory.
+		- Test 3: Input "../vm/nachos -rs -P FIFO -x test_exit" OR "../vm/nachos -rs -P RAND -x test_exit" under ../test/ directory.
+		- Test 4: Input "../vm/nachos -rs -P FIFO -x test_fork" OR "../vm/nachos -rs -P RAND -x test_fork" under ../test/ directory.
+		- Test 5: Input "../vm/nachos -rs -P FIFO -x test_exec" OR "../vm/nachos -rs -P RAND -x test_exec" under ../test/ directory.
+		- Test 6: Input "../vm/nachos -rs -P FIFO -x sort" OR "../vm/nachos -rs -P RAND -x sort" under ../test/ directory.
+
+	+ Test output
+		- Output 1: Expected matmult output = "Start Exit_Syscall with value [7220]"
+		- Output 2: Expected matmult output twice = "Start Exit_Syscall with value [7220]" & it will showing different pid and create separate address space
+		- Output 3: Expected sort output = "Start Exit_Syscall with value [1023]"
+		- Output 4: Expected test_exit output = "Start Exit_Syscall with value [0]" 
+		- Output 5: Expected test_fork output = it will use same address but increase page in the address 
+		- Output 6: Expected test_exec output = "Start Exit_Syscall with value [0]"
+		
+====================================================== PART 3 ======================================================
+	+ How to test
+		+ Test 1: 	(Server should execute first then client)(clients are to be executed in numbered order)(must be in network dir)
+				- Server: Input "./nachos -m 0 -s" under ../network/ directory.
+				- Client: Input "./nachos -m 1  -x ../test/simplelock" in a seperate terminal under ../network/ directory.
+		+ Test 2:	(Server should execute first then client)(clients are to be executed in numbered order)(must be in network dir)
+				- Server: Input "nachos -m 0 -s" under ../network/ directory.
+				- Client 1: Input "./nachos -m 1  -x ../test/testCond1" in a seperate terminal under ../network/ directory.
+				- Client 2: Input "./nachos -m 2  -x ../test/testCond2" in a seperate terminal under ../network/ directory.
+	+ Test output
+		- Output 1: Shows that Locks can be created, destroyed, acquired and released, and invalid syscalls can be catched.
+		- Output 2:	Shows that Locks and Condition can be acquired and released, and invalid syscalls can be catched.
+		- 		Show that Lock and Condition function on Wait, Signal, and Broadcast Syscalls, and invalid syscalls can be catched. 
+		
+		+ Client & Server Message Interpretation
+			- LC = "Lock Create Request"
+			- LD = "Lock Destroy Request"
+			- LA = "Lock Acquire Request"
+			- LR = "Lock Release Request"
+			- CC = "Condition Create Request"
+			- CD = "Condition Destroy Request"
+			- CS = "Condition Signal Request"
+			- CW = "Condition Wait Request"
+			- CB = "Condition Broadcast Request"
+			- LCS/LCF = "Lock Create Request Success/Fail"
+			- LDS/LDF = "Lock Destroy Request Success/Fail"
+			- LAS/LAF = "Lock Acquire Request Success/Fail"
+			- LRS/LRF = "Lock Release Request Success/Fail"
+			- CCS/CCF = "Condition Create Request Success/Fail"
+			- CDS/CDF = "Condition Destroy Request Success/Fail"
+			- CSS/CSF = "Condition Signal Request Success/Fail"
+			- CWS/CWF = "Condition Wait Request Success/Fail"
+			- CBS/CBF = "Condition Broadcast Request Success/Fail"
+
+*******************
+* VI. Discussion: *
+*******************
+====================================================== PART 1 ======================================================
+	+ Experiment expectation.  (What you hope will happen.)
+		- Able to use TLB for hardware no longer to deal with page table.
+		- Page translation scheme keep track of dirty and use flags for each page set.
+		- Show a single program runs to completion and two programs run to completion in different address space.
+
+	+ Experiment result.  (What actually happens.)
+		- Functioned perfectly.
+		- The result of this program meets the requirements.
+
+	+ Explanation
+		- We are able to implement software-management of the TLB using software page translation in order for hardware no longer deals with page tables.
+
+====================================================== PART 2 ======================================================
+	+ Experiment expectation.  (What you hope will happen.)
+		- Able to use virtual memory to move a page from disk to memory and from memory to disk.
+		- Show two or more programs are able to run to completion.
+
+	+ Experiment result.  (What actually happens.)
+		- Functioned perfectly.
+		- The result of this program meets the requirements.
+
+	+ Explanation
+		- We are successfully being able to implement virtual memory to move a page from disk to memory and from memory to disk.
+
+====================================================== PART 3 ======================================================
+	+ Experiment expectation.  (What you hope will happen.)
+		- Able to implement remote procedure calls for the new Lock and Condition Variable system calls that implemented in project 2.
+		- Server is to be able to handle multiple clients.
+		- The server performs the system call for the client and returns any result back to the client.
+
+	+ Experiment result.  (What actually happens.)
+		- Functioned perfectly.
+		- The result of this program meets the requirements.
+
+	+ Explanation
+		- We are able to implement remote procedure calls for the new Lock and Condition Variable system calls that implemented in project 2
+
+***********************
+* VII. Miscellaneous: *
+***********************
+====================================================== PART 1 ======================================================
+	- To disable the IPT implement, in the exception.cc line 808.There is #define HAVE_IPT, undefine this line
+		will running TLB without using IPT.
+====================================================== PART 2 ======================================================
+	- To showing more memory information there is some tag in exception.cc line 809~814
+		#define TLB_DEBUG
+		#define IPT_DEBUG
+		#define IPT_DEBUG_UPDATE
+		#define IPT_DEBUG_SWAP_OUT
+		#define IPT_DEBUG_SWAP_IN
+		#define PGF_DEBUG
+	-Turn on those debug information will slow down the nachos
+
+====================================================== PART 3 ======================================================
+	- None.
