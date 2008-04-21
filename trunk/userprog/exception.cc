@@ -400,21 +400,39 @@ void DestroyLock_Syscall(int id)
 void Acquire_Syscall(int id)
 {
 
+   printf("====Start Acquire_Sycall====\n");
 #ifdef NETWORK
 
    ClearArray(outMessage);
    sprintf(outMessage, "LA %d\0", id);
    ClientSendReceiveRequest();
-   while(strcmp(inMessage, "LAF") == 0) //acquire again until the request success (go into busy waiting)
-   {
-      printf("[CLIENT]Lock fail to be acquired, requesting service again \n");
-      ClientSendReceiveRequest();
-   }
-   printf("[CLIENT]Lock successfully acquired \n");
 
+   if(strcmp(inMessage, "LAF") == 0)
+   {
+      printf("[CLIENT]Lock fail to be Acquired\n");
+      return;
+   }
+   
+   //While waiting to acquiring lock
+   //Keep Checking the network package until get the message for
+   //LAS(Lock Acquire Success)
+   while(strcmp(inMessage,"LAS") != 0)
+   {
+      printf("[CLIENT]Someone is using the lock, need wait\n");
+      postOffice->Receive(1, &inPktHdr, &inMailHdr, buffer);
+      strcpy(inMessage, buffer);
+      printf("[CLIENT]Client got \"%s\" from %d, box %d\n", inMessage, inPktHdr.from, inMailHdr.from);
+      fflush(stdout);
+      if(strcmp(inMessage, "LAS") == 0)
+      {
+         printf("[CLIENT]Client has get Lock now! \n");
+
+         return;
+      }
+   }
+   printf("[CLIENT]Lock %d successfully acquired\n");
 #else
 
-   printf("====Start Acquire_Sycall====\n");
 
    Lock* myLock = (Lock*)lockTable.Get(id);
 
@@ -1289,6 +1307,31 @@ int getFreeTLBSlot(void)
 }
 
 #endif
+//-----------------------------------------------------
+//---------------- Project 4---------------------------
+//-----------------------------------------------------
+
+
+//----------------getMailBox_Syscall-------------------
+//Find the available mail box on the server
+//Return the mail box id
+int getMailBox_Syscall()
+{
+   int port = -1;
+   mailBoxLock->Acquire();
+   port = mailBoxMap->Find();
+   mailBoxLock->Release();
+   return port;
+
+}
+
+//----------------getMachineID_Syscall()----------------
+//Get machine id when start the program passing form
+//command line after -m "machine id"
+int getMachineID_Syscall()
+{
+   return machineID;
+}
 //-----------------------------------------------------
 //---------------- EXCEPTION HANDLER ------------------
 //-----------------------------------------------------

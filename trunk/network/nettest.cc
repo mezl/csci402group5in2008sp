@@ -182,7 +182,36 @@ void WakeProcessUp(int callerID)
 	postOffice->Send(outPktHdr, outMailHdr, "UP");
 }
 
+//send a lock acquired message to process
+void PassLockToProcess(int callerID)
+{
+	PacketHeader outPktHdr;
+	MailHeader outMailHdr;
 
+	outPktHdr.to = callerID;
+	outMailHdr.to = 1;
+	outMailHdr.from = 1;
+	outMailHdr.length = strlen("LAS")+1;
+	
+	printf("[SERVER]Sending a packet of \"%s\" to %d, box %d\n", "LAS", outPktHdr.to, outMailHdr.to);
+	postOffice->Send(outPktHdr, outMailHdr, "LAS");
+}
+
+
+//send a message to other machine 
+void sendTo(int id,char *msg)
+{
+	PacketHeader outPktHdr;
+	MailHeader outMailHdr;
+
+	outPktHdr.to = id;
+	outMailHdr.to = 1;
+	outMailHdr.from = 1;
+	outMailHdr.length = strlen(msg)+1;
+	
+	printf("[SERVER]Sending a packet of \"%s\" to %d, box %d\n", msg, outPktHdr.to, outMailHdr.to);
+	postOffice->Send(outPktHdr, outMailHdr,msg); 
+}
 void ClearLockArray()
 {
 	int i;
@@ -295,7 +324,7 @@ int DestroyLock(int lockID, int processID)
 
 int Acquire(int lockID, int processID)
 {
-	//return 0 if fail, 1 if success
+	//return 0 if fail, 1 if success, 2 if need wait 
 	int success = 0;
 	if(lockArray[lockID].name[0] == '0') 
 	{
@@ -317,9 +346,9 @@ int Acquire(int lockID, int processID)
 		}
 		else
 		{
-			printf("[SERVER] Lock %d belong to someone else. Acquire failed\n", lockID, processID);	
-			//lockArray[lockID].waitQueue->Append((void*)processID);
-			success = 0;
+			printf("[SERVER] Lock %d belong to someone else. Acquire wait\n", lockID, processID);	
+			lockArray[lockID].waitQueue->Append((void*)processID);
+			success = 2;
 		}
 	}
 
@@ -330,6 +359,7 @@ int Release(int lockID, int processID)
 {
 	//return 0 if fail, 1 if success
 	int success = 0;
+	int callerID= -1;
 	if(lockArray[lockID].name[0] == '\0')
 	{
 		printf("[SERVER] Lock %d doesn't exist anymore. Release failed\n", lockID);
@@ -340,6 +370,12 @@ int Release(int lockID, int processID)
 		printf("[SERVER] Machine %d is releasing Lock %d. Release success\n", processID, lockID);	
 		lockArray[lockID].ownerID = -1;
 		success = 1;
+	if(!lockArray[lockID].waitQueue->IsEmpty())
+	{
+		callerID = (int)(lockArray[lockID].waitQueue->Remove());
+      lockArray[lockID].ownerID = callerID;
+		PassLockToProcess(callerID);
+	}
 	}
 	else if(lockArray[lockID].ownerID == -1)
 	{
@@ -492,6 +528,8 @@ void ServerTest()
 		// buffer[0] represent type of request(lock/condition)
 		// buffer[0] is 'L' = Lock operation request
 		// buffer[0] is 'C' = Condition operation request
+		// buffer[0] is 'R' = Register clerk operation request
+		// buffer[0] is 'A' = Acquire clerk operation request
 
 		// buffer[1] represent lock/condition related operations
 		// buffer[1] is 'C' = Create Lock/Condition
@@ -502,8 +540,117 @@ void ServerTest()
 
 		// buffer[2-14] are required char string or integer for the operation
 
-		if(buffer[0] == 'L')
-		{
+		if(buffer[0] == 'R'){
+      //The format is like "RAA 10" for Reg AppClerk Available
+      //buffer[1] is 'A' = AppClerk                      
+      //buffer[1] is 'P' = PicClerk                      
+      //buffer[1] is 'S' = PassClerk                      
+      //buffer[1] is 'H' = CashClerk                      
+      //1.Handle the clerk register request
+      //2.Get clerk ID
+         int clerkID;
+         sscanf(buffer, "%*s %d", &clerkID);
+      //3.Check which type of clerk;
+         switch(buffer[1])
+         {
+            case 'A':
+               //if there is no customer is waiting
+               if(AppLine->IsEmpty())
+               {
+                  AppClerkTable->clerkTable->Append((void*)clerkID);
+                  sprintf(replyMessage, "RCW");//Register Clerk Wait 
+				      printf("[SERVER]App Clerk %d is waiting\n", clerkID);
+               }else
+               {
+                  //if there is customer is waiting,pass the customer id
+                  //to the register clerk
+                  int customerID;            
+                  customerID = (int)(AppLine->Remove());
+                  sprintf(replyMessage, "RCS %d ",customerID);
+                  //Register Clerk Success
+				      printf("[SERVER]App Clerk %d get customer %d \n",
+                  clerkID,customerID);
+                  //Also Send Message to Customer to wake Customer UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf,"ACS %d ",clerkID);
+                  //Acquire Clerk Success
+                  sendTo(customerID,tmpBuf);
+               
+               }
+               break;
+            case 'P':
+               PicClerkTable->clerkTable->Append((void*)clerkID);
+					sprintf(replyMessage, "RCS");//Register Clerk Success
+               break;
+            case 'S':
+               PassClerkTable->clerkTable->Append((void*)clerkID);
+					sprintf(replyMessage, "RCS");//Register Clerk Success
+               break;
+            case 'H':
+               CashClerkTable->clerkTable->Append((void*)clerkID);
+					sprintf(replyMessage, "RCS");//Register Clerk Success
+               break;
+         
+            default:
+               break;
+         }
+         
+      
+      } else if(buffer[0] == 'A') {
+         //Handle the customer Acquire Clerk
+         //Format A[A/P/S/H]C CustomerID
+         //Example: AAC 10 : customer 10 need appclerk
+         //Return Message
+         //A[APSH]S ClerkID: pass the clerk to customer
+         //A[APSH]W : need customer wait
+
+      //1.Handle the customer acquire clerk request
+      //2.Get customerID
+         int customerID;
+         sscanf(buffer, "%*s %d", &customerID);
+      //3.Check which type of clerk request;
+         switch(buffer[1])
+         {
+            case 'A':
+               //if there is no clerk is free 
+               if(AppClerkTable->clerkTable->IsEmpty())
+               {
+                  AppLine->Append((void*)customerID);
+                  sprintf(replyMessage, "AAW");//Acquire AppClerk Wait 
+				      printf("[SERVER]Customer %d is waiting for App\n",
+                  customerID);
+               }else
+               {
+                  //if there is clerk avaible ,pass the clerk id
+                  //to the customer 
+                  int clerkID;            
+                  clerkID= (int)(AppClerkTable->clerkTable->Remove());
+                  sprintf(replyMessage, "ACS %d ",clerkID);
+                  //Register Clerk Success
+				      printf("[SERVER]Customer %d get appClerk %d \n",
+                  customerID,clerkID);
+                  //Also Send Message to Clerk to wake Clerk UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf, "RCS %d ",customerID);
+                  //Register Clerk Success
+                  sendTo(clerkID,tmpBuf);
+                  
+               
+               }
+               break;
+            case 'P':
+               break;
+            case 'S':
+               break;
+            case 'H':
+               break;
+         
+            default:
+               break;
+         }
+
+      
+      } else if(buffer[0] == 'L') {
 			/* Lock operation */
 			switch(buffer[1])
 			{
@@ -534,7 +681,9 @@ void ServerTest()
 				result = Acquire(lockID, inPktHdr.from);
 				if(result == 1)
 					sprintf(replyMessage, "LAS");
-				else
+				else if(result ==2)
+					sprintf(replyMessage, "LAW");
+				else 
 					sprintf(replyMessage, "LAF");
 					break;
 
