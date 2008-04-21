@@ -20,8 +20,17 @@ Statistics *stats;			// performance metrics
 Timer *timer;				// the hardware timer device,
 					// for invoking context switches
 
-//--------------- Project 3 (part 1) ------------------
-//-------------------- Project 3 (part 1) -------------------
+//--------------- Project 2 (part 1) ------------------
+#ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
+Machine *machine;	// user program memory and registers
+Table lockTable(150);
+Table conditionTable(150);
+ProcessTable processTable;
+Table memoryTable(NumPhysPages);
+#endif
+//--------------- Project 2 (End) -------------------------
+
+//--------------- Project 3 (part 1 & 2) ------------------
 #ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
 #ifdef PROJ3 
 IPTEntry *IPTable;
@@ -34,6 +43,23 @@ Lock *physMemoryLock;
 int processID_Counter;
 #endif
 #endif
+//--------------- Project 3 (End) -------------------------
+
+//--------------- Project 4 (part 1 & 2) ------------------
+#ifdef PROJ4
+Lock* mailBoxLock;
+BitMap* mailBoxMap;
+int machineID;
+Clerk_Table* AppClerkTable;
+Clerk_Table* PicClerkTable;
+Clerk_Table* PassClerkTable;
+Clerk_Table* CashClerkTable;
+List* AppLine;
+List* PicLine;
+List* PassLine;
+List* CashLine;
+#endif 
+//--------------- Project 4 (End) -------------------------
 #ifdef FILESYS_NEEDED
 FileSystem  *fileSystem;
 #endif
@@ -42,16 +68,6 @@ FileSystem  *fileSystem;
 SynchDisk   *synchDisk;
 #endif
 
-#ifdef USER_PROGRAM	// requires either FILESYS or FILESYS_STUB
-Machine *machine;	// user program memory and registers
-
-//--------------- Project 2 (part 1) ------------------
-Table lockTable(150);
-Table conditionTable(150);
-ProcessTable processTable;
-Table memoryTable(NumPhysPages);
-
-#endif
 
 #ifdef NETWORK
 PostOffice *postOffice;
@@ -147,6 +163,7 @@ Initialize(int argc, char **argv)
 	    ASSERT(argc > 1);
 	    netname = atoi(*(argv + 1));
 	    argCount = 2;
+       machineID = netname;
 	}
 #endif
     }
@@ -187,6 +204,22 @@ Initialize(int argc, char **argv)
    processID_Counter = 0;
 #endif    
 #endif    
+
+//--------------- Project 4 (part 1 & 2) ------------------
+#ifdef PROJ4
+mailBoxLock = new Lock("MailBoxLock");
+mailBoxMap = new BitMap(10);
+
+AppClerkTable  = new Clerk_Table(0);
+PicClerkTable  = new Clerk_Table(1);
+PassClerkTable = new Clerk_Table(2);
+CashClerkTable = new Clerk_Table(3);
+AppLine = new List();
+PicLine = new List();
+PassLine= new List();
+CashLine= new List();
+#endif 
+//--------------- Project 4 (End) -------------------------
 #ifdef USER_PROGRAM
     machine = new Machine(debugUserProg);	// this must come first
 #endif

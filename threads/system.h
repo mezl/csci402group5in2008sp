@@ -49,6 +49,7 @@ extern Table memoryTable;
 
 #endif
 
+//-------------------- Project 3 (part 1 & 2) -------------------
 #ifdef USER_PROGRAM
 #ifdef PROJ3
 class IPTEntry {
@@ -72,6 +73,38 @@ extern Lock* physMemoryLock;
 extern int processID_Counter;
 #endif 
 #endif 
+//-------------------- Project 4 (part 1) -------------------
+#ifdef PROJ4
+extern Lock* mailBoxLock;
+extern BitMap* mailBoxMap;
+extern int machineID;
+enum CLERK_TYPE{APP,PIC,PASS,CASH};
+
+class Clerk_Table{
+   public:
+   int type;//four clerk type
+   List* clerkTable;
+   Clerk_Table(int t){
+      type = t;
+      clerkTable= new List();
+   }
+   ~Clerk_Table(){
+      delete clerkTable;
+   }
+   
+};
+extern Clerk_Table* AppClerkTable;
+extern Clerk_Table* PicClerkTable;
+extern Clerk_Table* PassClerkTable;
+extern Clerk_Table* CashClerkTable;
+extern List* AppLine;
+extern List* PicLine;
+extern List* PassLine;
+extern List* CashLine;
+#endif
+
+
+
 #ifdef FILESYS_NEEDED 		// FILESYS or FILESYS_STUB 
 #include "filesys.h"
 extern FileSystem  *fileSystem;
