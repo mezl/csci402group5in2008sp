@@ -48,6 +48,8 @@ int processID_Counter;
 //--------------- Project 4 (part 1 & 2) ------------------
 #ifdef PROJ4
 Lock* mailBoxLock;
+Lock* clerkRegLock;
+Lock* customerAcquireLock;
 BitMap* mailBoxMap;
 int machineID;
 Clerk_Table* AppClerkTable;
@@ -209,6 +211,9 @@ Initialize(int argc, char **argv)
 #ifdef PROJ4
 mailBoxLock = new Lock("MailBoxLock");
 mailBoxMap = new BitMap(10);
+
+clerkRegLock = new Lock("ClerkRegLock");
+customerAcquireLock = new Lock("customeracquirelock");
 
 AppClerkTable  = new Clerk_Table(0);
 PicClerkTable  = new Clerk_Table(1);

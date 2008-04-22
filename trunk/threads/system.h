@@ -75,7 +75,10 @@ extern int processID_Counter;
 #endif 
 //-------------------- Project 4 (part 1) -------------------
 #ifdef PROJ4
+#define SERVER_NUM 2
 extern Lock* mailBoxLock;
+extern Lock* clerkRegLock;
+extern Lock* customerAcquireLock;
 extern BitMap* mailBoxMap;
 extern int machineID;
 enum CLERK_TYPE{APP,PIC,PASS,CASH};
