@@ -66,13 +66,22 @@ void TestLockAndCond()
 {
 	
 }
-
+void TestClerkReg()
+{
+   ClerkReg(0);
+}
+void TestCustomerAcquire()
+{
+   CustomerAcquire(2);
+}
 int main()
 {
-	int mode = 0;
+	int mode = 4;
 	/* mode == 0, run TestLockOnly() */
 	/* mode == 1, run TestAcquireLockFight() */
 	/* mode == 2, run TestLockAndCond() */
+	/* mode == 3, run TestClerkReg() */
+	/* mode == 4, run TestCustomerAcquire() */
 	
 	
 	if(mode == 0)
@@ -81,6 +90,10 @@ int main()
 		TestAcquireLockFight();
 	else if(mode == 2)
 		TestLockAndCond();
+	else if(mode == 3)
+      TestClerkReg();
+	else if(mode == 4)
+      TestCustomerAcquire();
 
 	Exit(0);
 }

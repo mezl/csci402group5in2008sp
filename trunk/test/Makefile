@@ -34,7 +34,9 @@ INCDIR =-I../userprog -I../threads
 CFLAGS = -G 0 -c $(INCDIR)
 CCFLAGS =  -G 0 -c $(INCDIR)
 
-all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond test_exit test_matmult simplelock testCond1 testCond2  
+all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond \
+test_exit test_matmult simplelock testCond1 testCond2 test_clerk test_customer \
+multi_clerk multi_customer pic_clerk pass_clerk cash_clerk app_clerk
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -143,7 +145,66 @@ test_matmult.o: test_matmult.c
 test_matmult: test_matmult.o start.o
 	$(LD) $(LDFLAGS) start.o test_matmult.o -o test_matmult.coff
 	../bin/coff2noff test_matmult.coff test_matmult
+test_clerk.o: test_clerk.c
+	$(CC2C) test_clerk.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o test_clerk.o
+	rm -f tmp.c
+test_clerk: test_clerk.o start.o
+	$(LD) $(LDFLAGS) start.o test_clerk.o -o test_clerk.coff
+	../bin/coff2noff test_clerk.coff test_clerk
+test_customer.o: test_customer.c
+	$(CC2C) test_customer.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o test_customer.o
+	rm -f tmp.c
+test_customer: test_customer.o start.o
+	$(LD) $(LDFLAGS) start.o test_customer.o -o test_customer.coff
+	../bin/coff2noff test_customer.coff test_customer
+multi_customer.o: multi_customer.c
+	$(CC2C) multi_customer.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o multi_customer.o
+	rm -f tmp.c
+multi_customer: multi_customer.o start.o
+	$(LD) $(LDFLAGS) start.o multi_customer.o -o multi_customer.coff
+	../bin/coff2noff multi_customer.coff multi_customer
+multi_clerk.o: multi_clerk.c
+	$(CC2C) multi_clerk.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o multi_clerk.o
+	rm -f tmp.c
+multi_clerk: multi_clerk.o start.o
+	$(LD) $(LDFLAGS) start.o multi_clerk.o -o multi_clerk.coff
+	../bin/coff2noff multi_clerk.coff multi_clerk
+app_clerk.o: app_clerk.c
+	$(CC2C) app_clerk.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o app_clerk.o
+	rm -f tmp.c
+app_clerk: app_clerk.o start.o
+	$(LD) $(LDFLAGS) start.o app_clerk.o -o app_clerk.coff
+	../bin/coff2noff app_clerk.coff app_clerk
+pic_clerk.o: pic_clerk.c
+	$(CC2C) pic_clerk.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o pic_clerk.o
+	rm -f tmp.c
+pic_clerk: pic_clerk.o start.o
+	$(LD) $(LDFLAGS) start.o pic_clerk.o -o pic_clerk.coff
+	../bin/coff2noff pic_clerk.coff pic_clerk
+pass_clerk.o: pass_clerk.c
+	$(CC2C) pass_clerk.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o pass_clerk.o
+	rm -f tmp.c
+pass_clerk: pass_clerk.o start.o
+	$(LD) $(LDFLAGS) start.o pass_clerk.o -o pass_clerk.coff
+	../bin/coff2noff pass_clerk.coff pass_clerk
+cash_clerk.o: cash_clerk.c
+	$(CC2C) cash_clerk.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o cash_clerk.o
+	rm -f tmp.c
+cash_clerk: cash_clerk.o start.o
+	$(LD) $(LDFLAGS) start.o cash_clerk.o -o cash_clerk.coff
+	../bin/coff2noff cash_clerk.coff cash_clerk
 clean:
+	rm -f multi_clerk multi_customer
+	rm -f test_clerk test_customer
+	rm -f app_clerk pic_clerk pass_clerk cash_clerk
 	rm -f test_exit test_matmult 
 	rm -f *.o *.coff
 	rm -f multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond simplelock testCond1 testCond2

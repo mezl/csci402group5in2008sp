@@ -77,6 +77,68 @@ typedef char * va_list;
 /*======================================================================*
                                 vsprintf
  *======================================================================*/
+inline int vsprintf1i(char *buf, const char *fmt, int args)
+{
+    char*   p;
+    char*   q;
+    char*   r;
+    char    tmp[256];
+    int len,i;
+    
+    for (p=buf;*fmt;fmt++) {
+        if (*fmt != '%') {
+            *p++ = *fmt;
+            continue;
+        }
+        fmt++;
+        switch (*fmt) {
+        case 'd':
+            q= itoa(*(int*)args,10);
+            itsStrcpy(p, q);
+            p += itsStrlen(q);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return (p - buf);
+
+}
+inline int vsprintf2i(char *buf, const char *fmt, int args1,int args2)
+{
+    char*   p;
+    char*   q;
+    char*   r;
+    char    tmp[256];
+    int len,i;
+    int count = 0;
+    for (p=buf;*fmt;fmt++) {
+        if (*fmt != '%') {
+            *p++ = *fmt;
+            continue;
+        }
+        fmt++;
+        switch (*fmt) {
+        case 'd':
+            if(count == 0){
+               q= itoa(*(int*)args1,10);
+               count++;
+            }else
+            {
+               q= itoa(*(int*)args2,10);
+            }
+            itsStrcpy(p, q);
+            p += itsStrlen(q);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return (p - buf);
+
+}
 inline int vsprintf(char *buf, const char *fmt, va_list args)
 {
     char*   p;
@@ -145,6 +207,25 @@ int printf(const char *fmt,...)
     i = vsprintf(buf, fmt, arg);
     Write(buf,itsStrlen(buf),ConsoleOutput);
     return i;
+}
+int printf1i(const char *fmt,int args)
+{           
+    int i;
+    char buf[256];
+    i = vsprintf1i(buf, fmt, args);
+    Write(buf,itsStrlen(buf),ConsoleOutput);
+    return i;
+}
+int printf2i(const char *fmt,int args1,int args2)
+{
+    int i;
+    int arg[2];
+    char buf[256];
+    i = vsprintf2i(buf, fmt, args1,args2);
+    Write(buf,itsStrlen(buf),ConsoleOutput);
+    return i;
+   
+
 }
 /*======================================================================*
                                  sprintf
