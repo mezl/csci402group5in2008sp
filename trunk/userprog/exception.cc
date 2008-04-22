@@ -29,6 +29,7 @@
 #include "../network/post.h"
 #include "network.h"
 #include <stdlib.h>
+//#define RPC_DEBUG
 using namespace std;
 
 int copyin(unsigned int vaddr, int len, char *buf) {
@@ -268,6 +269,9 @@ void Close_Syscall(int fd) {
 // -------------- PROJECT 2 (part 1) ---------------------
 // -------------------------------------------------------
 
+// -------------------------------------------------------
+// -------------- PROJECT 3 (part 3) ---------------------
+// -------------------------------------------------------
 #ifdef NETWORK
 class PacketHeader;
 class MailHeader;
@@ -284,11 +288,12 @@ void ClearArray(char name[15])
    for(int i=0; i<15; i++)
       name[i] = ' ';
 }
-void ClientSendReceiveRequest()
+
+void ClientSendReceiveRequest(int port)
 {
    outPktHdr.to = 0; //send to machine 0, which is the server
    outMailHdr.to = 0;
-   outMailHdr.from = 1;
+   outMailHdr.from = port;//port;
    outMailHdr.length = strlen(outMessage)+1;
    success = postOffice->Send(outPktHdr, outMailHdr, outMessage);
    printf("[CLIENT]Sending a packet of \"%s\" to %d, box %d\n", outMessage, outPktHdr.to, outMailHdr.to);
@@ -301,10 +306,66 @@ void ClientSendReceiveRequest()
    }
 
    printf("[CLIENT]Client waiting for response...\n");
-   postOffice->Receive(1, &inPktHdr, &inMailHdr, buffer);
+   postOffice->Receive(port, &inPktHdr, &inMailHdr, buffer);
    strcpy(inMessage, buffer);
    printf("[CLIENT]Client got \"%s\" from %d, box %d\n", inMessage, inPktHdr.from,inMailHdr.from);
    fflush(stdout);
+}
+void ClientSendReceiveRequest(){
+   ClientSendReceiveRequest(1);
+}
+
+// -------------------------------------------------------
+// -------------- PROJECT 4 (part 1) ---------------------
+// -------------------------------------------------------
+
+//-------------getRandServerID()-------------------------
+//Generate the random server ID
+int server_count = 0;
+int getRandServerID()
+{
+   return (server_count++)%SERVER_NUM;
+}
+
+//-------------SR_server(int port,char *outMsg,char *inMsg)--------
+//Send a message to server and get one message back
+//Pre:sender's port number, outgoing message
+//Post:the server response message
+//Return:none
+void SR_server(int port,char *outMsg,char *inMsg)
+{
+   PacketHeader SR_outPktHdr, SR_inPktHdr;
+   MailHeader SR_outMailHdr, SR_inMailHdr;
+   int result;
+   char SRbuf[256];
+   SR_outPktHdr.to = getRandServerID(); //send to machine 0, which is the server
+   SR_outMailHdr.to = 0;
+   SR_outMailHdr.from = port;//port;
+   SR_outMailHdr.length = strlen(outMsg)+1;
+   result = postOffice->Send(SR_outPktHdr, SR_outMailHdr, outMsg);
+   printf("[CLIENT]Sending a packet of \"%s\" to server [%d], box %d\n", outMsg,
+   SR_outPktHdr.to, SR_outMailHdr.to);
+#ifdef RPC_DEBUG   
+#endif   
+
+
+   if(!result)
+   {
+      printf("[CLIENT]Send failed. Probably don't have server running. Terminating Nachos\n");
+      interrupt->Halt();
+   }
+
+#ifdef RPC_DEBUG   
+   printf("[CLIENT]Client waiting for response...\n");
+#endif   
+   postOffice->Receive(port, &SR_inPktHdr, &SR_inMailHdr, SRbuf);
+   strcpy(inMsg, SRbuf);
+#ifdef RPC_DEBUG   
+   printf("[CLIENT]Client got \"%s\" from %d, box %d\n", inMsg, SR_inPktHdr.from,SR_inMailHdr.from);
+#endif   
+   fflush(stdout);
+
+
 }
 #endif
 
@@ -1312,10 +1373,13 @@ int getFreeTLBSlot(void)
 //-----------------------------------------------------
 
 
-//----------------getMailBox_Syscall-------------------
+#ifdef PROJ4 
+//----------------GetMailBox_Syscall-------------------
 //Find the available mail box on the server
-//Return the mail box id
-int getMailBox_Syscall()
+//Pre:None
+//Post:None
+//Return: the mail box id
+int GetMailBox_Syscall()
 {
    int port = -1;
    mailBoxLock->Acquire();
@@ -1325,13 +1389,166 @@ int getMailBox_Syscall()
 
 }
 
-//----------------getMachineID_Syscall()----------------
+//----------------GetMachineID_Syscall()----------------
 //Get machine id when start the program passing form
 //command line after -m "machine id"
-int getMachineID_Syscall()
+//Pre:None
+//Post:None
+//Return: the machine id
+int GetMachineID_Syscall()
 {
    return machineID;
 }
+int combineIPPort(int ip,int port);
+int getIP(int ipport);
+int getPort(int ipport);
+
+//-------------------ClerkReg_Syscall(int id)-----------
+//The Clerk will call this function to register the server
+//When Clerk is free, if there is the customer is waiting
+//Server will return the massage with customer ID
+//Otherwise, it will return "RCW" for to let clerk wait.
+//
+//Clerk Have four type 0:App,1:Pic,2:Pass,3:Cash
+//
+//Pre: Clerk IP,Clerk Port,Clerk Type
+//Post:Customer IP,Customer Port  
+//Return: None 
+int ClerkReg_Syscall(int ip,int port,int type)
+//int *customerIP,int *customerPort)
+{
+   printf("==============ClerkReg_Syscall=============\n");
+   printf("ip %d port %d type %d\n",ip,port,type);
+   int customerIP,customerPort;
+   char typeName[20];
+   char clerk_out_msg[20];
+   char clerk_in_msg[20];
+   char clerk_buf[256];
+   PacketHeader Clerk_outPktHdr, Clerk_inPktHdr;
+   MailHeader Clerk_outMailHdr, Clerk_inMailHdr;
+   clerkRegLock->Acquire();
+   ClearArray(clerk_out_msg);
+   //Register App Clerk
+   switch(type)
+   {
+      case 0:
+         sprintf(clerk_out_msg, "RA %d %d \0", ip,port);//Reg App Clerk
+         strcpy(typeName,"Application");
+         break;
+      case 1:
+         sprintf(clerk_out_msg, "RP %d %d \0", ip,port);//Reg Pic Clerk
+         strcpy(typeName,"Picture");
+         break;
+      case 2:
+         sprintf(clerk_out_msg, "RS %d %d \0", ip,port);//Reg paSs Clerk
+         strcpy(typeName,"Passport");
+         break;
+      case 3:
+         sprintf(clerk_out_msg, "RH %d %d \0", ip,port);//Reg casH Clerk
+         strcpy(typeName,"Cashier");
+         break;
+   }
+   SR_server(port,clerk_out_msg,clerk_in_msg);
+   clerkRegLock->Release();
+   //if there is no customer can handle
+   if(strcmp(clerk_in_msg, "RCW") == 0)
+   {
+      while(true)
+      {
+         printf("[Clerk]%s Clerk %d:%d wait for customer\n",typeName,ip,port);
+         postOffice->Receive(port, &Clerk_inPktHdr, &Clerk_inMailHdr, clerk_buf);
+         strcpy(clerk_in_msg, clerk_buf);
+         printf("[Clerk]Client got \"%s\" from %d, box %d\n", 
+            clerk_in_msg, Clerk_inPktHdr.from, Clerk_inMailHdr.from);
+         fflush(stdout);
+         if(strncmp(clerk_in_msg, "RCS",3) == 0)
+         {
+            
+            sscanf(clerk_in_msg, "%*s %d %d", &customerIP,&customerPort);
+            printf("[Clerk]%s Clerk has get the Customer %d:%d! \n",
+               typeName,customerIP,customerPort);
+            return combineIPPort(customerIP,customerPort);
+         }
+      }
+
+   }
+   sscanf(clerk_in_msg, "%*s %d %d", &customerIP,&customerPort);
+   printf("[Clerk]%s Clerk has get the Customer %d:%d! \n",
+         typeName,customerIP,customerPort);
+   return combineIPPort(customerIP,customerPort);
+
+}
+//-----------------CustomerAcquire_Syscall(int id)---------
+//Customer call this function to get clerk to service
+//It will do the same thing as the clerk did
+//Customer send the clerk request to the server
+//If there is avaiable clerk on the server,
+//Server will return the ACS message with clerk ID
+//Otherwise, it will queue up the customer request 
+//until server get clerk registion
+//
+//Pre: customer ID,Clerk Type
+//Post: None
+//Return: Clerk ID
+int CustomerAcquire_Syscall(int ip,int port,int type)//,int *clerkIP,int *clerkPort)
+{
+   char typeName[20];
+   int clerkIP,clerkPort;
+   char customer_out_msg[20];
+   char customer_in_msg[20];
+   char customer_buf[256];
+   PacketHeader Customer_outPktHdr, Customer_inPktHdr;
+   MailHeader Customer_outMailHdr, Customer_inMailHdr;
+   customerAcquireLock->Acquire();
+   ClearArray(customer_out_msg);
+   //Acquire App Clerk
+   switch(type)
+   {
+      case 0:
+         sprintf(customer_out_msg, "AAC %d %d\0", ip,port);//Acquire App Clerk
+         strcpy(typeName,"Application");
+         break;
+      case 1:
+         sprintf(customer_out_msg, "APC %d %d\0", ip,port);//Acquire Pic Clerk
+         strcpy(typeName,"Picture");
+         break;
+      case 2:
+         sprintf(customer_out_msg, "ASC %d %d\0", ip,port);//Acquire paSs Clerk
+         strcpy(typeName,"Passport");
+         break;
+      case 3:
+         sprintf(customer_out_msg, "AHC %d %d\0", ip,port);//Acquire casH Clerk
+         strcpy(typeName,"Cashier");
+         break;
+   }
+   SR_server(port,customer_out_msg,customer_in_msg);
+   customerAcquireLock->Release();
+   //if there is no clerk can serve customer 
+   if(strcmp(customer_in_msg, "ACW") == 0)
+   {
+      while(true)
+      {
+         printf("[Customer]Customer %d:%d wait for %s clerk\n",ip,port,typeName);
+         postOffice->Receive(port, &Customer_inPktHdr, &Customer_inMailHdr, customer_buf);
+         strcpy(customer_in_msg, customer_buf);
+         printf("[Customer]Client got \"%s\" from %d, box %d\n", customer_in_msg, Customer_inPktHdr.from, Customer_inMailHdr.from);
+         fflush(stdout);
+         if(strncmp(customer_in_msg, "ACS",3) == 0)
+         {
+            
+            sscanf(customer_in_msg, "%*s %d %d", &clerkIP,&clerkPort);
+            printf("[Customer]Customer has get the %s Clerk %d:%d! \n",typeName,clerkIP,clerkPort);
+            return combineIPPort(clerkIP,clerkPort);
+         }
+      }
+
+   }
+   sscanf(customer_in_msg, "%*s %d %d", &clerkIP,&clerkPort);
+   printf("[Customer]Customer has get the %s Clerk %d:%d! \n",typeName,clerkIP,clerkPort);
+   return combineIPPort(clerkIP,clerkPort);
+
+}
+#endif
 //-----------------------------------------------------
 //---------------- EXCEPTION HANDLER ------------------
 //-----------------------------------------------------
@@ -1481,6 +1698,27 @@ void ExceptionHandler(ExceptionType which) {
          case SC_Yield:
             DEBUG('a', "Yield syscall.\n");
             Yield_Syscall();
+            break;
+         case SC_ClerkReg:
+            DEBUG('a', "Clekr Reg syscall.\n");
+            rv = ClerkReg_Syscall(machine->ReadRegister(4),machine->ReadRegister(5),
+            machine->ReadRegister(6)
+            );
+            break;
+         case SC_CustomerAcquire:
+            DEBUG('a', "Clekr Reg syscall.\n");
+            rv =
+            CustomerAcquire_Syscall(machine->ReadRegister(4),machine->ReadRegister(5),
+            machine->ReadRegister(6)
+            );
+            break;
+         case SC_GetMachineID:
+            DEBUG('a', "Get Machine ID syscall.\n");
+            rv = GetMachineID_Syscall();
+            break;
+         case SC_GetMailBox:
+            DEBUG('a', "Get Mail Box syscall.\n");
+            rv = GetMailBox_Syscall();
             break;
 #endif
       }

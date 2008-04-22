@@ -40,6 +40,11 @@
 #define SC_Signal 		17
 #define SC_Wait 			18
 #define SC_Broadcast 		19
+/* Project 4 Addition */
+#define SC_ClerkReg 20 
+#define SC_CustomerAcquire 21 
+#define SC_GetMailBox 22 
+#define SC_GetMachineID 23 
 
 
 
@@ -163,6 +168,7 @@ void DestroyCondition(int);
 void Signal(int, int);
 void Wait(int, int);
 void Broadcast(int, int);
+
 
 
 
