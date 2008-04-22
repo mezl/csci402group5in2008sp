@@ -204,8 +204,38 @@ Broadcast:
 	j	$31
 	.end Broadcast
 
+	.globl ClerkReg
+	.ent	ClerkReg
+ClerkReg:
+	addiu $2,$0,SC_ClerkReg
+	syscall
+	j	$31
+	.end ClerkReg
 
 
+	.globl CustomerAcquire
+	.ent	CustomerAcquire
+CustomerAcquire:
+	addiu $2,$0,SC_CustomerAcquire
+	syscall
+	j	$31
+	.end CustomerAcquire
+
+	.globl GetMachineID
+	.ent	GetMachineID
+GetMachineID:
+	addiu $2,$0,SC_GetMachineID
+	syscall
+	j	$31
+	.end GetMachineID
+
+	.globl GetMailBox
+	.ent	GetMailBox
+GetMailBox:
+	addiu $2,$0,SC_GetMailBox
+	syscall
+	j	$31
+	.end GetMailBox
 /* dummy function to keep gcc happy */
         .globl  __main
         .ent    __main
