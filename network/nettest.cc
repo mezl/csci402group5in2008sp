@@ -199,13 +199,14 @@ void PassLockToProcess(int callerID)
 
 
 //send a message to other machine 
-void sendTo(int id,char *msg)
+void sendTo(int ip,int port,char *msg)
 {
+   printf("[SendTo] ip %d port %d msg \"%s\" \n", ip,port,msg);
 	PacketHeader outPktHdr;
 	MailHeader outMailHdr;
 
-	outPktHdr.to = id;
-	outMailHdr.to = 1;
+	outPktHdr.to = ip;
+	outMailHdr.to = port;
 	outMailHdr.from = 1;
 	outMailHdr.length = strlen(msg)+1;
 	
@@ -484,7 +485,6 @@ int Broadcast(int lockID, int condID, int processorID)
 	return 0;
 }
 
-
 void Initialization()
 {
 	lockCount = 0;
@@ -497,6 +497,142 @@ void Initialization()
 // server test added
 // this is the server kernal+stub
 
+
+//---------combineIPPort(int ip,int port)-----------
+//Combine ip & port to one number for list to use
+//for the simple use in the table
+//We combine the ip and port to one number
+//so the 10^1's number is ip,10^0 is port
+//Example:15 => ip = 1,port = 5
+//We assume the ip & port are less then 10
+//Pre:ip,port
+//Post:None
+//Return:one number combine with
+int combineIPPort(int ip,int port)
+{
+   return ip*10+port;
+}
+int getIP(int ipport)
+{
+   return ipport/10;
+}
+int getPort(int ipport)
+{
+   return ipport%10;
+}
+//-----------Send & Receive Function-------------------
+//Send the message and get message for other machine
+//Default port for sending is 1 and listen port 0 for reply
+void receiveFromServer(char *msg)
+{
+
+   PacketHeader r_inPktHdr ;
+   MailHeader r_inMailHdr ;
+   postOffice->Receive(0, &r_inPktHdr, &r_inMailHdr, msg);
+}
+void sendToServer(int ip,int port,char * msg)
+{
+
+   PacketHeader s_outPktHdr ;
+   MailHeader s_outMailHdr ;
+   int result;
+   s_outPktHdr.to = ip;
+   s_outMailHdr.to = port;
+   s_outMailHdr.from = 0;
+   s_outMailHdr.length = strlen(msg)+1;
+   printf("[SERVER]Sending a packet of \"%s\" to %d, box %d\n", msg, s_outPktHdr.to, s_outMailHdr.to);
+   result= postOffice->Send(s_outPktHdr, s_outMailHdr, msg);
+
+   if(!result)
+   {
+      printf("Server send reply message failed. Client probably not found. Terminating nachos.\n");
+      interrupt->Halt();
+   }
+}
+//Since server will reply to the message from the the source
+//We need wap the new package to let other under this is a 
+//forward package
+//If the org msg is "ACK 1 0" from machine 2:3, then the format is 
+//"F 2 3 ACK 1 0" 
+void forwardMsg(int ip,char *msg,int sourceIP,int sourcePort)
+{
+   char tmp[256];
+   sprintf(tmp,"F %d %d %s",sourceIP,sourcePort,msg);
+   sendToServer(ip,0,tmp);
+
+}
+//------------askServerForClerk(int type)--------------------
+//Ask all other server does the clerk avaiable
+//it will send the message to other server for the clerk
+//if some server respones ACK message back, then we return the 
+//server number back ,otherwise, we return -1 for not found
+//Pre:Need Clerk Type
+//Post:Asking all other server
+//Return:ServerID,-1 for not found
+int askServerForClerk(int type){
+//Q[C/K][A/P/S/H]
+   char out_msg[20];
+   char in_msg[20];
+
+   if(type == 0)
+      sprintf(out_msg,"QKA");
+   else if(type == 1)   
+      sprintf(out_msg,"QKP");
+   else if(type == 2)   
+      sprintf(out_msg,"QKS");
+   else if(type == 3)   
+      sprintf(out_msg,"QKH");
+   for(int i = 0;i < SERVER_NUM ;i++)
+   {
+      if(i != machineID){//Don't ask myself
+         sendToServer(i,0,out_msg);
+         receiveFromServer(in_msg); 
+         //if there is the server have clerk we need
+         if(strcmp(in_msg,"ACK") == 0)
+            return i;
+      
+      }
+   
+   }
+   return -1;
+
+}
+//------------askServerForCustomer(int type)--------------------
+//Ask all other server does the some customer is waiting 
+//it will send the message to other server for the customer 
+//if some server respones ACK message back, then we return the 
+//server number back ,otherwise, we return -1 for not found
+//Pre:Need Clerk Type
+//Post:Asking all other server
+//Return:ServerID,-1 for not found
+int askServerForCustomer(int type){
+//Q[C/K][A/P/S/H]
+   char out_msg[20];
+   char in_msg[20];
+
+   if(type == 0)
+      sprintf(out_msg,"QCA");
+   else if(type == 1)   
+      sprintf(out_msg,"QCP");
+   else if(type == 2)   
+      sprintf(out_msg,"QCS");
+   else if(type == 3)   
+      sprintf(out_msg,"QCH");
+   for(int i = 0;i < SERVER_NUM ;i++)
+   {
+      if(i != machineID){//Don't ask myself
+         sendToServer(i,0,out_msg);
+         receiveFromServer(in_msg); 
+         //if there is the server have clerk we need
+         if(strcmp(in_msg,"ACK") == 0)
+            return i;
+      
+      }
+   
+   }
+   return -1;
+
+}
 void ServerTest()
 {
 	PacketHeader outPktHdr, inPktHdr;
@@ -514,7 +650,7 @@ void ServerTest()
 
 	Initialization();
 
-	printf("[SERVER]Server starting up... \n");
+	printf("[SERVER]Server %d starting up... \n",machineID);
 	while(true)
 	{
 		postOffice->Receive(0, &inPktHdr, &inMailHdr, buffer);
@@ -540,6 +676,22 @@ void ServerTest()
 
 		// buffer[2-14] are required char string or integer for the operation
 
+
+      //If there is the forward message, we need find the soure to replay
+		if(buffer[0] == 'F'){
+         int sourceIP,sourcePort;
+         int destIP,destPort;
+         int orgMsg[20];
+         
+         //"F 2 3 ACK 1 0" 
+         printf("[Server][Before]Get a forward message [%s]\n",buffer);
+         sscanf(buffer, "%*s %d %d %s %d %d", &sourceIP,&sourcePort,orgMsg,&destIP,&destPort);
+         
+			outPktHdr.to = inPktHdr.from = sourceIP;
+			outMailHdr.to = inMailHdr.from = sourcePort;
+         sprintf(buffer,"%s %d %d",orgMsg,destIP,destPort);
+         printf("[Server][After] process a forward message [%s]\n",buffer);
+      }
 		if(buffer[0] == 'R'){
       //The format is like "RAA 10" for Reg AppClerk Available
       //buffer[1] is 'A' = AppClerk                      
@@ -547,9 +699,9 @@ void ServerTest()
       //buffer[1] is 'S' = PassClerk                      
       //buffer[1] is 'H' = CashClerk                      
       //1.Handle the clerk register request
-      //2.Get clerk ID
-         int clerkID;
-         sscanf(buffer, "%*s %d", &clerkID);
+      //2.Get clerk IP & Port
+         int clerkIP,clerkPort;
+         sscanf(buffer, "%*s %d %d", &clerkIP,&clerkPort);
       //3.Check which type of clerk;
          switch(buffer[1])
          {
@@ -557,38 +709,142 @@ void ServerTest()
                //if there is no customer is waiting
                if(AppLine->IsEmpty())
                {
-                  AppClerkTable->clerkTable->Append((void*)clerkID);
-                  sprintf(replyMessage, "RCW");//Register Clerk Wait 
-				      printf("[SERVER]App Clerk %d is waiting\n", clerkID);
+                  int forwardID = askServerForCustomer(0);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of customer 
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of customer waiting 
+
+                     AppClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
+                     sprintf(replyMessage, "RCW");//Register Clerk Wait 
+                     printf("[SERVER]App Clerk %d is waiting\n", clerkIP);
+                  }
                }else
                {
                   //if there is customer is waiting,pass the customer id
                   //to the register clerk
-                  int customerID;            
-                  customerID = (int)(AppLine->Remove());
-                  sprintf(replyMessage, "RCS %d ",customerID);
+                  int tmpIPort,customerIP,customerPort;            
+                  tmpIPort = (int)(AppLine->Remove());
+
+                  customerIP = getIP(tmpIPort);
+                  customerPort = getPort(tmpIPort); 
+                  sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
                   //Register Clerk Success
-				      printf("[SERVER]App Clerk %d get customer %d \n",
-                  clerkID,customerID);
+				      printf("[SERVER]App Clerk %d:%d get customer %d:%d \n",
+                  clerkIP,clerkPort,customerIP,customerPort);
                   //Also Send Message to Customer to wake Customer UP
                   char tmpBuf[256];
-                  sprintf(tmpBuf,"ACS %d ",clerkID);
+                  sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
                   //Acquire Clerk Success
-                  sendTo(customerID,tmpBuf);
+                  sendTo(customerIP,customerPort,tmpBuf);
                
                }
                break;
             case 'P':
-               PicClerkTable->clerkTable->Append((void*)clerkID);
-					sprintf(replyMessage, "RCS");//Register Clerk Success
+               if(PicLine->IsEmpty())
+               {
+                  
+                  int forwardID = askServerForCustomer(1);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of customer 
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of customer waiting 
+                     PicClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
+                     sprintf(replyMessage, "RCW");//Register Clerk Wait 
+                     printf("[SERVER]Pic Clerk %d is waiting\n", clerkIP);
+                  }
+               }else
+               {
+                  //if there is customer is waiting,pass the customer id
+                  //to the register clerk
+                  int tmpIPort,customerIP,customerPort;            
+                  tmpIPort = (int)(PicLine->Remove());
+
+                  customerIP = getIP(tmpIPort);
+                  customerPort = getPort(tmpIPort); 
+                  sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
+                  //Register Clerk Success
+				      printf("[SERVER]Pic Clerk %d:%d get customer %d:%d \n",
+                  clerkIP,clerkPort,customerIP,customerPort);
+                  //Also Send Message to Customer to wake Customer UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
+                  //Acquire Clerk Success
+                  sendTo(customerIP,customerPort,tmpBuf);
+               
+               }
                break;
             case 'S':
-               PassClerkTable->clerkTable->Append((void*)clerkID);
-					sprintf(replyMessage, "RCS");//Register Clerk Success
+               if(PassLine->IsEmpty())
+               {
+                  
+                  int forwardID = askServerForCustomer(2);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of customer 
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of customer waiting 
+                     PassClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
+                     sprintf(replyMessage, "RCW");//Register Clerk Wait 
+                     printf("[SERVER]Pass Clerk %d is waiting\n", clerkIP);
+                  }
+               }else
+               {
+                  //if there is customer is waiting,pass the customer id
+                  //to the register clerk
+                  int tmpIPort,customerIP,customerPort;            
+                  tmpIPort = (int)(PassLine->Remove());
+
+                  customerIP = getIP(tmpIPort);
+                  customerPort = getPort(tmpIPort); 
+                  sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
+                  //Register Clerk Success
+				      printf("[SERVER]Pass Clerk %d:%d get customer %d:%d \n",
+                  clerkIP,clerkPort,customerIP,customerPort);
+                  //Also Send Message to Customer to wake Customer UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
+                  //Acquire Clerk Success
+                  sendTo(customerIP,customerPort,tmpBuf);
+               
+               }
                break;
             case 'H':
-               CashClerkTable->clerkTable->Append((void*)clerkID);
-					sprintf(replyMessage, "RCS");//Register Clerk Success
+               if(CashLine->IsEmpty())
+               {
+                  
+                  int forwardID = askServerForCustomer(3);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of customer 
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of customer waiting 
+                     CashClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
+                     sprintf(replyMessage, "RCW");//Register Clerk Wait 
+                     printf("[SERVER]Cash Clerk %d is waiting\n", clerkIP);
+                  }
+               }else
+               {
+                  //if there is customer is waiting,pass the customer id
+                  //to the register clerk
+                  int tmpIPort,customerIP,customerPort;            
+                  tmpIPort = (int)(CashLine->Remove());
+
+                  customerIP = getIP(tmpIPort);
+                  customerPort = getPort(tmpIPort); 
+                  sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
+                  //Register Clerk Success
+				      printf("[SERVER]Cash Clerk %d:%d get customer %d:%d \n",
+                  clerkIP,clerkPort,customerIP,customerPort);
+                  //Also Send Message to Customer to wake Customer UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
+                  //Acquire Clerk Success
+                  sendTo(customerIP,customerPort,tmpBuf);
+               
+               }
                break;
          
             default:
@@ -605,9 +861,9 @@ void ServerTest()
          //A[APSH]W : need customer wait
 
       //1.Handle the customer acquire clerk request
-      //2.Get customerID
-         int customerID;
-         sscanf(buffer, "%*s %d", &customerID);
+      //2.Get customerIP
+         int customerIP,customerPort;
+         sscanf(buffer, "%*s %d %d", &customerIP,&customerPort);
       //3.Check which type of clerk request;
          switch(buffer[1])
          {
@@ -615,41 +871,224 @@ void ServerTest()
                //if there is no clerk is free 
                if(AppClerkTable->clerkTable->IsEmpty())
                {
-                  AppLine->Append((void*)customerID);
-                  sprintf(replyMessage, "AAW");//Acquire AppClerk Wait 
-				      printf("[SERVER]Customer %d is waiting for App\n",
-                  customerID);
+               //If the server don't have the clerk to handle customer
+               //Then the server ask the other server if they have clerk avaiable
+               //If all the server don't have the type of clerk avaiable
+               //The server will queue up this customer, for latter on other server
+               //may asking for the customer
+
+               //Ask Other Server for this type of clerk
+                  int forwardID = askServerForClerk(0);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of clerk
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of clerk
+                     AppLine->Append((void*)combineIPPort(customerIP,customerPort));
+                     sprintf(replyMessage, "ACW");//Acquire AppClerk Wait 
+                     printf("[SERVER]Customer %d:%d is waiting for App\n",
+                           customerIP,customerPort);
+                  }
                }else
                {
                   //if there is clerk avaible ,pass the clerk id
                   //to the customer 
-                  int clerkID;            
-                  clerkID= (int)(AppClerkTable->clerkTable->Remove());
-                  sprintf(replyMessage, "ACS %d ",clerkID);
+                  int clerkIP,clerkPort,tmpIPort;            
+                  tmpIPort = (int)(AppClerkTable->clerkTable->Remove());
+                  clerkIP = getIP(tmpIPort);
+                  clerkPort = getPort(tmpIPort);
+                  sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
                   //Register Clerk Success
-				      printf("[SERVER]Customer %d get appClerk %d \n",
-                  customerID,clerkID);
+                  printf("[SERVER]Customer %d:%d get appClerk %d:%d \n",
+                        customerIP,customerPort,clerkIP,clerkPort);
                   //Also Send Message to Clerk to wake Clerk UP
                   char tmpBuf[256];
-                  sprintf(tmpBuf, "RCS %d ",customerID);
+                  sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
                   //Register Clerk Success
-                  sendTo(clerkID,tmpBuf);
+                  sendTo(clerkIP,clerkPort,tmpBuf);
+
+
+               }
+               break;
+            case 'P':
+               printf("===========Server Get AP request, customer need pic clerk====\n");
+               //if there is no clerk is free 
+               if(PicClerkTable->clerkTable->IsEmpty())
+               {
+                  int forwardID = askServerForClerk(1);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of clerk
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of clerk
+                     PicLine->Append((void*)combineIPPort(customerIP,customerPort));
+                     sprintf(replyMessage, "ACW");//Acquire PicClerk Wait 
+                     printf("[SERVER]Customer %d:%d is waiting for Pic\n",
+                           customerIP,customerPort);
+                  }
+               }else
+               {
+                  //if there is clerk avaible ,pass the clerk id
+                  //to the customer 
+                  int clerkIP,clerkPort,tmpIPort;            
+                  tmpIPort = (int)(PicClerkTable->clerkTable->Remove());
+                  clerkIP = getIP(tmpIPort);
+                  clerkPort = getPort(tmpIPort);
+                  sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
+                  //Register Clerk Success
+				      printf("[SERVER]Customer %d:%d get picClerk %d:%d \n",
+                  customerIP,customerPort,clerkIP,clerkPort);
+                  //Also Send Message to Clerk to wake Clerk UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
+                  //Register Clerk Success
+                  sendTo(clerkIP,clerkPort,tmpBuf);
                   
                
                }
                break;
-            case 'P':
-               break;
             case 'S':
+               printf("===========Server Get AS request, customer need pass clerk====\n");
+               //if there is no clerk is free 
+               if(PassClerkTable->clerkTable->IsEmpty())
+               {
+                  int forwardID = askServerForClerk(2);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of clerk
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of clerk
+                     PassLine->Append((void*)combineIPPort(customerIP,customerPort));
+                     sprintf(replyMessage, "ACW");//Acquire PassClerk Wait 
+                     printf("[SERVER]Customer %d:%d is waiting for Pass\n",
+                           customerIP,customerPort);
+                  }
+               }else
+               {
+                  //if there is clerk avaible ,pass the clerk id
+                  //to the customer 
+                  int clerkIP,clerkPort,tmpIPort;            
+                  tmpIPort = (int)(PassClerkTable->clerkTable->Remove());
+                  clerkIP = getIP(tmpIPort);
+                  clerkPort = getPort(tmpIPort);
+                  sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
+                  //Register Clerk Success
+				      printf("[SERVER]Customer %d:%d get passClerk %d:%d \n",
+                  customerIP,customerPort,clerkIP,clerkPort);
+                  //Also Send Message to Clerk to wake Clerk UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
+                  //Register Clerk Success
+                  sendTo(clerkIP,clerkPort,tmpBuf);
+                  
+               
+               }
                break;
             case 'H':
+               printf("===========Server Get AP request, customer need cash clerk====\n");
+               //if there is no clerk is free 
+               if(CashClerkTable->clerkTable->IsEmpty())
+               {
+                  int forwardID = askServerForClerk(3);//send 0 for app clerk,return -1 mean's all server busy
+                  if(forwardID!=-1)//some server have this type of clerk
+                  {
+                     forwardMsg(forwardID,buffer,inPktHdr.from,inMailHdr.from);
+                     noReply = 1;//after forward message,we don't need replay to client
+                  }else{ //if no server have this type of clerk
+                     CashLine->Append((void*)combineIPPort(customerIP,customerPort));
+                     sprintf(replyMessage, "ACW");//Acquire CashClerk Wait 
+                     printf("[SERVER]Customer %d:%d is waiting for Cash\n",
+                           customerIP,customerPort);
+                  }
+               }else
+               {
+                  //if there is clerk avaible ,pass the clerk id
+                  //to the customer 
+                  int clerkIP,clerkPort,tmpIPort;            
+                  tmpIPort = (int)(CashClerkTable->clerkTable->Remove());
+                  clerkIP = getIP(tmpIPort);
+                  clerkPort = getPort(tmpIPort);
+                  sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
+                  //Register Clerk Success
+				      printf("[SERVER]Customer %d:%d get cashClerk %d:%d \n",
+                  customerIP,customerPort,clerkIP,clerkPort);
+                  //Also Send Message to Clerk to wake Clerk UP
+                  char tmpBuf[256];
+                  sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
+                  //Register Clerk Success
+                  sendTo(clerkIP,clerkPort,tmpBuf);
+                  
+               
+               }
                break;
          
             default:
                break;
          }
+      //Handle The request from other server
+      //The format is Q[C/K][A/P/S/H]
+      //[C/K] = need Customer/clerK
+      //[A/P/S/H] = clerk Type
+      } else if(buffer[0] == 'Q') {
+         if(buffer[1] == 'K'){
+            switch(buffer[2])
+            {
+               case 'A':
+                  if(AppClerkTable->clerkTable->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
+               case 'P':
+                  if(PicClerkTable->clerkTable->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
+               case 'S':
+                  if(PassClerkTable->clerkTable->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
+               case 'H':
+                  if(CashClerkTable->clerkTable->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
 
-      
+            }
+         } else if(buffer[1] == 'C'){
+            switch(buffer[2])
+            {
+               case 'A':
+                  if(AppLine->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
+               case 'P':
+                  if(PicLine->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
+               case 'S':
+                  if(PassLine->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
+               case 'H':
+                  if(CashLine->IsEmpty())
+                     sprintf(replyMessage, "NCK");//neg ack
+                  else
+                     sprintf(replyMessage, "ACK");//ack
+                  break;
+            }
+         
+         }
       } else if(buffer[0] == 'L') {
 			/* Lock operation */
 			switch(buffer[1])
