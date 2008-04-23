@@ -324,6 +324,7 @@ void ClientSendReceiveRequest(){
 int server_count = 0;
 int getRandServerID()
 {
+   server_count += rand()%10;
    return (server_count++)%SERVER_NUM;
 }
 
