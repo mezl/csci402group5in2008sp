@@ -75,7 +75,7 @@ extern int processID_Counter;
 #endif 
 //-------------------- Project 4 (part 1) -------------------
 #ifdef PROJ4
-#define SERVER_NUM 2
+#define SERVER_NUM 3
 extern Lock* mailBoxLock;
 extern Lock* clerkRegLock;
 extern Lock* customerAcquireLock;

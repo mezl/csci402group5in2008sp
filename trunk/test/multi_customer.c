@@ -11,13 +11,6 @@ int main()
 {
    Exec("../test/test_customer");
    Exec("../test/test_customer");
-   Exec("../test/test_customer");
-   Exec("../test/test_customer");
-   Exec("../test/test_customer");
-   Exec("../test/test_customer");
-   Exec("../test/test_customer");
-   Exec("../test/test_customer");
-   Exec("../test/test_customer");
 	Exit(0);
 }
 
