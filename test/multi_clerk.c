@@ -16,10 +16,6 @@ int main()
    Exec("../test/pic_clerk");
    Exec("../test/pass_clerk");
    Exec("../test/cash_clerk");
-   Exec("../test/app_clerk");
-   Exec("../test/pic_clerk");
-   Exec("../test/pass_clerk");
-   Exec("../test/cash_clerk");
 	Exit(0);
 }
 
