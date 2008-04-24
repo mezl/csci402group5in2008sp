@@ -547,12 +547,12 @@ void sendToServer(int ip,char * msg)
 {
    //the communication between server's
    //is using port 1 to distinguish wiht client request
-   //however, since server can only listen one port at a time
-   //we still send to other server port 0 for asking result
-   //but we use the port 1 for the reply port
+   //we have fork another server for listen port 1
+   //we send to other server port 1 for asking result
+   //and we use the port 2 for the reply port
    //so, after we send the server request message
-   //we go to listen port 1 for the replay
-   sendTo(ip,0,msg,1);
+   //we go to listen port 2 for the replay
+   sendTo(ip,1,msg,2);
 }
 void forwardToServer(int ip,char * msg)
 {
@@ -562,7 +562,7 @@ void forwardToServer(int ip,char * msg)
    //since the forwardhandler will replace those infor
    //before passing to the client handler
 
-   sendTo(ip,0,msg,1);
+   sendTo(ip,0,msg,0);
 }
 void receiveFrom(char *msg,int port)
 {
@@ -574,14 +574,14 @@ void serverListen(int port,PacketHeader* r_inPktHdr,MailHeader* r_inMailHdr,char
 {
    postOffice->Receive(port, r_inPktHdr, r_inMailHdr, msg);
 
-   printf("[SERVER]Server just received \"%s\" from machine %d, box %d \n", 
-         msg, r_inPktHdr->from, r_inMailHdr->from);
+   printf("[SERVER]Port %d just received \"%s\" from machine %d, box %d \n", 
+         port,msg, r_inPktHdr->from, r_inMailHdr->from);
    fflush(stdout);
 }
 void receiveFromServer(char *msg)
 {
    //default server<->server port is 1
-   receiveFrom(msg,1);
+   receiveFrom(msg,2);
 }
 //Since server will reply to the message from the the source
 //We need wap the new package to let other under this is a 
@@ -671,11 +671,13 @@ int askServerForCustomer(int type){
    return -1;
 
 }
-void handleForwardRequest(char *buffer,char *replyMessage,
+int handleForwardRequest(char *buffer,char *replyMessage,
       PacketHeader* outPktHdr,
       MailHeader* outMailHdr)
 {
+   int fw = 0;
    if(buffer[0] == 'F'){
+      fw = 1;
       int sourceIP,sourcePort;
       int destIP,destPort;
       int orgMsg[20];
@@ -684,11 +686,13 @@ void handleForwardRequest(char *buffer,char *replyMessage,
       printf("[Server][Before]=======Get a forward message ============[%s]\n",buffer);
       sscanf(buffer, "%*s %d %d %s %d %d", &sourceIP,&sourcePort,orgMsg,&destIP,&destPort);
 
-      outPktHdr->to  = sourceIP;
-      outMailHdr->to  = sourcePort;
+      //pretend the message is form client
+      outPktHdr->from= sourceIP;
+      outMailHdr->from = sourcePort;
       sprintf(buffer,"%s %d %d",orgMsg,destIP,destPort);
       printf("[Server][After]======== process a forward message [%s]=============\n",buffer);
    }
+   return fw;
 }   
 bool isClerkTableEmpty(int type)
 {
@@ -762,14 +766,23 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                //The server will queue up this customer, for latter on other server
                //may asking for the customer
 
+               //In case while we are asking other server,
+               //the same the server also ask us for the clerk/customer
+               //So we first put our customer in the queue before we ask
+               //then if other server need this customer
+               //we remove from our queue and forward to them
+               
+               AppLine->Append((void*)combineIPPort(customerIP,customerPort));
                //Ask Other Server for this type of clerk
                int forwardID = askServerForClerk(0);//send 0 for app clerk,return -1 mean's all server busy
                if(forwardID!=-1)//some server have this type of clerk
                {
+                  (int)(AppLine->Remove());
+                  
                   forwardMsg(forwardID,buffer,inPktHdr->from,inMailHdr->from);
                   *noReply = 1;//after forward message,we don't need replay to client
                }else{ //if no server have this type of clerk
-                  AppLine->Append((void*)combineIPPort(customerIP,customerPort));
+                  //AppLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire AppClerk Wait 
                   printf("[SERVER]Customer %d:%d is waiting for App\n",
                         customerIP,customerPort);
@@ -800,13 +813,15 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
             //if there is no clerk is free 
             if(PicClerkTable->clerkTable->IsEmpty())
             {
+               PicLine->Append((void*)combineIPPort(customerIP,customerPort));
                int forwardID = askServerForClerk(1);//send 0 for app clerk,return -1 mean's all server busy
                if(forwardID!=-1)//some server have this type of clerk
                {
+                  (int)(PicLine->Remove());
                   forwardMsg(forwardID,buffer,inPktHdr->from,inMailHdr->from);
                   *noReply = 1;//after forward message,we don't need replay to client
                }else{ //if no server have this type of clerk
-                  PicLine->Append((void*)combineIPPort(customerIP,customerPort));
+                  //PicLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire PicClerk Wait 
                   printf("[SERVER]Customer %d:%d is waiting for Pic\n",
                         customerIP,customerPort);
@@ -837,13 +852,15 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
             //if there is no clerk is free 
             if(PassClerkTable->clerkTable->IsEmpty())
             {
+               PassLine->Append((void*)combineIPPort(customerIP,customerPort));
                int forwardID = askServerForClerk(2);//send 0 for app clerk,return -1 mean's all server busy
                if(forwardID!=-1)//some server have this type of clerk
                {
+                  (int)(PassLine->Remove());
                   forwardMsg(forwardID,buffer,inPktHdr->from,inMailHdr->from);
                   *noReply = 1;//after forward message,we don't need replay to client
                }else{ //if no server have this type of clerk
-                  PassLine->Append((void*)combineIPPort(customerIP,customerPort));
+                  //PassLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire PassClerk Wait 
                   printf("[SERVER]Customer %d:%d is waiting for Pass\n",
                         customerIP,customerPort);
@@ -865,8 +882,6 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
                //Register Clerk Success
                sendTo(clerkIP,clerkPort,tmpBuf,0);
-
-
             }
             break;
          case 'H':
@@ -874,13 +889,15 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
             //if there is no clerk is free 
             if(CashClerkTable->clerkTable->IsEmpty())
             {
+               CashLine->Append((void*)combineIPPort(customerIP,customerPort));
                int forwardID = askServerForClerk(3);//send 0 for app clerk,return -1 mean's all server busy
                if(forwardID!=-1)//some server have this type of clerk
                {
+                  (int)(CashLine->Remove());
                   forwardMsg(forwardID,buffer,inPktHdr->from,inMailHdr->from);
                   *noReply = 1;//after forward message,we don't need replay to client
                }else{ //if no server have this type of clerk
-                  CashLine->Append((void*)combineIPPort(customerIP,customerPort));
+                  //CashLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire CashClerk Wait 
                   printf("[SERVER]Customer %d:%d is waiting for Cash\n",
                         customerIP,customerPort);
@@ -1213,13 +1230,15 @@ void handleConditionRequest(char *buffer,char* replyMessage,
 
    }
 }
-void handleServerRequest(char *buffer,char* replyMessage)
+int handleServerRequest(char *buffer,char* replyMessage)
 {
    //Handle The request from other server
    //The format is Q[C/K][A/P/S/H]
    //[C/K] = need Customer/clerK
    //[A/P/S/H] = clerk Type
+   int reply = -1;
    if(buffer[0] == 'Q') {
+      reply = 1;
       if(buffer[1] == 'K'){
          switch(buffer[2])
          {
@@ -1278,9 +1297,11 @@ void handleServerRequest(char *buffer,char* replyMessage)
                break;
          }
 
-      }
+      }//else if buffer[1]
+            
 
    }
+   return reply;
 }
 
 /* parse the message  buffer (message) is limited to max. size of 15 chars*/
@@ -1307,13 +1328,13 @@ void handleClientRequest()
    char replyMessage[MaxMailSize];
    bool sendSuccess;
    int noReply = 0;
-
+   int isFw = 0;
    serverListen(0, &h_inPktHdr, &h_inMailHdr, buffer);
    
-   handleForwardRequest(buffer,replyMessage, &h_inPktHdr, &h_inMailHdr);
+   isFw = handleForwardRequest(buffer,replyMessage, &h_inPktHdr, &h_inMailHdr);
    handleCustomerRequest (buffer,replyMessage,&noReply, &h_inPktHdr, &h_inMailHdr);
    handleClerkRequest(buffer,replyMessage,&noReply, &h_inPktHdr, &h_inMailHdr);
-   handleServerRequest(buffer,replyMessage);
+   //handleServerRequest(buffer,replyMessage);
 
 
    
@@ -1329,12 +1350,45 @@ void handleClientRequest()
       sendTo(ip,port,replyMessage,1);
    }
 }
+//------------void serverToServer()----------------------
+//This is another thread using for reply the server request
+//It will listen the port 1 for the message from other server
+//So, the server will listen two port at same time
+//port 0 is using for client(clerk/customer) request
+//port 1 is using for other server quary
+void serverToServer()
+{
+   printf("[SERVER]Server %d start s2s server... \n",machineID);
+   while(1){
+      PacketHeader h_inPktHdr;
+      MailHeader h_inMailHdr;
+      char buffer[MaxMailSize];
+      char replyMessage[MaxMailSize];
+      int reply = 0;
+      //listen port 1 for the message comming from other server
+      serverListen(1, &h_inPktHdr, &h_inMailHdr, buffer);
+      //Check the request the generate
+      reply = handleServerRequest(buffer,replyMessage);
 
+      /* create the reply package and send */
+      if(reply == 1){
+         int port = h_inMailHdr.from;
+         int ip = h_inPktHdr.from;
+         //reply to sender by the port sender given
+         //we use port 1 to send message
+         //port should be equal 2
+         sendTo(ip,port,replyMessage,1);
+      }
+   }
+
+}
 void ServerTest()
 {
 
    Initialization();
 
+   Thread *t = new Thread("s2s");
+   t->Fork((VoidFunctionPtr)serverToServer,0);
    printf("[SERVER]Server %d starting up... \n",machineID);
    while(true)
    {
