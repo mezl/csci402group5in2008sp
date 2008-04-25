@@ -81,6 +81,7 @@ extern Lock* clerkRegLock;
 extern Lock* customerAcquireLock;
 extern BitMap* mailBoxMap;
 extern int machineID;
+extern int managerID;
 enum CLERK_TYPE{APP,PIC,PASS,CASH};
 
 class Clerk_Table{

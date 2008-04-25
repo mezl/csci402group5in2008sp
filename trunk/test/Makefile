@@ -36,7 +36,8 @@ CCFLAGS =  -G 0 -c $(INCDIR)
 
 all: multi_office project2_final office halt matmult sort testfiles test_exec test_fork lockcond \
 test_exit test_matmult simplelock testCond1 testCond2 test_clerk test_customer \
-multi_clerk multi_customer pic_clerk pass_clerk cash_clerk app_clerk
+multi_clerk multi_customer pic_clerk pass_clerk cash_clerk app_clerk \
+test_manager
 
 start.o: start.s ../userprog/syscall.h
 	$(CPP) $(CPPFLAGS) start.s > strt.s
@@ -201,9 +202,16 @@ cash_clerk.o: cash_clerk.c
 cash_clerk: cash_clerk.o start.o
 	$(LD) $(LDFLAGS) start.o cash_clerk.o -o cash_clerk.coff
 	../bin/coff2noff cash_clerk.coff cash_clerk
+test_manager.o: test_manager.c
+	$(CC2C) test_manager.c > tmp.c
+	$(CC) $(CFLAGS) -c tmp.c -o test_manager.o
+	rm -f tmp.c
+test_manager: test_manager.o start.o
+	$(LD) $(LDFLAGS) start.o test_manager.o -o test_manager.coff
+	../bin/coff2noff test_manager.coff test_manager
 clean:
 	rm -f multi_clerk multi_customer
-	rm -f test_clerk test_customer
+	rm -f test_clerk test_customer test_manager
 	rm -f app_clerk pic_clerk pass_clerk cash_clerk
 	rm -f test_exit test_matmult 
 	rm -f *.o *.coff

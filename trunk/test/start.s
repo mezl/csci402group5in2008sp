@@ -212,7 +212,6 @@ ClerkReg:
 	j	$31
 	.end ClerkReg
 
-
 	.globl CustomerAcquire
 	.ent	CustomerAcquire
 CustomerAcquire:
@@ -236,6 +235,31 @@ GetMailBox:
 	syscall
 	j	$31
 	.end GetMailBox
+
+	.globl ManagerReg
+	.ent	ManagerReg
+ManagerReg:
+	addiu $2,$0,SC_ManagerReg
+	syscall
+	j	$31
+	.end ManagerReg
+   
+	.globl ManagerGetMoney
+	.ent	ManagerGetMoney
+ManagerGetMoney:
+	addiu $2,$0,SC_ManagerGetMoney
+	syscall
+	j	$31
+	.end ManagerGetMoney
+
+	.globl CashierSendMoney
+	.ent	CashierSendMoney
+CashierSendMoney:
+	addiu $2,$0,SC_CashierSendMoney
+	syscall
+	j	$31
+	.end CashierSendMoney
+
 /* dummy function to keep gcc happy */
         .globl  __main
         .ent    __main
