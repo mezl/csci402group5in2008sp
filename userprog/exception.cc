@@ -333,14 +333,14 @@ int getRandServerID()
 //Pre:sender's port number, outgoing message
 //Post:the server response message
 //Return:none
-void SR_server(int port,char *outMsg,char *inMsg)
+void SR_server(int port,char *outMsg,char *inMsg,int serverPort = 0)
 {
    PacketHeader SR_outPktHdr, SR_inPktHdr;
    MailHeader SR_outMailHdr, SR_inMailHdr;
    int result;
    char SRbuf[256];
    SR_outPktHdr.to = getRandServerID(); //send to machine 0, which is the server
-   SR_outMailHdr.to = 0;
+   SR_outMailHdr.to = serverPort;
    SR_outMailHdr.from = port;//port;
    SR_outMailHdr.length = strlen(outMsg)+1;
    result = postOffice->Send(SR_outPktHdr, SR_outMailHdr, outMsg);
@@ -1549,6 +1549,90 @@ int CustomerAcquire_Syscall(int ip,int port,int type)//,int *clerkIP,int *clerkP
    return combineIPPort(clerkIP,clerkPort);
 
 }
+//-------------------ManagerReg_Syscall(int id)-----------
+//The Manager will call this function to register the server
+//
+//
+//Pre: Manager IP
+//Post:None
+//Return: None 
+void ManagerReg_Syscall(int ip)
+//int *customerIP,int *customerPort)
+{
+   printf("==============ManagerReg_Syscall=============\n");
+   int port = 3;//manager default port
+   char manager_out_msg[20];
+   char manager_in_msg[20];
+   char manager_buf[256];
+   ClearArray(manager_out_msg);
+   sprintf(manager_out_msg, "RGMGR %d \0", ip);//Reg Manager 
+   SR_server(port,manager_out_msg,manager_in_msg,3);//to server port 3
+   //if there is no customer can handle
+   if(strcmp(manager_in_msg, "RMGS") == 0)
+   {
+         printf("[Manager_%d]Register to Server Success\n",ip);
+
+   }
+
+}
+//-------------------ManagerGetMoney_Syscall(int id)-----------
+//The Manager will call this function to get money from the server
+//
+//
+//Pre: Manager IP
+//Post:None
+//Return:Money from server  
+int ManagerGetMoney_Syscall(int ip)
+{
+   printf("==============ManagerGetMoney_Syscall=============\n");
+   int port = 3;//manager default port
+   char manager_in_msg[20];
+   char manager_buf[256];
+   PacketHeader Manager_outPktHdr, Manager_inPktHdr;
+   MailHeader Manager_outMailHdr, Manager_inMailHdr;
+
+   while(true)
+   {
+      printf("[Manager_%d]Wait for money coming to port %d \n",ip,port);
+      postOffice->Receive(port, &Manager_inPktHdr, &Manager_inMailHdr, manager_buf);
+      strcpy(manager_in_msg, manager_buf);
+      printf("[Manager]Manager got \"%s\" from %d, box %d\n", manager_in_msg, Manager_inPktHdr.from, Manager_inMailHdr.from);
+      fflush(stdout);
+      if(strncmp(manager_in_msg, "GETCASH",7) == 0)
+      {
+         int amount;
+         sscanf(manager_in_msg, "%*s %d", &amount);
+         printf("[Manager]Manager has get the money %d! \n",amount);
+         return amount; 
+      }
+   }
+}
+//-------------------CashierSendMoney_Syscall(int id)-----------
+//The Cashier will call this function to send money to the server
+//
+//
+//Pre: Cashier IP,port,amount
+//Post:None
+//Return: None 
+void CashierSendMoney_Syscall(int ip,int port,int amount)
+//int *customerIP,int *customerPort)
+{
+   printf("==============CashierReg_Syscall=============\n");
+   char cashire_out_msg[20];
+   char cashire_in_msg[20];
+   char cashire_buf[256];
+   ClearArray(cashire_out_msg);
+   sprintf(cashire_out_msg, "CASH %d %d %d\0",amount,ip,port);//Send Money
+   SR_server(port,cashire_out_msg,cashire_in_msg,3);
+   
+   //if there is no customer can handle
+   if(strncmp(cashire_in_msg, "GETCASH",7) == 0)
+   {
+         printf("[Cashier_%d:%d]Send money %d to Server Success\n",ip,port,amount);
+
+   }
+
+}
 #endif
 //-----------------------------------------------------
 //---------------- EXCEPTION HANDLER ------------------
@@ -1720,6 +1804,20 @@ void ExceptionHandler(ExceptionType which) {
          case SC_GetMailBox:
             DEBUG('a', "Get Mail Box syscall.\n");
             rv = GetMailBox_Syscall();
+            break;
+         case SC_ManagerReg:
+            DEBUG('a', "Manager Reg syscall.\n");
+            ManagerReg_Syscall(machine->ReadRegister(4));
+            break;
+         case SC_ManagerGetMoney:
+            DEBUG('a', "Manager Get Money syscall.\n");
+            rv = ManagerGetMoney_Syscall(machine->ReadRegister(4));
+            break;
+         case SC_CashierSendMoney:
+            DEBUG('a', "Cashier send money syscall.\n");
+            CashierSendMoney_Syscall(machine->ReadRegister(4),machine->ReadRegister(5),
+            machine->ReadRegister(6)
+            );
             break;
 #endif
       }

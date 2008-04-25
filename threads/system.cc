@@ -52,6 +52,7 @@ Lock* clerkRegLock;
 Lock* customerAcquireLock;
 BitMap* mailBoxMap;
 int machineID;
+int managerID;
 Clerk_Table* AppClerkTable;
 Clerk_Table* PicClerkTable;
 Clerk_Table* PassClerkTable;
@@ -166,6 +167,7 @@ Initialize(int argc, char **argv)
 	    netname = atoi(*(argv + 1));
 	    argCount = 2;
        machineID = netname;
+       managerID = -1;
 	}
 #endif
     }

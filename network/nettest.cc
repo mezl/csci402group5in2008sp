@@ -28,6 +28,10 @@
 #include <stdlib.h>
 #include "list.h"
 
+//If want to display the sending/receive massage
+//define this line
+//#define SR_DEBUG
+
 // Test out message delivery, by doing the following:
 //	1. send a message to the machine with ID "farAddr", at mail box #0
 //	2. wait for the other machine's message to arrive (in our mailbox #0)
@@ -480,7 +484,26 @@ void Initialization()
 // server test added
 // this is the server kernal+stub
 
+char gckname[20];
+//------getClerkName(int type)-----------------------
+//Convert the clerk type to the string name
+//Pre:Clerk type (int)
+//Post:
+//Return:Clerk name(char *)
+char* getClerkName(int type)
+{
+   if(type == 0)
+      sprintf(gckname,"Application");
+   else if(type == 1)   
+      sprintf(gckname,"Picture");
+   else if(type == 2)   
+      sprintf(gckname,"Passport");
+   else if(type == 3)   
+      sprintf(gckname,"Cashier");
 
+  return gckname;    
+
+}
 
 //---------combineIPPort(int ip,int port)-----------
 //Combine ip & port to one number for list to use
@@ -534,7 +557,9 @@ void sendTo(int ip,int port,char * msg,int myport)
    s_outMailHdr.to = port;
    s_outMailHdr.from = myport;
    s_outMailHdr.length = strlen(msg)+1;
-   printf("[SERVER]Sending a packet of \"%s\" to %d, box %d\n", msg, s_outPktHdr.to, s_outMailHdr.to);
+#ifdef SR_DEBUG
+   printf("[SERVER%d]Sending a packet of \"%s\" to %d, box %d\n", machineID,msg, s_outPktHdr.to, s_outMailHdr.to);
+#endif
    result= postOffice->Send(s_outPktHdr, s_outMailHdr, msg);
 
    if(!result)
@@ -574,8 +599,10 @@ void serverListen(int port,PacketHeader* r_inPktHdr,MailHeader* r_inMailHdr,char
 {
    postOffice->Receive(port, r_inPktHdr, r_inMailHdr, msg);
 
-   printf("[SERVER]Port %d just received \"%s\" from machine %d, box %d \n", 
-         port,msg, r_inPktHdr->from, r_inMailHdr->from);
+#ifdef SR_DEBUG
+   printf("[SERVER%d]Port %d just received \"%s\" from machine %d, box %d \n", 
+         machineID,port,msg, r_inPktHdr->from, r_inMailHdr->from);
+#endif
    fflush(stdout);
 }
 void receiveFromServer(char *msg)
@@ -616,20 +643,27 @@ int askServerForClerk(int type){
       sprintf(out_msg,"QKS");
    else if(type == 3)   
       sprintf(out_msg,"QKH");
+      
+   printf("[SERVER%d]====Asking other server for %s Clerk =====\n",
+   machineID,getClerkName(type));
    for(int i = 0;i < SERVER_NUM ;i++)
    {
       if(i != machineID){//Don't ask myself
          sendToServer(i,out_msg);
-         printf("[Server]====now waiting for %d server reply=====\n",i);
+         //printf("[SERVER%d]====now waiting for server %d reply=====\n",machineID,i);
          receiveFromServer(in_msg); 
          //if there is the server have clerk we need
-         if(strcmp(in_msg,"ACK") == 0)
+         if(strcmp(in_msg,"ACK") == 0){
+            printf("[SERVER%d]server %d has %s Clerk \n",
+                  machineID,i,getClerkName(type));
             return i;
+         }   
 
       }
 
    }
-   printf("[Server]All server don't have clerk type %d,queue up customer!\n",type);
+   printf("[SERVER%d]All server don't have %s clerk ,queue up customer!\n",
+   machineID,getClerkName(type));
    return -1;
 
 }
@@ -654,20 +688,26 @@ int askServerForCustomer(int type){
       sprintf(out_msg,"QCS");
    else if(type == 3)   
       sprintf(out_msg,"QCH");
+   printf("[SERVER%d]====Asking other server for customer who needs %s Clerk =====\n",
+   machineID,getClerkName(type));
    for(int i = 0;i < SERVER_NUM ;i++)
    {
       if(i != machineID){//Don't ask myself
          sendToServer(i,out_msg);
-         printf("[Server]====now waiting for %d server reply=====\n",i);
+         //printf("[Server]====now waiting for %d server reply=====\n",i);
          receiveFromServer(in_msg); 
          //if there is the server have clerk we need
-         if(strcmp(in_msg,"ACK") == 0)
+         if(strcmp(in_msg,"ACK") == 0){
+            printf("[SERVER%d]server %d has customer who needs %s Clerk =====\n",
+                  machineID,i,getClerkName(type));
             return i;
+         }
 
       }
 
    }
-   printf("[Server]All server don't customer type %d wait ,queue up clerk!\n",type);
+   printf("[SERVER%d]No one has customer who needs %s clerk ,queue up clerk!\n",
+   machineID,getClerkName(type));
    return -1;
 
 }
@@ -683,14 +723,13 @@ int handleForwardRequest(char *buffer,char *replyMessage,
       int orgMsg[20];
 
       //"F 2 3 ACK 1 0" 
-      printf("[Server][Before]=======Get a forward message ============[%s]\n",buffer);
+      printf("[SERVER%d]===Get a forward message [%s]===\n",machineID,buffer);
       sscanf(buffer, "%*s %d %d %s %d %d", &sourceIP,&sourcePort,orgMsg,&destIP,&destPort);
 
       //pretend the message is form client
       outPktHdr->from= sourceIP;
       outMailHdr->from = sourcePort;
       sprintf(buffer,"%s %d %d",orgMsg,destIP,destPort);
-      printf("[Server][After]======== process a forward message [%s]=============\n",buffer);
    }
    return fw;
 }   
@@ -757,6 +796,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
       switch(buffer[1])
       {
          case 'A':
+            printf("====Server%d Get AA request, customer need app clerk====\n",
+            machineID);
             //if there is no clerk is free 
             if(AppClerkTable->clerkTable->IsEmpty())
             {
@@ -784,8 +825,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                }else{ //if no server have this type of clerk
                   //AppLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire AppClerk Wait 
-                  printf("[SERVER]Customer %d:%d is waiting for App\n",
-                        customerIP,customerPort);
+                  printf("[SERVER%d]Customer %d:%d is waiting for App\n",
+                       machineID, customerIP,customerPort);
                }
             }else
             {
@@ -797,8 +838,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                clerkPort = getPort(tmpIPort);
                sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
                //Register Clerk Success
-               printf("[SERVER]Customer %d:%d get appClerk %d:%d \n",
-                     customerIP,customerPort,clerkIP,clerkPort);
+               printf("[SERVER%d]Customer %d:%d get appClerk %d:%d \n",
+                     machineID,customerIP,customerPort,clerkIP,clerkPort);
                //Also Send Message to Clerk to wake Clerk UP
                char tmpBuf[256];
                sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
@@ -809,7 +850,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
             }
             break;
          case 'P':
-            printf("===========Server Get AP request, customer need pic clerk====\n");
+            printf("====Server%d Get AP request, customer need pic clerk====\n",
+            machineID);
             //if there is no clerk is free 
             if(PicClerkTable->clerkTable->IsEmpty())
             {
@@ -823,8 +865,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                }else{ //if no server have this type of clerk
                   //PicLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire PicClerk Wait 
-                  printf("[SERVER]Customer %d:%d is waiting for Pic\n",
-                        customerIP,customerPort);
+                  printf("[SERVER%d]Customer %d:%d is waiting for Pic\n",
+                        machineID,customerIP,customerPort);
                }
             }else
             {
@@ -836,8 +878,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                clerkPort = getPort(tmpIPort);
                sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
                //Register Clerk Success
-               printf("[SERVER]Customer %d:%d get picClerk %d:%d \n",
-                     customerIP,customerPort,clerkIP,clerkPort);
+               printf("[SERVER%d]Customer %d:%d get picClerk %d:%d \n",
+                     machineID,customerIP,customerPort,clerkIP,clerkPort);
                //Also Send Message to Clerk to wake Clerk UP
                char tmpBuf[256];
                sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
@@ -848,7 +890,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
             }
             break;
          case 'S':
-            printf("===========Server Get AS request, customer need pass clerk====\n");
+            printf("====Server%d Get As request, customer need passport clerk====\n",
+            machineID);
             //if there is no clerk is free 
             if(PassClerkTable->clerkTable->IsEmpty())
             {
@@ -862,8 +905,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                }else{ //if no server have this type of clerk
                   //PassLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire PassClerk Wait 
-                  printf("[SERVER]Customer %d:%d is waiting for Pass\n",
-                        customerIP,customerPort);
+                  printf("[SERVER%d]Customer %d:%d is waiting for Pass\n",
+                        machineID,customerIP,customerPort);
                }
             }else
             {
@@ -875,8 +918,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                clerkPort = getPort(tmpIPort);
                sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
                //Register Clerk Success
-               printf("[SERVER]Customer %d:%d get passClerk %d:%d \n",
-                     customerIP,customerPort,clerkIP,clerkPort);
+               printf("[SERVER%d]Customer %d:%d get passClerk %d:%d \n",
+                     machineID,customerIP,customerPort,clerkIP,clerkPort);
                //Also Send Message to Clerk to wake Clerk UP
                char tmpBuf[256];
                sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
@@ -885,7 +928,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
             }
             break;
          case 'H':
-            printf("===========Server Get AP request, customer need cash clerk====\n");
+            printf("====Server%d Get AH request, customer need cashier clerk====\n",
+            machineID);
             //if there is no clerk is free 
             if(CashClerkTable->clerkTable->IsEmpty())
             {
@@ -899,8 +943,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                }else{ //if no server have this type of clerk
                   //CashLine->Append((void*)combineIPPort(customerIP,customerPort));
                   sprintf(replyMessage, "ACW");//Acquire CashClerk Wait 
-                  printf("[SERVER]Customer %d:%d is waiting for Cash\n",
-                        customerIP,customerPort);
+                  printf("[SERVER%d]Customer %d:%d is waiting for Cash\n",
+                        machineID,customerIP,customerPort);
                }
             }else
             {
@@ -912,8 +956,8 @@ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,
                clerkPort = getPort(tmpIPort);
                sprintf(replyMessage, "ACS %d %d",clerkIP,clerkPort);
                //Register Clerk Success
-               printf("[SERVER]Customer %d:%d get cashClerk %d:%d \n",
-                     customerIP,customerPort,clerkIP,clerkPort);
+               printf("[SERVER%d]Customer %d:%d get cashClerk %d:%d \n",
+                    machineID, customerIP,customerPort,clerkIP,clerkPort);
                //Also Send Message to Clerk to wake Clerk UP
                char tmpBuf[256];
                sprintf(tmpBuf, "RCS %d %d",customerIP,customerPort);
@@ -961,7 +1005,7 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
 
                   AppClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
                   sprintf(replyMessage, "RCW");//Register Clerk Wait 
-                  printf("[SERVER]App Clerk %d is waiting\n", clerkIP);
+                  printf("[SERVER%d]App Clerk %d is waiting\n", machineID,clerkIP);
                }
             }else
             {
@@ -974,8 +1018,8 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
                customerPort = getPort(tmpIPort); 
                sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
                //Register Clerk Success
-               printf("[SERVER]App Clerk %d:%d get customer %d:%d \n",
-                     clerkIP,clerkPort,customerIP,customerPort);
+               printf("[SERVER%d]App Clerk %d:%d get customer %d:%d \n",
+                     machineID,clerkIP,clerkPort,customerIP,customerPort);
                //Also Send Message to Customer to wake Customer UP
                char tmpBuf[256];
                sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
@@ -996,7 +1040,7 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
                }else{ //if no server have this type of customer waiting 
                   PicClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
                   sprintf(replyMessage, "RCW");//Register Clerk Wait 
-                  printf("[SERVER]Pic Clerk %d is waiting\n", clerkIP);
+                  printf("[SERVER%d]Pic Clerk %d is waiting\n", machineID,clerkIP);
                }
             }else
             {
@@ -1009,8 +1053,8 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
                customerPort = getPort(tmpIPort); 
                sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
                //Register Clerk Success
-               printf("[SERVER]Pic Clerk %d:%d get customer %d:%d \n",
-                     clerkIP,clerkPort,customerIP,customerPort);
+               printf("[SERVER%d]Pic Clerk %d:%d get customer %d:%d \n",
+                     machineID,clerkIP,clerkPort,customerIP,customerPort);
                //Also Send Message to Customer to wake Customer UP
                char tmpBuf[256];
                sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
@@ -1031,7 +1075,7 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
                }else{ //if no server have this type of customer waiting 
                   PassClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
                   sprintf(replyMessage, "RCW");//Register Clerk Wait 
-                  printf("[SERVER]Pass Clerk %d is waiting\n", clerkIP);
+                  printf("[SERVER%d]Pass Clerk %d is waiting\n", machineID,clerkIP);
                }
             }else
             {
@@ -1044,8 +1088,8 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
                customerPort = getPort(tmpIPort); 
                sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
                //Register Clerk Success
-               printf("[SERVER]Pass Clerk %d:%d get customer %d:%d \n",
-                     clerkIP,clerkPort,customerIP,customerPort);
+               printf("[SERVER%d]Pass Clerk %d:%d get customer %d:%d \n",
+                     machineID,clerkIP,clerkPort,customerIP,customerPort);
                //Also Send Message to Customer to wake Customer UP
                char tmpBuf[256];
                sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
@@ -1066,7 +1110,7 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
                }else{ //if no server have this type of customer waiting 
                   CashClerkTable->clerkTable->Append((void*)combineIPPort(clerkIP,clerkPort));
                   sprintf(replyMessage, "RCW");//Register Clerk Wait 
-                  printf("[SERVER]Cash Clerk %d is waiting\n", clerkIP);
+                  printf("[SERVER%d]Cash Clerk %d is waiting\n", machineID,clerkIP);
                }
             }else
             {
@@ -1079,8 +1123,8 @@ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,
                customerPort = getPort(tmpIPort); 
                sprintf(replyMessage, "RCS %d %d",customerIP,customerPort);
                //Register Clerk Success
-               printf("[SERVER]Cash Clerk %d:%d get customer %d:%d \n",
-                     clerkIP,clerkPort,customerIP,customerPort);
+               printf("[SERVER%d]Cash Clerk %d:%d get customer %d:%d \n",
+                     machineID,clerkIP,clerkPort,customerIP,customerPort);
                //Also Send Message to Customer to wake Customer UP
                char tmpBuf[256];
                sprintf(tmpBuf,"ACS %d %d ",clerkIP,clerkPort);
@@ -1358,7 +1402,7 @@ void handleClientRequest()
 //port 1 is using for other server quary
 void serverToServer()
 {
-   printf("[SERVER]Server %d start s2s server... \n",machineID);
+   printf("[SERVER%d]Server %d start s2s server... \n",machineID,machineID);
    while(1){
       PacketHeader h_inPktHdr;
       MailHeader h_inMailHdr;
@@ -1382,6 +1426,129 @@ void serverToServer()
    }
 
 }
+
+//----handleManagerRequest(char *buffer,char* replyMessage)-----
+//The message form port 3 will be handle like this way
+//
+//RGMGR 7 : register form manager in location 7,
+//          server will set managerID to 7 and also forward msg to other
+//          server.
+//FRMG 7: forward msg for manager reg 7,so we just set our managerID and don't
+//          need for forward to the other server
+//CASH 100 5 3 : get casiher in 5:3 for amount 100
+//          it will send this amount to manager
+
+//The message will be sent from manager server
+//
+//To Manager
+//RMGS : register manager success
+//GETCASH 100: get 100 
+//
+//To Other server
+//FRMG 7: see above
+//
+//To Cashier
+//GETCASH 100: once receive the cash 100 from cashier
+
+
+int handleManagerRequest(char *buffer,char* replyMessage)
+{
+   //Handle The request from other server
+   //The format is Q[C/K][A/P/S/H]
+   //[C/K] = need Customer/clerK
+   //[A/P/S/H] = clerk Type
+   int reply = -1;
+   int mgrID;
+   if(buffer[0] == 'R') {
+      sscanf(buffer, "%*s %d", &mgrID);
+      managerID = mgrID;
+      printf("[SERVER%d]Server get manager register in %d... \n",
+            machineID,managerID);
+
+      //Forward manager register to other server
+      printf("[SERVER%d]Forward other server for manager in %d=====\n",
+            machineID,managerID);
+
+      char out_msg[20];
+      sprintf(out_msg,"FRMG %d ",managerID);
+      for(int i = 0;i < SERVER_NUM ;i++)
+      {
+         if(i != machineID){//Don't ask myself
+            sendTo(i,3,out_msg,3);
+         }   
+
+      }
+      sprintf(replyMessage,"RMGS");
+      reply = 1;
+
+   } else if(buffer[0] == 'F') {
+      sscanf(buffer, "%*s %d", &mgrID);
+      managerID = mgrID;
+      printf("[SERVER%d]Get Forward manager in %d=====\n",
+            machineID,managerID);
+   } else if(buffer[0] == 'C') {
+      int ip,port,amount;
+      sscanf(buffer, "%*s %d %d %d", &amount,&ip,&port);
+      printf("[SERVER%d]Get money %d form casier %d:%d\n",
+            machineID,amount,ip,port);
+
+            if(managerID != -1 && managerID > SERVER_NUM){
+               char out_msg[20];
+               sprintf(out_msg,"GETCASH %d ",amount);
+               sendTo(managerID,3,out_msg,3);
+
+               
+            }else{
+               printf("[SERVER%d]No manager can handle this money\n", machineID);
+            }
+               sprintf(replyMessage,"GETCASH %d ",amount);
+               reply = 1;
+            
+      
+      
+   }
+   return reply;
+}
+//------------void managerServer()----------------------
+//This the communcation between server and manager
+//It will listen the port 3 for the operation
+//First operation is manager register
+//Once the server get reqister from manager
+//The server will forward this registion to other server
+//
+//Second operation is for cashier clerk to use
+//Once get money from customer
+//It will send the amount to server
+//
+//Once server get the money from cashier,
+//Server will tell manager the money cashier get
+
+//The managerID is the global variable in the system.h
+void managerServer()
+{
+   while(1){
+      PacketHeader h_inPktHdr;
+      MailHeader h_inMailHdr;
+      char buffer[MaxMailSize];
+      char replyMessage[MaxMailSize];
+      int reply = 0;
+      //listen port 1 for the message comming from other server
+      serverListen(3, &h_inPktHdr, &h_inMailHdr, buffer);
+      //Check the request the generate
+      reply = handleManagerRequest(buffer,replyMessage);
+
+      /* create the reply package and send */
+      if(reply == 1){
+         int port = h_inMailHdr.from;
+         int ip = h_inPktHdr.from;
+         //reply to sender by the port sender given
+         //we use port 1 to send message
+         //port should be equal 2
+         sendTo(ip,port,replyMessage,3);
+      }
+   }
+
+}
 void ServerTest()
 {
 
@@ -1389,7 +1556,9 @@ void ServerTest()
 
    Thread *t = new Thread("s2s");
    t->Fork((VoidFunctionPtr)serverToServer,0);
-   printf("[SERVER]Server %d starting up... \n",machineID);
+   Thread *m = new Thread("managerServer");
+   m->Fork((VoidFunctionPtr)managerServer,0);
+   printf("[SERVER%d]Server %d starting up... \n",machineID,machineID);
    while(true)
    {
       handleClientRequest();

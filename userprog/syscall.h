@@ -46,6 +46,9 @@
 #define SC_GetMailBox 22 
 #define SC_GetMachineID 23 
 
+#define SC_ManagerReg 24
+#define SC_ManagerGetMoney 25
+#define SC_CashierSendMoney 26
 
 
 #define MAXFILENAME 256
