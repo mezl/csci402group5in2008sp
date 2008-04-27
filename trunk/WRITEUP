@@ -1,0 +1,418 @@
+Ttitle: Writeup for Project 4, Spring 2008
+
+Date: 04/27/08
+
+Group Num 05:	Chin-Kai Chang		chinkaic@usc.edu	7557011081
+		Cheng-Yu Lee		chengyul@usc.edu	9027332848
+
+********************
+* I. Requirements: *
+********************
+	- Implement all the entities from the Project 1 Passport Office and allow to work together across nachos clients.
+	- All client messages are to go to a Nachos server and servers connect the client and the user programs.
+	- Clearly document the new set of system calls.
+	- Each Passport Office entity must have their own set of system calls.
+	- Only need to have a single server to accept all RPC request.
+	- Each Nachos client instance must be able to run up to 5 user programs.
+	- Fork or Exec to creast user programs are optional.
+	- Can not use any user program variables to coordinate the user program activities.
+	- All Passport Office state is to be managed by the servers.
+	- Implement server code to have up to 5 servers working together in a group.
+	- Each server can receive a request from any client.
+	- Client Nachos kernels are to randomly generate a server machine ID for each request message.
+	- Servers must cooperate to ensure proper synchronization.
+	- Nachos Servers are to be able to handle multiple Nachos Clients.
+
+********************
+* II. Assumptions: *
+********************
+	- The main memory is 1024 pages.
+	- Assume no shared variables due to distributed program.
+	- All Clients choose servers randomly.
+	- Assume there are at most 5 servers only.
+	- Assume each machine can only run up to 10 processes(Max 10 mailbox).
+	- Total running machine will be less than 10(Max 10 machineID).
+
+****************
+* III. Design: *
+****************
+	+ exception.cc
+		+ getRandServerID()
+			- Generate the random server ID.
+
+		+ SR_server(int port,char *outMsg,char *inMsg)
+			- Send a message to server and get one message back.
+			- Pre:	Sender's port number, outgoing message.
+			- Post:	The server response message.
+			- Return:	None.
+
+		+ GetMailBox_Syscall()
+			- Find the available mail box on the machine.
+			- Pre:	None.
+			- Post:	None.
+			- Return:	The mail box ID.
+
+		+ GetMachineID_Syscall()
+			- Get machine id when start the program passing form.
+			- command line after -m "machine id".
+			- Pre:	None.
+			- Post:	None.
+			- Return:	The machine ID.
+
+		+ ClerkReg_Syscall()
+			- The Clerk will call this function to register the server.
+			- When Clerk is free and if there is the customer is waiting, server will return the massage with customer ID.
+			- Otherwise, it will return "RCW" for to let clerk wait.
+			- Clerk Have four type 0:App, 1:Pic, 2:Pass, 3:Cash.
+			- Pre:	Clerk IP, Clerk Port, Clerk Type.
+			- Post:	Customer IP, Customer Port.
+			- Return:	None.
+
+		+ CustomerAcquire_Syscall()
+			- Customer calls this function to get clerk to service.
+			- It will do the same thing as the clerk did.
+			- Customer send the clerk request to the server.
+			- If there is avaiable clerk on the server, server will return the ACS message with clerk ID.
+			- Otherwise, it will queue up the customer request until server get clerk registion.
+			- Pre:	Customer ID, Clerk Type.
+			- Post:	None.
+			- Return:	Clerk ID.
+
+		+ ManagerReg_Syscall(int id)
+			- The Manager will call this function to register the server.
+			- Pre:	Manager IP.
+			- Post:	All server know the manager location.
+			- Return:	None.
+
+		+ ManagerGetMoney_Syscall(int id)
+			- The Manager will call this function to get money from the server.
+			- Pre:	Manager IP.
+			- Post:	None.
+			- Return:Money from server. 
+
+		+ CashierSendMoney_Syscall(int id)
+			- The Cashier will call this function to send money to the server.
+			- Pre:	Cashier IP, port, amount.
+			- Post:	Amount money send to server.
+			- Return:None.
+
+	+ nettest.cc
+		+ combineIPPort(int ip,int port)
+			- Combine ip & port to one number for list to use.
+			- For the simple use in the table, we combine the ip and port to one number.
+			- Therefore, the 10^1's number is ip, 10^0 is port.
+			- Example: 15 => ip = 1, port = 5.
+			- We assume the ip & port are less then 10.
+			- Pre:	Ip, port.
+			- Post:	None.
+			- Return:	One number combine with.
+
+		+ Send & Receive Function
+			- Send the message and get message for other machine.
+			- Default port for sending is 1 and listen port 0 for reply.
+			- This is the communication between server and server.
+			- The server <--> client will use port 0.
+
+		+ askServerForClerk(int type)
+			- Ask all other server does the clerk avaiable.
+			- It will send the message to other server for the clerk.
+			- If some server respones ACK message back, then we return the server number back.
+			- Otherwise, we return -1 for not found.
+			- Pre:	Need Clerk Type.
+			- Post:	Asking all other server.
+			- Return:	ServerID, -1 for not found.
+
+		+ askServerForCustomer(int type)
+			- Ask all other server does the some customer is waiting .
+			- It will send the message to other server for the customer.
+			- If some server respones ACK message back, then we return the server number back.
+			- Otherwise, we return -1 for not found.
+			- Pre:	Need Clerk Type.
+			- Post:	Asking all other server.
+			- Return:	ServerID, -1 for not found.
+		
+		+ void handleForwardRequest(char *buffer,char *replyMessage,PacketHeader* outPktHdr,MailHeader* outMailHdr)
+			- If the buffer[0]=F, it's a forward message and process a forward message.
+
+		+ bool isClerkTableEmpty(int type)
+			- Check either application clerk, picture clerk, passport clerk, or cashier clerk table is empty or not.
+
+		+ int getClerkTableRemove(int type)
+			- Remove application clerk, picture clerk, passport clerk, or cashier clerk table.
+
+		+ void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- Handle the customer Acquire Clerk.
+			- Format A[A/P/S/H]C CustomerID.
+			- Example: AAC 10 : customer 10 need appclerk.
+			- Return Message.
+			- A[APSH]S ClerkID: pass the clerk to customer.
+			- A[APSH]W : need customer wait.
+			- 1. Handle the customer acquire clerk request.
+			- 2. Get customerIP.
+			- 3. Check which type of clerk request.
+
+		+ void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- The format is like "RAA 10" for Reg AppClerk Available.	
+			- Buffer[1] is 'A' = AppClerk.
+			- Buffer[1] is 'P' = PicClerk. 
+			- Buffer[1] is 'S' = PassClerk.
+			- Buffer[1] is 'H' = CashClerk.
+			- 1. Handle the clerk register request.
+			- 2. Get clerk IP & Port.
+			- 3. Check which type of clerk.
+
+		+ void handleLockRequest(char *buffer,char *replyMessage,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- Lock operation.
+
+		+ void handleConditionRequest(char *buffer,char* replyMessage,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- Conditon operation.
+	
+		+ void handleServerRequest(char *buffer,char* replyMessage)
+			- Handle The request from other server.
+			- The format is Q[C/K][A/P/S/H].
+   			- [C/K] = need Customer/clerK.
+   			- [A/P/S/H] = clerk Type.
+
+		+ void handleClientRequest()
+			- Handle forward request, customer request, clerk request, and server request.
+			- If there is the forward message, we need find the soure to replay.
+			- Send the server reply message after complete parsing the outMessage.
+			- Skip sending reply message if noReply=1.
+		
+		+ void serverToServer()
+			- This is another thread using for reply the server request.
+			- It will listen the port 1&2 for the message from other server.
+			- So, the server will listen two port at same time.
+			- Port 0 is using for client(clerk/customer) request.
+			- Port 1&2 is using for other server quary.
+
+		+ handleManagerRequest(char *buffer,char* replyMessage)
+			+ The message form port 3 will be handle like this way.
+				- RGMGR 7 : register form manager in location 7, 
+					server will set managerID to 7 and also forward msg to other server.
+				- FRMG 7: forward msg for manager reg 7, 
+					so we just set our managerID and don't need for forward to the other server.
+				- CASH 100 5 3 : get casiher in 5:3 for amount 100, it will send this amount to manager.
+	
+			+ The message will be sent from manager server.
+				+ To Manager.
+					- RMGS : register manager success.
+					- GETCASH 100: get 100.
+				+ To Other server.
+					- FRMG 7: see above.
+				+ To Cashier.
+					- GETCASH 100: once receive the cash 100 from cashier.
+
+		+ void managerServer()
+			- This the communcation between server and manager.
+			- It will listen the port 3 for the operation.
+			- First operation is manager register.
+			- Once the server get reqister from manager, server will forward this registion to other server.
+			- Second operation is for cashier clerk to use.
+			- Once get money from customer, it will send the amount to server.
+			- Once server get the money from cashier,server will tell manager the money cashier get
+			- The managerID is the global variable in the system.h
+
+		+ ServerTest()
+			- Begin to handle client request.
+
+	+ cash_clerk.c
+		- Get and print Machine ID and Port number of cashier clerk.
+		- Print message about Machine ID and Port number of cashier clerk finish handle customer.
+
+	+ test_clerk.c
+		- Get and print Machine ID and Port number of user clerk.
+		- Print message about Machine ID and Port number of user clerk finish handle customer.
+
+	+ app_clerk.c
+		- Get and print Machine ID and Port number of application clerk.
+		- Print message about Machine ID and Port number of application clerk finish handle customer.
+
+	+ test_customer.c
+		- Get and print Machine ID and Port number.
+		- Customer acquires Machine ID and Port number and print message after customer is done.
+		
+	+ pass_clerk.c
+		- Get and print Machine ID and Port number of passport clerk.
+		- Print message about Machine ID and Port number of passport clerk finish handle customer.
+
+	+ pic_clerk.c
+		- Get and print Machine ID and Port number of picture clerk.
+		- Print message about Machine ID and Port number of picture clerk finish handle customer.
+
+	+ multi_clerk.c
+		- Use exec system call to run multiple clerk 
+
+	+ multi_customer.c
+		- Use exec system call to run multiple customer
+	 
+	+ test_manager.c
+		- Manager register to server and wait for the money comming. 
+***********************
+* IV. Implementation: *
+***********************
+	+ Files Modified
+		- code/userprog/exception.cc
+		- code/network/nettest.cc
+		- code/test/string.h
+		- code/test/start.s
+		- code/test/Makefile
+		- code/machine/machine.h
+		- code/userprog/syscall.h
+		- code/network/Makefile
+		- code/threads/system.h
+		- code/threads/system.cc
+
+	+ Files added
+		- code/test/cash_clerk.c
+		- code/test/test_clerk.c
+		- code/test/app_clerk.c
+		- code/test/test_customer.c
+		- code/test/multi_clerk.c
+		- code/test/multi_customer.c
+		- code/test/pass_clerk.c
+		- code/test/pic_clerk.c
+		- code/test/test_manager.c
+		- code/network/runserver.sh
+		- code/network/runmanager.sh
+		- code/network/runclerk.sh
+		- code/network/runcustomer.sh
+		
+	+ Data Structures added, and the file they were added to.
+		- None.
+
+	+ Data Structures modified, and the file they were added to.
+		- None.
+
+	+ Functions added and in which file.
+		+ code/userprog/exception.cc
+			- int getRandServerID()
+			- void SR_server(int port,char *outMsg,char *inMsg)
+			- int GetMailBox_Syscall()
+			- int GetMachineID_Syscall()
+			- int combineIPPort(int ip,int port)
+			- int getIP(int ipport)
+			- int getPort(int ipport)
+			- int ClerkReg_Syscall(int ip,int port,int type)
+			- int CustomerAcquire_Syscall(int ip,int port,int type
+			- void ManagerReg_Syscall(int ip)
+			- int ManagerGetMoney_Syscall(int ip)
+			- void CashierSendMoney_Syscall(int ip,int port,int amount)
+
+		+ code/network/nettest.cc
+			- int combineIPPort(int ip,int port)
+			- int getIP(int ipport)
+			- int getPort(int ipport)
+			- void receiveFromServer(char *msg)
+			- void sendToServer(int ip,int port,char * msg)
+			- void forwardMsg(int ip,char *msg,int sourceIP,int sourcePort)
+			- int askServerForClerk(int type)
+			- int askServerForCustomer(int type)
+			- void handleForwardRequest(char *buffer,char *replyMessage,PacketHeader* outPktHdr,MailHeader* outMailHdr)
+			- bool isClerkTableEmpty(int type)
+			- int getClerkTableRemove(int type)
+			- void handleCustomerRequest(char *buffer,char* replyMessage,int* noReply,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- void handleClerkRequest(char *buffer,char* replyMessage,int* noReply,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- void handleLockRequest(char *buffer,char *replyMessage,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- void handleConditionRequest(char *buffer,char* replyMessage,PacketHeader* inPktHdr,MailHeader* inMailHdr)
+			- void handleServerRequest(char *buffer,char* replyMessage)
+			- void handleClientRequest()
+			- void serverToServer()
+			- int handleManagerRequest(char *buffer,char* replyMessage)
+			- void managerServer()
+			- void ServerTest()
+
+		+ code/test/cash_clerk.c
+			-void TestClerkReg()
+
+		+ code/test/test_clerk.c
+			- void TestClerkReg()
+
+		+ code/test/app_clerk.c
+			- void TestClerkReg()
+
+		+ code/test/test_customer.c
+			- void TestCustomerAcquire()
+
+		+ code/test/pass_clerk.c
+			- void TestClerkReg()
+
+		+ code/test/pic_clerk.c
+			- void TestClerkReg()
+
+		+ code/test/test_manager.c
+			- void manager()
+
+	+ Functions modified and in which file.
+		- None.
+
+***************
+* V. Testing: *
+***************
+	+ How to test
+		- Input "gmake" under code/ directory for compile from command prompt.
+		- To run multiple servers:	Input "./runserver.sh" 
+								under code/network/ directory. 
+								(it will Run 5 servers)
+								(When press Ctrl-C to kill the nachos,
+								it will kill all nachos which is running,
+								include clerk/manager/customer)
+
+		- To run manager:		Input "./runmanager.sh" 
+								under code/network/ directory. 
+								(Must run before customers)
+
+		- To run multiple clerks:	Input "./runclerk.sh" 
+							OR "./nachos -m 5 -x ../test/multi_clerk" 
+							under code/network/ directory. 
+							(Run 8 clerks, 2 for each clerk type)
+
+		- To run multiple customers:	Input "./runcustomer.sh" 
+							under code/network/ directory. (Run 5 customers)
+							OR "./nachos -m 6 -x ../test/multi_customer" 
+	+ For extra Test
+		- To run single server:		Input "./nachos -m id -s" single server under code/network/ directory. 
+							(To change total server number, 
+							define SERVER_NUM under code/threads/system.h)
+
+		- To run single customer:	Input "./nachos -m id -x ../test/test_customer" 
+							under code/network/ directory.
+
+		- To run single clerk:		Input "./nachos -m id -x ../test/[x]_clerk" 
+							under code/network/ directory. 
+							(where [x]= app, pic, pass, or cash)
+
+	+ Test output
+		- The distributed system of our Passport Office is working since customers are able to be served until the end.
+		- Manager received $500 after running 5 customers in this system.
+		+ Scenario for the relationship between servers and customers:
+			- When customers request to the first server, server either assigns clerk to customer if available or asks customer to wait.
+			- Then server sends message to other server, and other server checks either he has that specific clerk.
+			- If clerk available, the other server acknowlege to that "asked server", and "asked server" forwards message to the that server.
+			- If clerk is not available, the second server acknowleges to that "asked server", and "asked server" sends message to next server.
+			- If no server has that specific clerk, then "asked server" queues customer's request to wait for next available.
+			- Same rule when the clerk register to the server.
+			
+*******************
+* VI. Discussion: *
+*******************
+	+ Experiment expectation. (What you hope will happen.)
+		- Be able to run the Passport Office and allow to work together across nachos clients.
+		- Each Nachos client instance must be able to run up to 5 user programs.
+		- All Passport Office state is to be managed by the servers.
+		- Be able to run Passport Office to have up to 5 servers working together in a group.
+		- Client Nachos kernerls are to randomly generate a server machine ID and Nachos Servers are to be able to handle multiple Nachos Clients.
+
+	+ Experiment result. (What actually happens.)
+		- Functioned perfectly.
+		- The result of this program meets the requirements.
+		- Manager get $500 after 5 customer finish their task.
+
+	+ Explanation
+		- We are able to run the Passport Office across Nachos clients and server connect each client together.
+		- We are able to implement Passport Office to have up to 5 servers working together to take care clients by ensure the proper synchronization.
+
+***********************
+* VII. Miscellaneous: *
+***********************
+	- None.
