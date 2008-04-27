@@ -5,4 +5,4 @@ done
 echo "Press Ctrl-C to kill all nachos process"
 echo ""
 ./nachos -m 4 -s 
-kill -9 $(ps -e|grep nachos|awk '{print $1}')
+kill -9 $(ps -e|grep nachos|awk '{print $1}') 2>/dev/null 

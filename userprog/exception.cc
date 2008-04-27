@@ -1419,7 +1419,6 @@ int ClerkReg_Syscall(int ip,int port,int type)
 //int *customerIP,int *customerPort)
 {
    printf("==============ClerkReg_Syscall=============\n");
-   printf("%s clerk form ip %d port %d type %d\n",ip,port,type);
    int customerIP,customerPort;
    char typeName[20];
    char clerk_out_msg[20];
@@ -1800,6 +1799,7 @@ void ExceptionHandler(ExceptionType which) {
             Yield_Syscall();
             break;
             //Project 4 Add this kernel syscall
+#ifdef PROJ4 
          case SC_ClerkReg:
             DEBUG('a', "Clekr Reg syscall.\n");
             rv = ClerkReg_Syscall(machine->ReadRegister(4),machine->ReadRegister(5),
@@ -1835,7 +1835,8 @@ void ExceptionHandler(ExceptionType which) {
             machine->ReadRegister(6)
             );
             break;
-#endif
+#endif //PROJ4
+#endif //USER_PROGRAM
       }
 
       // Put in the return value and increment the PC
