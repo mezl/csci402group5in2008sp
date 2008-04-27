@@ -1419,7 +1419,7 @@ int ClerkReg_Syscall(int ip,int port,int type)
 //int *customerIP,int *customerPort)
 {
    printf("==============ClerkReg_Syscall=============\n");
-   printf("ip %d port %d type %d\n",ip,port,type);
+   printf("%s clerk form ip %d port %d type %d\n",ip,port,type);
    int customerIP,customerPort;
    char typeName[20];
    char clerk_out_msg[20];
@@ -1551,10 +1551,18 @@ int CustomerAcquire_Syscall(int ip,int port,int type)//,int *clerkIP,int *clerkP
 }
 //-------------------ManagerReg_Syscall(int id)-----------
 //The Manager will call this function to register the server
+//No matter which server manager choose,that server will
+//forward this registrition to all the other server
+//So,once manager register to a server, every server will know
+//Where to find manager
 //
+//The port using for listen manager request is port 3
+//All server have a thread to listen on port 3
+//So,server can always handle manager request even
+//Server are handle other client request
 //
 //Pre: Manager IP
-//Post:None
+//Post:All server know manager ip
 //Return: None 
 void ManagerReg_Syscall(int ip)
 //int *customerIP,int *customerPort)
@@ -1577,11 +1585,15 @@ void ManagerReg_Syscall(int ip)
 }
 //-------------------ManagerGetMoney_Syscall(int id)-----------
 //The Manager will call this function to get money from the server
-//
+//Once the server know the manager IP
+//Manager will call this function to listen port 3 on manager machine
+//When cashier tell the server money is comming,server will send this
+//amount money to the manager, than the manager will keep track
+//the total money he get.
 //
 //Pre: Manager IP
 //Post:None
-//Return:Money from server  
+//Return:amount Money from server  
 int ManagerGetMoney_Syscall(int ip)
 {
    printf("==============ManagerGetMoney_Syscall=============\n");
@@ -1609,10 +1621,13 @@ int ManagerGetMoney_Syscall(int ip)
 }
 //-------------------CashierSendMoney_Syscall(int id)-----------
 //The Cashier will call this function to send money to the server
-//
+//Once cashier get money from the customer,cashier will send
+//this money to the server, cashier doesn't know where is the
+//manager location are, so it will send to server and let
+//server talk to manager.
 //
 //Pre: Cashier IP,port,amount
-//Post:None
+//Post:Amount money send to server
 //Return: None 
 void CashierSendMoney_Syscall(int ip,int port,int amount)
 //int *customerIP,int *customerPort)
@@ -1784,6 +1799,7 @@ void ExceptionHandler(ExceptionType which) {
             DEBUG('a', "Yield syscall.\n");
             Yield_Syscall();
             break;
+            //Project 4 Add this kernel syscall
          case SC_ClerkReg:
             DEBUG('a', "Clekr Reg syscall.\n");
             rv = ClerkReg_Syscall(machine->ReadRegister(4),machine->ReadRegister(5),
